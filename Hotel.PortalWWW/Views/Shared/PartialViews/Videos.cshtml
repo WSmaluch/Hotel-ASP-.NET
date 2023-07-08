@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Hotel.Data.Data.CMS.MainPage.Video>
+
+    @foreach(var item in Model)
+{
+    <div class="video_area_inner text-center">
+        <span>@item.VideoTitle</span>
+        <h3>
+            @item.VideoDescription
+        </h3>
+        <a href="@item.VideoUrl" class="video_btn popup-video">
+            <i class="fa fa-play"></i>
+        </a>
+    </div>
+}
+

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
 	<meta charset="utf-8">
@@ -135,9 +135,9 @@
 						<li class="submenu">
 							<a href="#"><i class="fas fa-suitcase"></i> <span> Booking </span> <span class="menu-arrow"></span></a>
 							<ul class="submenu_class" style="display: none;">
-								<li><a href="all-booking.html"> All Booking </a></li>
-								<li><a href="edit-booking.html"> Edit Booking </a></li>
-								<li><a href="add-booking.html"> Add Booking </a></li>
+								<li><a href="@Url.Action("AllBooking","Home")"> All Booking </a></li>
+								<li><a href="@Url.Action("EditBooking","Home")"> Edit Booking </a></li>
+								<li><a href="@Url.Action("AddBooking","Home")"> Add Booking </a></li>
 							</ul>
 						</li>
 						<li class="submenu">
@@ -146,6 +146,14 @@
 								<li><a href="all-customer.html"> All customers </a></li>
 								<li><a href="edit-customer.html"> Edit Customer </a></li>
 								<li><a href="add-customer.html"> Add Customer </a></li>
+							</ul>
+						</li>
+						<li class="submenu">
+							<a href="#"><i class="fas fa-user"></i> <span> Pages </span> <span class="menu-arrow"></span></a>
+							<ul class="submenu_class" style="display: none;">
+								<li><a asp-area="" asp-controller="Pages" asp-action="Index">Pages</a></li>
+								<li><a asp-area="" asp-controller="Pages" asp-action="Create">Add Pages </a></li>
+								<li><a asp-area="" asp-controller="Pages" asp-action="Edit">Edit Pages </a></li>
 							</ul>
 						</li>
 						<li class="submenu">
@@ -217,8 +225,8 @@
 						<li class="submenu">
 							<a href="#"><i class="fe fe-table"></i> <span> Blog </span> <span class="menu-arrow"></span></a>
 							<ul class="submenu_class" style="display: none;">
-								<li><a href="blog.html">Blog </a></li>
-								<li><a href="blog-details.html">Blog Veiw </a></li>
+								<li><a asp-area="" asp-controller="Posts" asp-action="Index">Blog</a></li>
+								<li><a href="blog-details.html">Blog View </a></li>
 								<li><a href="add-blog.html">Add Blog </a></li>
 								<li><a href="edit-blog.html">Edit Blog </a></li>
 							</ul>
@@ -300,6 +308,7 @@
 	<script src="~/lib/bootstrap/plugins/morris/morris.min.js"></script>
 	<script src="~/lib/bootstrap/js/chart.morris.js"></script>
 	<script src="~/lib/bootstrap/js/script.js"></script>
+	@await RenderSectionAsync("Scripts", required:false)
 </body>
 
 </html>

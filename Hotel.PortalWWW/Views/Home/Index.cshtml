@@ -5,7 +5,8 @@
 <!-- slider_area_start -->
 <div class="slider_area">
     <div class="slider_active owl-carousel">
-        <div class="single_slider d-flex align-items-center justify-content-center slider_bg_1">
+        @await Html.PartialAsync("PartialViews/Banners",(IEnumerable<Hotel.Data.Data.CMS.MainPage.Banner>)ViewBag.Banner)
+        @*<div class="single_slider d-flex align-items-center justify-content-center slider_bg_1">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-12">
@@ -28,7 +29,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>*@
     </div>
 </div>
 <!-- slider_area_end -->
@@ -136,16 +137,7 @@
 <!-- offers_area_end -->
 <!-- video_area_start -->
 <div class="video_area video_bg overlay">
-    <div class="video_area_inner text-center">
-        <span>Montana Sea View</span>
-        <h3>
-            Relax and Enjoy your <br>
-            Vacation
-        </h3>
-        <a href="https://www.youtube.com/watch?v=vLnPwxZdW4Y" class="video_btn popup-video">
-            <i class="fa fa-play"></i>
-        </a>
-    </div>
+    @await Html.PartialAsync("PartialViews/Videos",(IEnumerable<Hotel.Data.Data.CMS.MainPage.Video>)ViewBag.Video)
 </div>
 <!-- video_area_end -->
 <!-- about_area_start -->

@@ -18,6 +18,21 @@ namespace Hotel.Intranet.Controllers
             return View();
         }
 
+        public IActionResult AllBooking()
+        {
+            return View();
+        }
+
+        public IActionResult EditBooking()
+        {
+            return View();
+        }
+
+        public IActionResult AddBooking()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Hotel.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<HotelContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("HotelContext") ?? throw new InvalidOperationException("Connection string 'HotelContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

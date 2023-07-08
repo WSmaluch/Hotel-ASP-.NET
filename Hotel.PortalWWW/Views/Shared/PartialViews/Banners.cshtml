@@ -1,0 +1,21 @@
+﻿@model IEnumerable<Hotel.Data.Data.CMS.MainPage.Banner>
+@{
+    int count = 1;
+}
+@foreach(var banner in Model)
+{
+    
+    <div class="single_slider d-flex align-items-center justify-content-center slider_bg_@count" style="background-image: url(@banner.BannerUrl)">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="slider_text text-center">
+                        <h3>@banner.BannerTitle</h3>
+                        <p>@banner.BannerDescription</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    count++;
+}
