@@ -43,24 +43,15 @@ namespace Hotel.PortalWWW.Controllers
 
         public IActionResult About()
         {
-            var aboutPage = _context.AboutPage.FirstOrDefault();
-            var layout = _context.Layout.FirstOrDefault();
-
+            var aboutPage = _context.AboutPage.FirstOrDefault(); //important
             ViewBag.AboutBanner =
             (
-                from aboutPhoto in _context.AboutSilderPhoto
-                where aboutPhoto.IsActive == true
-                select aboutPhoto
-            ).ToList();
+                   from aboutPhoto in _context.AboutSilderPhoto
+                   where aboutPhoto.IsActive == true
+                   select aboutPhoto
+                ).ToList();
 
-            var viewModel = new AboutViewModel
-            {
-                Layout = layout,
-                AboutPage = aboutPage,
-                AboutBanner = ViewBag.AboutBanner as IEnumerable<Hotel.Data.Data.CMS.About.AboutSilderPhoto>
-            };
-
-            return View(viewModel);
+            return View(aboutPage);
         }
 
 
@@ -76,7 +67,8 @@ namespace Hotel.PortalWWW.Controllers
 
         public IActionResult Contact()
         {
-            return View();
+            var contactpage = _context.ContactPage.FirstOrDefault(); //important
+            return View(contactpage);
         }
 
         public IActionResult Privacy()

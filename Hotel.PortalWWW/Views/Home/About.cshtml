@@ -1,11 +1,10 @@
-﻿@using Hotel.Data.Data.CMS.About;
-@model Hotel.PortalWWW.Models.AboutViewModel
+﻿@model Hotel.Data.Data.CMS.About.AboutPage
 @{
     ViewData["Title"] = "About";
 }
 <!-- bradcam_area_start -->
-<div class="bradcam_area breadcam_bg" style="background-image:url(@Model.AboutPage.BannerUrl)">
-    <h3>@Model.AboutPage.BannerTitle</h3>
+<div class="bradcam_area breadcam_bg" style="background-image:url(@Model.BannerUrl)">
+    <h3>@Model.BannerTitle</h3>
 </div>
 <!-- bradcam_area_end -->
 <!-- about_area_start -->
@@ -17,20 +16,20 @@
                     <div class="section_title mb-20px">
                         <span>About Us</span>
                         <h3>
-                            @Model.AboutPage.Content1Title
+                            @Model.Content1Title
                         </h3>
                     </div>
-                    <p>@Model.AboutPage.Content1Description</p>
+                    <p>@Model.Content1Description</p>
                     <a href="#" class="line-button">Learn More</a>
                 </div>
             </div>
             <div class="col-xl-7 col-lg-7">
                 <div class="about_thumb d-flex">
                     <div class="img_1">
-                        <img src="@Model.AboutPage.Content1Picture1Url" alt="">
+                        <img src="@Model.Content1Picture1Url" alt="">
                     </div>
                     <div class="img_2">
-                        <img src="@Model.AboutPage.Content1Picture2Url" alt="">
+                        <img src="@Model.Content1Picture2Url" alt="">
                     </div>
                 </div>
             </div>
@@ -39,10 +38,7 @@
 </div>
 <!-- about_area_end -->
 <!-- about_info_area_start -->
-@foreach (var item in ViewBag.AboutBanner as IEnumerable<AboutSilderPhoto>)
-{
-    <div class="single_slider" style="background-image: url(@item.PhotoUrl)"></div>
-}
+@await Html.PartialAsync("PartialViews/AboutBanner",(IEnumerable<Hotel.Data.Data.CMS.About.AboutSilderPhoto>)ViewBag.AboutBanner)
 <!-- about_info_area_end -->
 <!-- about_main_info_start -->
 <div class="about_main_info">
@@ -51,20 +47,20 @@
             <div class="col-xl-6 col-md-6">
                 <div class="single_about_info">
                     <h3>
-                        @Model.AboutPage.Content2Title
+                        @Model.Content2Title
                     </h3>
                     <p>
-                        @Model.AboutPage.Content2Description
+                        @Model.Content2Description
                     </p>
                 </div>
             </div>
             <div class="col-xl-6 col-md-6">
                 <div class="single_about_info">
                     <h3>
-                        @Model.AboutPage.Content3Title
+                        @Model.Content3Title
                     </h3>
                     <p>
-                        @Model.AboutPage.Content3Description
+                        @Model.Content3Description
                     </p>
                 </div>
             </div>

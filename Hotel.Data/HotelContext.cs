@@ -1,5 +1,6 @@
 ﻿using Hotel.Data.Data.CMS;
 using Hotel.Data.Data.CMS.About;
+using Hotel.Data.Data.CMS.Contact;
 using Hotel.Data.Data.CMS.Layout;
 using Hotel.Data.Data.CMS.MainPage;
 using Microsoft.EntityFrameworkCore;
@@ -21,5 +22,6 @@ namespace Hotel.Data
 		public DbSet<Video>? Video { get; set; }
 		public DbSet<AboutPage>? AboutPage { get; set; }
 		public DbSet<AboutSilderPhoto>? AboutSilderPhoto { get; set; }
+		public DbSet<ContactPage>? ContactPage { get; set; }
 	}
 }
