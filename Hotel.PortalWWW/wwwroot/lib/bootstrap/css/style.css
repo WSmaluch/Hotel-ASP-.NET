@@ -1021,9 +1021,9 @@ h3 {
     margin-left: 10px
 }
 
-.about_bg_1 {
+/*.about_bg_1 {
     background-image: url(../img/banner/about_banner.png)
-}
+}*/
 
 .about_info_area {
     padding-left: 387px;
@@ -1822,9 +1822,9 @@ h3 {
             color: #fff
         }
 
-.breadcam_bg {
+/*.breadcam_bg {
     background-image: url(../img/banner/bradcam.png)
-}
+}*/
 
 .breadcam_bg_1 {
     background-image: url(../img/banner/bradcam2.png)

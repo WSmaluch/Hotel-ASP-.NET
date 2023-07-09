@@ -1,9 +1,11 @@
-﻿@{
+﻿@using Hotel.Data.Data.CMS.About;
+@model Hotel.PortalWWW.Models.AboutViewModel
+@{
     ViewData["Title"] = "About";
 }
 <!-- bradcam_area_start -->
-<div class="bradcam_area breadcam_bg">
-    <h3>About Montana</h3>
+<div class="bradcam_area breadcam_bg" style="background-image:url(@Model.AboutPage.BannerUrl)">
+    <h3>@Model.AboutPage.BannerTitle</h3>
 </div>
 <!-- bradcam_area_end -->
 <!-- about_area_start -->
@@ -15,21 +17,20 @@
                     <div class="section_title mb-20px">
                         <span>About Us</span>
                         <h3>
-                            A Luxuries Hotel <br>
-                            with Nature
+                            @Model.AboutPage.Content1Title
                         </h3>
                     </div>
-                    <p>Suscipit libero pretium nullam potenti. Interdum, blandit phasellus consectetuer dolor ornare dapibus enim ut tincidunt rhoncus tellus sollicitudin pede nam maecenas, dolor sem. Neque sollicitudin enim. Dapibus lorem feugiat facilisi faucibus et. Rhoncus.</p>
+                    <p>@Model.AboutPage.Content1Description</p>
                     <a href="#" class="line-button">Learn More</a>
                 </div>
             </div>
             <div class="col-xl-7 col-lg-7">
                 <div class="about_thumb d-flex">
                     <div class="img_1">
-                        <img src="~/lib/bootstrap/img/about/about_1.png" alt="">
+                        <img src="@Model.AboutPage.Content1Picture1Url" alt="">
                     </div>
                     <div class="img_2">
-                        <img src="~/lib/bootstrap/img/about/about_2.png" alt="">
+                        <img src="@Model.AboutPage.Content1Picture2Url" alt="">
                     </div>
                 </div>
             </div>
@@ -38,15 +39,11 @@
 </div>
 <!-- about_area_end -->
 <!-- about_info_area_start -->
-<div class="about_info_area">
-    <div class="about_active owl-carousel" style="width:74%">
-        <div class="single_slider about_bg_1"></div>
-        <div class="single_slider about_bg_1"></div>
-        <div class="single_slider about_bg_1"></div>
-        <div class="single_slider about_bg_1"></div>
-    </div>
-</div>
-<!-- about_info_area_start -->
+@foreach (var item in ViewBag.AboutBanner as IEnumerable<AboutSilderPhoto>)
+{
+    <div class="single_slider" style="background-image: url(@item.PhotoUrl)"></div>
+}
+<!-- about_info_area_end -->
 <!-- about_main_info_start -->
 <div class="about_main_info">
     <div class="container">
@@ -54,22 +51,20 @@
             <div class="col-xl-6 col-md-6">
                 <div class="single_about_info">
                     <h3>
-                        We Serve Fresh and <br>
-                        Delicious Food
+                        @Model.AboutPage.Content2Title
                     </h3>
                     <p>
-                        Suscipit libero pretium nullam potenti. Interdum, blandit <br> phasellus consectetuer dolor ornare dapibus enim ut tincidunt <br> rhoncus tellus sollicitudin pede nam maecenas, dolor sem. <br> Neque sollicitudin enim. Dapibus lorem feugiat facilisi <br> faucibus et. Rhoncus.
+                        @Model.AboutPage.Content2Description
                     </p>
                 </div>
             </div>
             <div class="col-xl-6 col-md-6">
                 <div class="single_about_info">
                     <h3>
-                        We Serve Fresh and <br>
-                        Delicious Food
+                        @Model.AboutPage.Content3Title
                     </h3>
                     <p>
-                        Suscipit libero pretium nullam potenti. Interdum, blandit <br> phasellus consectetuer dolor ornare dapibus enim ut tincidunt <br> rhoncus tellus sollicitudin pede nam maecenas, dolor sem. <br> Neque sollicitudin enim. Dapibus lorem feugiat facilisi <br> faucibus et. Rhoncus.
+                        @Model.AboutPage.Content3Description
                     </p>
                 </div>
             </div>

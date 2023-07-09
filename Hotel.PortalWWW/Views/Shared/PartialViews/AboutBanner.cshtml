@@ -1,0 +1,10 @@
+﻿@model IEnumerable<Hotel.Data.Data.CMS.About.AboutSilderPhoto>
+
+<div class="about_info_area">
+    <div class="about_active owl-carousel" style="width:74%">
+        @foreach (var item in Model)
+        {
+            <div class="single_slider" style="background-image: url(@item.PhotoUrl)"></div>
+        }
+    </div>
+</div>

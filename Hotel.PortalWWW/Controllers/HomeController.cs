@@ -1,4 +1,5 @@
 ﻿using Hotel.Data;
+using Hotel.Data.Data.CMS.About;
 using Hotel.Data.Data.CMS.MainPage;
 using Hotel.PortalWWW.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,19 +9,17 @@ using System.Diagnostics;
 
 namespace Hotel.PortalWWW.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         //private readonly ILogger<HomeController> _logger;
-        private readonly HotelContext _context;
 
         //public HomeController(ILogger<HomeController> logger)
         //{
         //    _logger = logger;
         //}
 
-        public HomeController(HotelContext context)
+        public HomeController(HotelContext context) : base(context)
         {
-            _context = context;
         }
 
         public IActionResult Index()
@@ -42,10 +41,28 @@ namespace Hotel.PortalWWW.Controllers
             return View();
         }
 
-		public IActionResult About()
-		{
-			return View();
-		}
+        public IActionResult About()
+        {
+            var aboutPage = _context.AboutPage.FirstOrDefault();
+            var layout = _context.Layout.FirstOrDefault();
+
+            ViewBag.AboutBanner =
+            (
+                from aboutPhoto in _context.AboutSilderPhoto
+                where aboutPhoto.IsActive == true
+                select aboutPhoto
+            ).ToList();
+
+            var viewModel = new AboutViewModel
+            {
+                Layout = layout,
+                AboutPage = aboutPage,
+                AboutBanner = ViewBag.AboutBanner as IEnumerable<Hotel.Data.Data.CMS.About.AboutSilderPhoto>
+            };
+
+            return View(viewModel);
+        }
+
 
         public IActionResult Rooms()
         {
