@@ -1,0 +1,22 @@
+﻿@model IEnumerable<Hotel.Data.Data.CMS.Offers.Offer>
+@foreach (var offer in Model)
+{
+    string[] details = offer.Details.Split(";");
+    <div class="col-xl-4 col-md-4">
+        <div class="single_offers">
+            <div class="about_thumb">
+                <img src="@offer.PhotoUrl" alt="">
+            </div>
+            <h3>
+                @offer.Title
+            </h3>
+            <ul>
+                @foreach (var detail in details)
+                {
+                    <li>@detail</li>
+                }
+            </ul>
+            <a href="#" class="book_now">book now</a>
+        </div>
+    </div>
+}

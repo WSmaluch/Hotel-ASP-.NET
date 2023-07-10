@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Hotel.Data.Data.CMS.Blog.Post>
+@{
+    string checkLength(string text)
+    {
+        if(text.Length>25)
+        {
+            var shortText = text.Substring(0,22);
+            text = shortText + "...";
+        }
+        return text;
+    }
+}
+@foreach(var post in Model)
+{
+    <div class="media post_item">
+        <img src="@post.PhotoUrl" alt="post" width="80" height="80">
+        <div class="media-body">
+            <a href="single-blog.html">
+                <h3>@checkLength(post.Content)</h3>
+            </a>
+            <p>@post.AddedDate.ToString("d")</p>
+        </div>
+    </div>
+}

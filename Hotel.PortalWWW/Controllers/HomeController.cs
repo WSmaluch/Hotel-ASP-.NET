@@ -37,6 +37,18 @@ namespace Hotel.PortalWWW.Controllers
                   where video.IsActive == true
                   select video
                ).ToList();
+            ViewBag.AboutUs =
+            (
+                   from about in _context.AboutPage
+                   where about.IsActive == true
+                   select about
+                ).ToList().FirstOrDefault();
+            ViewBag.Offers =
+            (
+                   from offer in _context.Offer
+                   where offer.IsActive == true
+                   select offer
+                ).ToList();
 
             return View();
         }
@@ -44,6 +56,12 @@ namespace Hotel.PortalWWW.Controllers
         public IActionResult About()
         {
             var aboutPage = _context.AboutPage.FirstOrDefault(); //important
+            ViewBag.AboutUs =
+            (
+                   from about in _context.AboutPage
+                   where about.IsActive == true
+                   select about
+                ).ToList().FirstOrDefault();
             ViewBag.AboutBanner =
             (
                    from aboutPhoto in _context.AboutSilderPhoto
@@ -57,11 +75,24 @@ namespace Hotel.PortalWWW.Controllers
 
         public IActionResult Rooms()
         {
+            ViewBag.Offers =
+            (
+                   from offer in _context.Offer
+                   where offer.IsActive == true
+                   select offer
+                ).ToList();
             return View();
         }
 
         public IActionResult Blog()
         {
+            //var blogPage = _context.Post;
+            ViewBag.Posts =
+            (
+                   from post in _context.Post
+                   where post.IsActive == true
+                   select post
+                ).ToList();
             return View();
         }
 
