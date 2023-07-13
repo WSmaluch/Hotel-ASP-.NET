@@ -1,4 +1,6 @@
-﻿using Hotel.Data.Data.CMS;
+﻿using Hotel.Data.Data.Booking;
+using Hotel.Data.Data.Booking.Extensions;
+using Hotel.Data.Data.CMS;
 using Hotel.Data.Data.CMS.About;
 using Hotel.Data.Data.CMS.Blog;
 using Hotel.Data.Data.CMS.Contact;
@@ -9,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.Data
 {
-	public class HotelContext : DbContext
+    public class HotelContext : DbContext
 	{
 		public HotelContext(DbContextOptions<HotelContext> options)
 			: base(options)
@@ -27,5 +29,11 @@ namespace Hotel.Data
 		public DbSet<ContactPage>? ContactPage { get; set; }
 		public DbSet<Post>? Post { get; set; }
 		public DbSet<Offer>? Offer { get; set; }
-	}
+		public DbSet<Facilities>? Facilities { get; set; }
+		public DbSet<Types>? Types { get; set; }
+		public DbSet<Room>? Room { get; set; }
+
+
+        
+    }
 }

@@ -11,11 +11,6 @@ namespace Hotel.PortalWWW.Controllers
         public BaseController(HotelContext context)
         {
             _context = context;
-
-
-           
-
-
         }
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {

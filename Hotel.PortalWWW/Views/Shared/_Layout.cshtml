@@ -1,5 +1,4 @@
-﻿
-<!doctype html>
+﻿<!doctype html>
 <html class="no-js" lang="zxx">
 
 <head>
@@ -90,7 +89,7 @@
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
         <![endif]-->
     <!-- header-start -->
-   @* naglowek tez jest w body*@
+    @* naglowek tez jest w body*@
     <!-- header-end -->
     @RenderBody()
 
@@ -162,7 +161,6 @@
         </div>
     </div>
     <!-- instragram_area_end -->
-
     <!-- footer -->
     <footer class="footer">
         <div class="footer_top">
@@ -197,10 +195,10 @@
                                 Navigation
                             </h3>
                             <ul>
-                                <li><a href="#">Home</a></li>
-                                <li><a href="#">Rooms</a></li>
+                                <li><a href="@Url.Action("Index","Home")">Home</a></li>
+                                <li><a href="@Url.Action("Rooms","Home")">Rooms</a></li>
                                 <li><a href="@Url.Action("About","Home")">About</a></li>
-                                <li><a href="#">News</a></li>
+                                <li><a href="@Url.Action("Blog","Home")">Blog</a></li>
                             </ul>
                         </div>
                     </div>
