@@ -34,6 +34,5 @@ namespace Hotel.Data
 		public DbSet<Room>? Room { get; set; }
 
 
-        
     }
 }

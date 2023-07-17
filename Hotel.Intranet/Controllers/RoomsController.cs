@@ -10,23 +10,24 @@ using Hotel.Data.Data.Booking;
 
 namespace Hotel.Intranet.Controllers
 {
-    public class RoomController : Controller
+    public class RoomsController : Controller
     {
         private readonly HotelContext _context;
 
-        public RoomController(HotelContext context)
+        public RoomsController(HotelContext context)
         {
             _context = context;
         }
 
-        // GET: Room
+        // GET: Rooms
         public async Task<IActionResult> Index()
         {
-            var hotelContext = _context.Room.Include(r => r.Type);
-            return View(await hotelContext.ToListAsync());
+            var rooms = await _context.Room.Include(r => r.Type).Include(r => r.Facilities).ToListAsync();
+            return View(rooms);
         }
 
-        // GET: Room/Details/5
+
+        // GET: Rooms/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Room == null)
@@ -36,6 +37,7 @@ namespace Hotel.Intranet.Controllers
 
             var room = await _context.Room
                 .Include(r => r.Type)
+                .Include(r => r.Facilities)
                 .FirstOrDefaultAsync(m => m.IdRoom == id);
             if (room == null)
             {
@@ -45,31 +47,51 @@ namespace Hotel.Intranet.Controllers
             return View(room);
         }
 
-        // GET: Room/Create
+        // GET: Rooms/Create
         public IActionResult Create()
         {
-            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Description");
+            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name");
+            ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
             return View();
         }
 
-        // POST: Room/Create
+
+        // POST: Rooms/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdRoom,RoomNumber,Price,PhotosURL,TypeId,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Room room)
+        public async Task<IActionResult> Create([Bind("IdRoom,RoomNumber,Price,PhotosURL,TypeId,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Room room, List<int> facilities)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
+                if (facilities != null)
+                {
+                    // Dodaj wybrane udogodnienia do pokoju
+                    foreach (var facilityId in facilities)
+                    {
+                        var facility = await _context.Facilities.FindAsync(facilityId);
+                        if (facility != null)
+                        {
+                            room.Facilities.Add(facility);
+                        }
+                    }
+                //}
+                room.AddedDate= DateTime.Now;
+                room.AddedBy = "Admin";
                 _context.Add(room);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Description", room.TypeId);
+
+            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", room.TypeId);
+            ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
+
             return View(room);
         }
 
-        // GET: Room/Edit/5
+
+        // GET: Rooms/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Room == null)
@@ -86,7 +108,7 @@ namespace Hotel.Intranet.Controllers
             return View(room);
         }
 
-        // POST: Room/Edit/5
+        // POST: Rooms/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -122,7 +144,7 @@ namespace Hotel.Intranet.Controllers
             return View(room);
         }
 
-        // GET: Room/Delete/5
+        // GET: Rooms/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Room == null)
@@ -141,7 +163,7 @@ namespace Hotel.Intranet.Controllers
             return View(room);
         }
 
-        // POST: Room/Delete/5
+        // POST: Rooms/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -4,6 +4,7 @@ using Hotel.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Data.Migrations
 {
     [DbContext(typeof(HotelContext))]
-    partial class HotelContextModelSnapshot : ModelSnapshot
+    [Migration("20230717181827_UpdateRooms3")]
+    partial class UpdateRooms3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +23,6 @@ namespace Hotel.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("FacilitiesRoom", b =>
-                {
-                    b.Property<int>("FacilitiesIdFacility")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoomsIdRoom")
-                        .HasColumnType("int");
-
-                    b.HasKey("FacilitiesIdFacility", "RoomsIdRoom");
-
-                    b.HasIndex("RoomsIdRoom");
-
-                    b.ToTable("FacilitiesRoom");
-                });
 
             modelBuilder.Entity("Hotel.Data.Data.Booking.Extensions.Facilities", b =>
                 {
@@ -70,7 +57,12 @@ namespace Hotel.Data.Migrations
                     b.Property<DateTime?>("RemovedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
                     b.HasKey("IdFacility");
+
+                    b.HasIndex("RoomId");
 
                     b.ToTable("Facilities");
                 });
@@ -701,19 +693,15 @@ namespace Hotel.Data.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("FacilitiesRoom", b =>
+            modelBuilder.Entity("Hotel.Data.Data.Booking.Extensions.Facilities", b =>
                 {
-                    b.HasOne("Hotel.Data.Data.Booking.Extensions.Facilities", null)
-                        .WithMany()
-                        .HasForeignKey("FacilitiesIdFacility")
+                    b.HasOne("Hotel.Data.Data.Booking.Room", "Room")
+                        .WithMany("Facilities")
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Hotel.Data.Data.Booking.Room", null)
-                        .WithMany()
-                        .HasForeignKey("RoomsIdRoom")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("Hotel.Data.Data.Booking.Room", b =>
@@ -730,6 +718,11 @@ namespace Hotel.Data.Migrations
             modelBuilder.Entity("Hotel.Data.Data.Booking.Extensions.Types", b =>
                 {
                     b.Navigation("Rooms");
+                });
+
+            modelBuilder.Entity("Hotel.Data.Data.Booking.Room", b =>
+                {
+                    b.Navigation("Facilities");
                 });
 #pragma warning restore 612, 618
         }

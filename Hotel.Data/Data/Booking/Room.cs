@@ -13,6 +13,7 @@ namespace Hotel.Data.Data.Booking
         public string PhotosURL { get; set; }
         public int TypeId { get; set; }
         public Types Type { get; set; }
+        public List<Facilities> Facilities { get; set; } = new List<Facilities>();
 
     }
 }
