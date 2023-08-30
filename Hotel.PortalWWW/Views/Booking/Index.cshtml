@@ -1,0 +1,42 @@
+﻿@model Hotel.PortalWWW.Models.BookingModel
+
+<!-- bradcam_area_start -->
+<div class="bradcam_area breadcam_bg_1">
+    <h3>Avaliable Rooms</h3>
+</div>
+<!-- bradcam_area_end -->
+<div class="col-12 col-sm-12 col-md-12 col-lg-12 main-col">
+    <form action="#" method="post" class="cart style2">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Room Number</th>
+                    <th>Room Type</th>
+                    <th>Price</th>
+                    <th>Facilities</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var room in Model.rooms)
+                {
+                    <tr style="max-height: 100px;">
+                        <td><img height="100px" src="@room.PhotosURL" alt="Room Image"></td>
+                        <td>@room.RoomNumber</td>
+                        <td>@room.TypeId</td>
+                        <td>@room.Price</td>
+                        <td>
+                            <ul>
+                                @foreach (var facility in Model.facilities)
+                                {
+                                    <li>@facility.NameFacility</li>
+                                }
+                            </ul>
+                        </td>
+                        <td><a href="/Booking/Form/@room.IdRoom?checkIn=@ViewBag.CheckIn&checkOut=@ViewBag.CheckOut&adults=@ViewBag.Adults&children=@ViewBag.Children">@room.IdRoom</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+</div>

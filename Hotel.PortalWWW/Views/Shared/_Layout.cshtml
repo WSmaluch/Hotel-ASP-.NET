@@ -1,4 +1,5 @@
-﻿<!doctype html>
+﻿@model BookingModel
+<!doctype html>
 <html class="no-js" lang="zxx">
 
 <head>
@@ -255,48 +256,37 @@
 
     <!-- link that opens popup -->
     <!-- form itself end-->
-    <form id="test-form" class="white-popup-block mfp-hide">
+    <form id="test-form" class="white-popup-block mfp-hide" action="/Booking/Index" method="get">
         <div class="popup_box ">
             <div class="popup_inner">
                 <h3>Check Availability</h3>
-                <form action="#">
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <input id="datepicker" placeholder="Check in date">
-                        </div>
-                        <div class="col-xl-6">
-                            <input id="datepicker2" placeholder="Check out date">
-                        </div>
-                        <div class="col-xl-6">
-                            <select class="form-select wide" id="default-select" class="">
-                                <option data-display="Adult">1</option>
-                                <option value="1">2</option>
-                                <option value="2">3</option>
-                                <option value="3">4</option>
-                            </select>
-                        </div>
-                        <div class="col-xl-6">
-                            <select class="form-select wide" id="default-select" class="">
-                                <option data-display="Children">1</option>
-                                <option value="1">2</option>
-                                <option value="2">3</option>
-                                <option value="3">4</option>
-                            </select>
-                        </div>
-                        <div class="col-xl-12">
-                            <select class="form-select wide" id="default-select" class="">
-                                <option data-display="Room type">Room type</option>
-                                <option value="1">Laxaries Rooms</option>
-                                <option value="2">Deluxe Room</option>
-                                <option value="3">Signature Room</option>
-                                <option value="4">Couple Room</option>
-                            </select>
-                        </div>
-                        <div class="col-xl-12">
-                            <button type="submit" class="boxed-btn3">Check Availability</button>
-                        </div>
+                <div class="row">
+                    <div class="col-xl-6">
+                        <input name="checkin" id="datepicker" placeholder="Check in date" type="text">
                     </div>
-                </form>
+                    <div class="col-xl-6">
+                        <input name="checkout" id="datepicker2" placeholder="Check out date" type="text">
+                    </div>
+                    <div class="col-xl-6">
+                        <select class="form-select wide" id="default-select-adult" name="adults">
+                            <option data-display="Adult">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="col-xl-6">
+                        <select class="form-select wide" id="default-select-children" name="children">
+                            <option data-display="Children">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    <div class="col-xl-12">
+                        <button type="submit" class="boxed-btn3">Check Availability</button>
+                    </div>
+                </div>
             </div>
         </div>
     </form>

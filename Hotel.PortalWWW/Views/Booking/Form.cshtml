@@ -1,0 +1,40 @@
+﻿@model Hotel.PortalWWW.Models.BookingModel
+@{
+    ViewData["Title"] = "Form";
+}
+
+<!-- bradcam_area_start -->
+<div class="bradcam_area breadcam_bg_1">
+    <h3>Forms</h3>
+</div>
+
+<h1>Your Booking Details</h1>
+<p>Check-In: @ViewBag.CheckIn</p>
+<p>Check-Out: @ViewBag.CheckOut</p>
+<p>Adults: @ViewBag.Adults</p>
+<p>Children: @ViewBag.Children</p>
+
+<h2>Additional Information</h2>
+<form action="/Booking/Submit" method="post">
+    <input type="hidden" name="roomId" value="@ViewBag.RoomId" />
+    <input type="hidden" name="checkIn" value="@ViewBag.CheckIn" />
+    <input type="hidden" name="checkOut" value="@ViewBag.CheckOut" />
+    <input type="hidden" name="adults" value="@ViewBag.Adults" />
+    <input type="hidden" name="children" value="@ViewBag.Children" />
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="phone">Phone:</label>
+    <input type="tel" id="phone" name="phone" required><br><br>
+
+    <label for="specialRequests">Special Requests:</label>
+    <textarea id="specialRequests" name="specialRequests" rows="4"></textarea><br><br>
+
+    <!-- Additional form fields can be added here -->
+
+    <button type="submit">Submit</button>
+</form>
