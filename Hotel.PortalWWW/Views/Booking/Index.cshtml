@@ -6,6 +6,9 @@
 </div>
 <!-- bradcam_area_end -->
 <div class="col-12 col-sm-12 col-md-12 col-lg-12 main-col">
+    <p>Check-In: @ViewBag.CheckIn</p>
+    <p>Check-Out: @ViewBag.CheckOut</p>
+    <p>Adults: @ViewBag.Adults</p>
     <form action="#" method="post" class="cart style2">
         <table class="table table-bordered">
             <thead>
@@ -33,7 +36,7 @@
                                 }
                             </ul>
                         </td>
-                        <td><a href="/Booking/Form/@room.IdRoom?checkIn=@ViewBag.CheckIn&checkOut=@ViewBag.CheckOut&adults=@ViewBag.Adults&children=@ViewBag.Children">@room.IdRoom</a></td>
+                        <td><a href="/Booking/Form?roomId=@room.IdRoom&checkIn=@ViewBag.CheckIn&checkOut=@ViewBag.CheckOut&adults=@ViewBag.Adults&children=@ViewBag.Children">@room.IdRoom</a></td>
                     </tr>
                 }
             </tbody>

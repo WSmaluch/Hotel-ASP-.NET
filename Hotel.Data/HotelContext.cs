@@ -32,6 +32,7 @@ namespace Hotel.Data
 		public DbSet<Facilities>? Facilities { get; set; }
 		public DbSet<Types>? Types { get; set; }
 		public DbSet<Room>? Room { get; set; }
+		public DbSet<Reservation>? Reservations { get; set; }
 
 
     }

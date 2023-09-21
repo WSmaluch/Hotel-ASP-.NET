@@ -1,4 +1,4 @@
-﻿@model Hotel.PortalWWW.Models.BookingModel
+﻿@*@model Hotel.PortalWWW.Models.BookingModel
 @{
     ViewData["Title"] = "Form";
 }
@@ -13,6 +13,7 @@
 <p>Check-Out: @ViewBag.CheckOut</p>
 <p>Adults: @ViewBag.Adults</p>
 <p>Children: @ViewBag.Children</p>
+<p>RoomID: @ViewBag.RoomId</p>
 
 <h2>Additional Information</h2>
 <form action="/Booking/Submit" method="post">
@@ -38,3 +39,119 @@
 
     <button type="submit">Submit</button>
 </form>
+*@
+
+@model Hotel.PortalWWW.Models.BookingModel
+@{
+    ViewData["Title"] = "Form";
+}
+
+<style>
+    /* Styl dla głównego kontenera */
+    .container {
+        margin-top: 20px;
+    }
+
+    /* Styl dla lewej i prawej strony */
+    .col-md-6 {
+        padding: 20px;
+    }
+
+    /* Styl dla tytułów sekcji */
+    h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    /* Styl dla etykiet i pól tekstowych */
+    label {
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    /* Styl dla przycisku Submit */
+    button[type="submit"] {
+        background-color: #007BFF;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+    /* Styl dla podsumowania rezerwacji */
+    .booking-summary {
+        background-color: #f5f5f5;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+    }
+
+    /* Dodatkowe style dla podsumowania rezerwacji lub innych elementów */
+
+</style>
+<!-- bradcam_area_start -->
+<div class="bradcam_area breadcam_bg_1">
+    <h3>Forms</h3>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Lewa strona - Dane klienta -->
+        <div class="col-md-6">
+            <h2>Fill Out Your Details</h2>
+            <form action="/Booking/Submit" method="post">
+                <input type="hidden" name="roomId" value="@ViewBag.RoomId" />
+                <input type="hidden" name="checkIn" value="@ViewBag.CheckIn" />
+                <input type="hidden" name="checkOut" value="@ViewBag.CheckOut" />
+                <input type="hidden" name="adults" value="@ViewBag.Adults" />
+                <input type="hidden" name="children" value="@ViewBag.Children" />
+
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br><br>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br><br>
+
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" name="phone" required><br><br>
+
+                <label for="specialRequests">Special Requests:</label>
+                <textarea id="specialRequests" name="specialRequests" rows="4"></textarea><br><br>
+
+                <!-- Dodatkowe pola formularza klienta -->
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+        <!-- Prawa strona - Booking Summary -->
+        <div class="col-md-6">
+            <h2>Booking Summary</h2>
+            <p>Check-In: @ViewBag.CheckIn</p>
+            <p>Check-Out: @ViewBag.CheckOut</p>
+            <p>Adults: @ViewBag.Adults</p>
+            <p>Children: @ViewBag.Children</p>
+            <p>RoomID: @ViewBag.RoomId</p>
+            <p>Price: @ViewBag.Price</p>
+
+            <!-- Dodatkowe informacje o rezerwacji -->
+
+        </div>
+    </div>
+</div>

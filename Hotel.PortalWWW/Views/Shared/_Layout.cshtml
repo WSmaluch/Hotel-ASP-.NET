@@ -257,27 +257,30 @@
     <!-- link that opens popup -->
     <!-- form itself end-->
     <form id="test-form" class="white-popup-block mfp-hide" action="/Booking/Index" method="get">
-        <div class="popup_box ">
+        <div class="popup_box">
             <div class="popup_inner">
                 <h3>Check Availability</h3>
                 <div class="row">
                     <div class="col-xl-6">
-                        <input name="checkin" id="datepicker" placeholder="Check in date" type="text">
+                        <label for="checkin">Check-in Date:</label>
+                        <input name="checkin" id="datepicker" type="text" placeholder="Select date">
                     </div>
                     <div class="col-xl-6">
-                        <input name="checkout" id="datepicker2" placeholder="Check out date" type="text">
+                        <label for="checkout">Check-out Date:</label>
+                        <input name="checkout" id="datepicker2" type="text" placeholder="Select date">
                     </div>
                     <div class="col-xl-6">
+                        <label for="adults">Number of Adults:</label>
                         <select class="form-select wide" id="default-select-adult" name="adults">
-                            <option data-display="Adult">1</option>
+                            <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
-                            <option value="4">4</option>
                         </select>
                     </div>
                     <div class="col-xl-6">
+                        <label for="children">Number of Children:</label>
                         <select class="form-select wide" id="default-select-children" name="children">
-                            <option data-display="Children">0</option>
+                            <option value="0" selected>0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -290,6 +293,7 @@
             </div>
         </div>
     </form>
+
     <!-- form itself end -->
     <!-- JS here -->
     <script src="~/lib/bootstrap/js/vendor/modernizr-3.5.0.min.js"></script>
@@ -324,15 +328,19 @@
             iconsLibrary: 'fontawesome',
             icons: {
                 rightIcon: '<span class="fa fa-caret-down"></span>'
-            }
+            },
+            defaultViewDate: { year: new Date().getFullYear(), month: new Date().getMonth(), day: new Date().getDate() },
+            
         });
         $('#datepicker2').datepicker({
             iconsLibrary: 'fontawesome',
             icons: {
                 rightIcon: '<span class="fa fa-caret-down"></span>'
-            }
-
+            },
+            defaultViewDate: { year: new Date().getFullYear(), month: new Date().getMonth(), day: new Date().getDate() },
+            
         });
+
     </script>
 
 
