@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hotel.PortalWWW", "Hotel.Po
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hotel.Intranet", "Hotel.Intranet\Hotel.Intranet.csproj", "{BEC12D63-B1C0-4802-9E8D-D02083111E5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotel.Data", "Hotel.Data\Hotel.Data.csproj", "{D1A6808C-8B24-4208-8843-2FB26C4C129F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hotel.Data", "Hotel.Data\Hotel.Data.csproj", "{D1A6808C-8B24-4208-8843-2FB26C4C129F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
