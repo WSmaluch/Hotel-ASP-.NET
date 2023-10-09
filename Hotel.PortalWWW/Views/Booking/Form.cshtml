@@ -45,113 +45,268 @@
 @{
     ViewData["Title"] = "Form";
 }
-
+<div class="bradcam_area breadcam_bg_1">
+    <h3>Avaliable Rooms</h3>
+</div>
 <style>
-    /* Styl dla głównego kontenera */
-    .container {
-        margin-top: 20px;
+    body {
+        background-image: url('https://i.imgur.com/zidV3bJ.png');
+        background-repeat: no-repeat, repeat;
+        background-color: white;
+        background-position: center top 24%;
     }
 
-    /* Styl dla lewej i prawej strony */
-    .col-md-6 {
-        padding: 20px;
+    #content {
+        margin-left: 11%;
     }
 
-    /* Styl dla tytułów sekcji */
-    h2 {
-        font-size: 24px;
-        margin-bottom: 10px;
+    #summary {
+        background-color: white;
+        height: max-content;
+        width: 15%;
+        margin-left: 2%;    
+        padding: 1.8%;
+        margin-top: 2.5%;
+        border-radius: 7px;
+        font-size: 20px;
+        float: left;
+        font-size: medium;
     }
 
-    /* Styl dla etykiet i pól tekstowych */
-    label {
-        font-weight: bold;
+    #offer {
+        background-color: white;
+        height: 650px;
+        width: fit-content;
+        border-radius: 7px;
+        font-size: 20px;
+        margin-left: 2%;
+        float: left;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 2%;
     }
 
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    textarea {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 16px;
-    }
-
-    /* Styl dla przycisku Submit */
-    button[type="submit"] {
-        background-color: #007BFF;
-        color: #fff;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-        button[type="submit"]:hover {
-            background-color: #0056b3;
+        #offer img {
+            width: 100%;
+            border-radius: 5px;
+            float: left;
         }
 
-    /* Styl dla podsumowania rezerwacji */
-    .booking-summary {
-        background-color: #f5f5f5;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 20px;
+    #description {
+        float: left;
+        padding: 2%;
+        float: left;
+        font-size: 80%;
     }
 
-    /* Dodatkowe style dla podsumowania rezerwacji lub innych elementów */
+    #price {
+        text-align: center;
+        margin-top: auto;
+    }
 
+    button {
+        display: inline-block;
+        border: 2px solid #02464F;
+        background-color: #02464F;
+        color: white;
+        padding: 2% 3.5%;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        font-weight: bold;
+        margin-left: 2%;
+        margin-bottom: 3%;
+        border-radius: 15px;
+        width: 80%;
+        text-decoration: none;
+    }
+
+    #rooms {
+        float: left;
+        height: 700px;
+        width: 65%;
+        float: left;
+        overflow-y:scroll;
+        margin-top:2%;
+    }
+
+        #rooms::-webkit-scrollbar {
+            display: none;
+        }
+
+    #zzz {
+        float: center;
+        clear: both;
+        padding-top: 5%;
+    }
 </style>
-<!-- bradcam_area_start -->
-<div class="bradcam_area breadcam_bg_1">
-    <h3>Forms</h3>
-</div>
+    <div id="content">
+        <div id="rooms">
+            <table>
+                <tr>
+                    <td>
+                        <div id="offer">
+                            <div>
+                                <img src="https://i.imgur.com/aDKoVyp.jpg">
+                            </div>
+                            <div id="description">
+                            <b>NON-REFUNDABLE OFFER Breakfast and supper</b>
+                                <ul>
+                                    <li>
+                                        Breakfast (7.00 - 11.00) - special buffet in the Czerwona Restaurant
+                                    </li>
+                                    <li>
+                                        Dinner (18.30 - 21.00) - guest buffet at the Czerwona Restaurant
+                                    </li>
+                                    <li>
+                                        Tropicana (swimming pools, jacuzzi, slides) open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
+                                    </li>
+                                    <li>
+                                        Gym, open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
+                                        Children's club (9.00 - 18.00)
+                                    </li>
+                                    <li>
+                                        Children's club (9.00 - 18.00)
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="price">
+                                <b>$1337.45</b><br><br>
+                                <button id="button">Book</button>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="offer">
+                            <div>
+                                <img src="https://i.imgur.com/aDKoVyp.jpg">
+                            </div>
+                            <div id="description">
+                            <b>NON-REFUNDABLE OFFER Breakfast and supper</b>
+                                    <ul>
+                                        <li>
+                                            Breakfast (7.00 - 11.00) - special buffet in the Czerwona Restaurant
+                                        </li>
+                                        <li>
+                                            Dinner (18.30 - 21.00) - guest buffet at the Czerwona Restaurant
+                                        </li>
+                                        <li>
+                                            Tropicana (swimming pools, jacuzzi, slides) open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
+                                        </li>
+                                        <li>
+                                            Gym, open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
+                                            Children's club (9.00 - 18.00)
+                                        </li>
+                                        <li>
+                                            Children's club (9.00 - 18.00)
+                                        </li>
+                                    </ul>
+                            </div>
+                            <div id="price">
+                                <b>$1337.45</b><br><br>
+                                <button id="button">Book</button>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="offer">
+                            <div>
+                                <img src="https://i.imgur.com/aDKoVyp.jpg">
+                            </div>
+                            <div id="description">
+                            <b>NON-REFUNDABLE OFFER Breakfast and supper</b>
+                                    <ul>
+                                        <li>
+                                            Breakfast (7.00 - 11.00) - special buffet in the Czerwona Restaurant
+                                        </li>
+                                        <li>
+                                            Dinner (18.30 - 21.00) - guest buffet at the Czerwona Restaurant
+                                        </li>
+                                        <li>
+                                            Tropicana (swimming pools, jacuzzi, slides) open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
+                                        </li>
+                                        <li>
+                                            Gym, open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
+                                            Children's club (9.00 - 18.00)
+                                        </li>
+                                        <li>
+                                            Children's club (9.00 - 18.00)
+                                        </li>
+                                    </ul>
+                            </div>
+                            <div id="price">
+                                <b>$1337.45</b><br><br>
+                                <button id="button">Book</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="offer">
+                            <div>
+                                <img src="https://i.imgur.com/aDKoVyp.jpg">
+                            </div>
+                            <div id="description">
+                            <b>NON-REFUNDABLE OFFER Breakfast and supper</b>
+                                    <ul>
+                                        <li>
+                                            Breakfast (7.00 - 11.00) - special buffet in the Czerwona Restaurant
+                                        </li>
+                                        <li>
+                                            Dinner (18.30 - 21.00) - guest buffet at the Czerwona Restaurant
+                                        </li>
+                                        <li>
+                                            Tropicana (swimming pools, jacuzzi, slides) open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
+                                        </li>
+                                        <li>
+                                            Gym, open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
+                                            Children's club (9.00 - 18.00)
+                                        </li>
+                                        <li>
+                                            Children's club (9.00 - 18.00)
+                                        </li>
+                                    </ul>
+                            </div>
+                            <div id="price">
+                                <b>$1337.45</b><br><br>
+                                <button id="button">Book</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
 
-<div class="container">
-    <div class="row">
-        <!-- Lewa strona - Dane klienta -->
-        <div class="col-md-6">
-            <h2>Fill Out Your Details</h2>
-            <form action="/Booking/Submit" method="post">
-                <input type="hidden" name="roomId" value="@ViewBag.RoomId" />
-                <input type="hidden" name="checkIn" value="@ViewBag.CheckIn" />
-                <input type="hidden" name="checkOut" value="@ViewBag.CheckOut" />
-                <input type="hidden" name="adults" value="@ViewBag.Adults" />
-                <input type="hidden" name="children" value="@ViewBag.Children" />
-
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required><br><br>
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required><br><br>
-
-                <label for="phone">Phone:</label>
-                <input type="tel" id="phone" name="phone" required><br><br>
-
-                <label for="specialRequests">Special Requests:</label>
-                <textarea id="specialRequests" name="specialRequests" rows="4"></textarea><br><br>
-
-                <!-- Dodatkowe pola formularza klienta -->
-
-                <button type="submit">Submit</button>
-            </form>
+            </table>
         </div>
-
-        <!-- Prawa strona - Booking Summary -->
-        <div class="col-md-6">
-            <h2>Booking Summary</h2>
-            <p>Check-In: @ViewBag.CheckIn</p>
-            <p>Check-Out: @ViewBag.CheckOut</p>
-            <p>Adults: @ViewBag.Adults</p>
-            <p>Children: @ViewBag.Children</p>
-            <p>RoomID: @ViewBag.RoomId</p>
-            <p>Price: @ViewBag.Price</p>
-
-            <!-- Dodatkowe informacje o rezerwacji -->
-
+        <div id="summary">
+            <b>01-12-2023 <span style="padding: 0 6% 0;">&rarr;</span> 31-12-2023<br><br></b>
+            <span style="font-size: small;">Number of people</span><br>
+            2 adults
+            <table>
+                <tr>
+                    <td style="width: 80%;">Stay value</td>
+                    <td>$300.42</td>
+                </tr>
+                <tr>
+                    <td>Value of services</td>
+                    <td>$300.42</td>
+                </tr>
+            </table>
+            <hr>
+            <table>
+                <tr style="width: 80%;font-size:larger;font-weight: bold;">
+                    <td style="width: 80%;">Total:</td>
+                    <td>$300.42</td>
+                </tr>
+                <tr style="width: 80%;font-size:small;">
+                    <td>Prepayment</td>
+                    <td style="text-align: right;">$300.42</td>
+                </tr>
+                <tr style="width: 80%;font-size:small;">
+                    <td>Upon arrival</td>
+                    <td style="text-align: right;">$300.42</td>
+                </tr>
+            </table>
         </div>
     </div>
-</div>
+    <div id="zzz"></div>

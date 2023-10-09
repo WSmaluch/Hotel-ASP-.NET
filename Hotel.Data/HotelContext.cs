@@ -33,7 +33,7 @@ namespace Hotel.Data
 		public DbSet<Types>? Types { get; set; }
 		public DbSet<Room>? Room { get; set; }
 		public DbSet<Reservation>? Reservations { get; set; }
-
-
+		public DbSet<Options>? Options { get; set; }
+		public DbSet<ContentItem>? ContentItem { get; set; }
     }
 }

@@ -5,38 +5,231 @@
     <h3>Avaliable Rooms</h3>
 </div>
 <!-- bradcam_area_end -->
-<div class="col-12 col-sm-12 col-md-12 col-lg-12 main-col">
-    <form action="#" method="post" class="cart style2">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Room Number</th>
-                    <th>Room Type</th>
-                    <th>Price</th>
-                    <th>Facilities</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var room in Model.rooms)
+<style>
+    body {
+        background-image: url('https://i.imgur.com/zidV3bJ.png');
+        background-repeat: no-repeat, repeat;
+        background-color: white;
+        background-position: center top 27%;
+    }
+
+    #content {
+        margin-left: 8%;
+    }
+
+    #setings {
+        background-color: white;
+        height: max-content;
+        width: 72%;
+        margin: 2% 0 0 2%;
+        padding: 1%;
+        border-radius: 7px;
+        font-weight: bold;
+        font-size: 20px;
+        float: left;
+    }
+
+    #setings span {
+        border: 1px solid lightgray;
+        width: 40%;
+        padding: 0.5% 2% 0.5%;
+        display: flex;
+        float: left;
+        border-radius: 15px;
+        margin-left: 4%;
+        }
+
+    #setings img {
+        width: 20px;
+        height: 20px;
+        margin-right: 3%;
+        }
+
+    #summary {
+        background-color: white;
+        height: max-content;
+        width: 18%;
+        margin: 2%;
+        padding: 1.8%;
+        border-radius: 7px;
+        font-size: 20px;
+        float: left;
+        font-size: medium;
+    }
+
+    #offers {
+        background-color: white;
+        height: fit-content;
+        width: 68%;
+        position: relative;
+        border-radius: 7px;
+        font-size: 20px;
+        float: left;
+        margin-left: 2%;
+    }
+
+    #offers img {
+            width: 30%;
+            border-radius: 5px;
+            float: left;
+    }
+
+    #description {
+        float: left;
+        padding: 2%;
+        float: left;
+    }
+
+    #price {
+        padding-top: 4%;
+        text-align: center;
+    }
+
+    button {
+        display: inline-block;
+        border: 2px solid #02464F;
+        background-color: #02464F;
+        color: white;
+        padding: 1% 1.5%;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        margin-left: 2%;
+        border-radius: 15px;
+        text-decoration: none;
+    }
+
+    #rooms {
+        float: left;
+        height: 500px;
+        overflow-y: scroll;
+        margin-top: -15%;
+    }
+
+        #rooms::-webkit-scrollbar {
+            display: none;
+        }
+
+    #zzz {
+        float: left;
+        clear: both;
+        width:100%;
+        padding-bottom:10%;
+    }
+</style>
+    <div id="content">
+        <div id="setings">
+        <a class="popup-with-form" href="#test-form">
+           <span>
+           <img src="https://i.imgur.com/hBfDNBV.png">
+                @ViewBag.CheckIn - @ViewBag.CheckOut
+            </span>
+        </a>
+        <span style="margin-left: 10%;">
+                <img src="https://i.imgur.com/1wdIpUZ.png">
+            @ViewBag.Adults
+            @if (ViewBag.Adults == 1)
+            {
+                @:adult
+            }
+            else
+            {
+                @:adults
+            }
+
+            @if (ViewBag.Children > 0)
+            {
+                @ViewBag.Children
+                @if (ViewBag.Children == 1)
                 {
-                    <tr style="max-height: 100px;">
-                        <td><img height="100px" src="@room.PhotosURL" alt="Room Image"></td>
-                        <td>@room.RoomNumber</td>
-                        <td>@room.TypeId</td>
-                        <td>@room.Price</td>
-                        <td>
-                            <ul>
-                                @foreach (var facility in Model.facilities)
-                                {
-                                    <li>@facility.NameFacility</li>
-                                }
-                            </ul>
-                        </td>
-                        <td><a href="/Booking/Form?roomId=@room.IdRoom&checkIn=@ViewBag.CheckIn&checkOut=@ViewBag.CheckOut&adults=@ViewBag.Adults&children=@ViewBag.Children">@room.IdRoom</a></td>
-                    </tr>
+                    @:child
                 }
-            </tbody>
-        </table>
-    </form>
-</div>
+                else
+                {
+                    @:children
+                }
+            }
+            </span>
+        </div>
+        <div id="summary">
+        <b>@ViewBag.CheckIn <span style="padding: 0 6% 0;">&rarr;</span> @ViewBag.CheckOut<br><br></b>
+            <span style="font-size: small;">Number of people</span><br>
+        @ViewBag.Adults
+        @if (ViewBag.Adults == 1)
+        {
+            <span>adult</span>
+        }
+        else
+        {
+            <span>adults</span>
+        }
+        @if (ViewBag.Children > 0)
+        {
+            @ViewBag.Children
+            @if (ViewBag.Children == 1)
+            {
+                <span>child</span>
+            }
+            else
+            {
+                <span>children</span>
+            }
+        }
+            <table>
+                <tr>
+                    <td style="width: 80%;">Stay value</td>
+                    <td>$000</td>
+                </tr>
+                <tr>
+                    <td>Value of services</td>
+                    <td>$000</td>
+                </tr>
+            </table>
+            <hr>
+            <table>
+                <tr style="width: 80%;font-size:larger;font-weight: bold;">
+                    <td style="width: 80%;">Total:</td>
+                    <td>$000</td>
+                </tr>
+                <tr style="width: 80%;font-size:small;">
+                    <td>Prepayment</td>
+                    <td style="text-align: right;">$000</td>
+                </tr>
+                <tr style="width: 80%;font-size:small;">
+                    <td>Upon arrival</td>
+                    <td style="text-align: right;">$000</td>
+                </tr>
+            </table>
+        </div>
+        <div id="rooms">
+            <table style="float: left;width: 114%;">
+            @foreach (var room in Model.rooms)
+            {
+                <tr>
+                    <td>
+                        <div id="offers">
+                            <div>
+                                <img src="@room.PhotosURL" alt="Room Image">
+                            </div>
+                            <div id="description">
+                                Pokój dwuosobowy bez widoku na dolinę Wisły
+                                <ul>
+                                    @foreach (var facility in Model.facilities)
+                                    {
+                                        <li>@facility.NameFacility</li>
+                                    }
+                                </ul>
+                            </div>
+                            <div id="price">
+                                Price from<br>
+                                <b>@room.Price</b><br><br>
+                                <a href="/Booking/Form?roomId=@room.IdRoom&checkIn=@ViewBag.CheckIn&checkOut=@ViewBag.CheckOut&adults=@ViewBag.Adults&children=@ViewBag.Children"><button id="button" style="display: inline-block; margin-right: 10px;">Select room</button></a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </table>
+        </div>
+    </div>
+<div id="zzz"></div>
