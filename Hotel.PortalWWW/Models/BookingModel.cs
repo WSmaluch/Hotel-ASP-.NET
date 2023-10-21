@@ -13,5 +13,6 @@ namespace Hotel.PortalWWW.Models
         public IEnumerable<Facilities> facilities { get; set; } // Lista dostępnych udogodnień
         public IEnumerable<Types> types { get; set; } // Lista dostępnych typów pokoi
         public IEnumerable<Room> rooms { get; set; } // Lista dostępnych pokoi
+        public List<Options> Options { get; set; } 
     }
 }

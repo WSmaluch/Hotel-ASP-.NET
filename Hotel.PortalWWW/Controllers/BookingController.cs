@@ -45,6 +45,7 @@ namespace Hotel.PortalWWW.Controllers
 
             var model = new BookingModel
             {
+                Options = await _context.Options.Include(o => o.ContentItems).ToListAsync(),
                 facilities = await _context.Facilities.ToListAsync(),
                 types = await _context.Types.ToListAsync(),
                 rooms = availableRooms
@@ -68,6 +69,7 @@ namespace Hotel.PortalWWW.Controllers
         {
             var model = new BookingModel
             {
+                Options = await _context.Options.Include(o => o.ContentItems).Where(o=>o.IsActive).ToListAsync(),
                 facilities = await _context.Facilities.ToListAsync(),
                 types = await _context.Types.ToListAsync(),
                 rooms = await _context.Room.ToListAsync()
@@ -81,12 +83,11 @@ namespace Hotel.PortalWWW.Controllers
             ViewBag.Adults = adults;
             ViewBag.Children = children;
             ViewBag.Price = TotalPriceOfBooking(roomId,checkIn,checkOut);
-            //ViewBag.Price = days * (_context.Room.Find(roomId).Price);
-            //totalPrice = (double)(days * _context.Room.Find(roomId).Price);
             
 
             return View(model);
         }
+
         [HttpPost]
         public async Task<IActionResult> Submit(
             int roomId,

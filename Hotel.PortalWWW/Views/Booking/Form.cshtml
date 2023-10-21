@@ -1,47 +1,4 @@
-﻿@*@model Hotel.PortalWWW.Models.BookingModel
-@{
-    ViewData["Title"] = "Form";
-}
-
-<!-- bradcam_area_start -->
-<div class="bradcam_area breadcam_bg_1">
-    <h3>Forms</h3>
-</div>
-
-<h1>Your Booking Details</h1>
-<p>Check-In: @ViewBag.CheckIn</p>
-<p>Check-Out: @ViewBag.CheckOut</p>
-<p>Adults: @ViewBag.Adults</p>
-<p>Children: @ViewBag.Children</p>
-<p>RoomID: @ViewBag.RoomId</p>
-
-<h2>Additional Information</h2>
-<form action="/Booking/Submit" method="post">
-    <input type="hidden" name="roomId" value="@ViewBag.RoomId" />
-    <input type="hidden" name="checkIn" value="@ViewBag.CheckIn" />
-    <input type="hidden" name="checkOut" value="@ViewBag.CheckOut" />
-    <input type="hidden" name="adults" value="@ViewBag.Adults" />
-    <input type="hidden" name="children" value="@ViewBag.Children" />
-
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required><br><br>
-
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required><br><br>
-
-    <label for="phone">Phone:</label>
-    <input type="tel" id="phone" name="phone" required><br><br>
-
-    <label for="specialRequests">Special Requests:</label>
-    <textarea id="specialRequests" name="specialRequests" rows="4"></textarea><br><br>
-
-    <!-- Additional form fields can be added here -->
-
-    <button type="submit">Submit</button>
-</form>
-*@
-
-@model Hotel.PortalWWW.Models.BookingModel
+﻿@model Hotel.PortalWWW.Models.BookingModel
 @{
     ViewData["Title"] = "Form";
 }
@@ -137,146 +94,162 @@
     #zzz {
         float: center;
         clear: both;
-        padding-top: 5%;
+        padding-top: 0%;
     }
+
+    ul{
+        list-style:none;
+    }
+
+    #items img {
+        width: 28px;
+        height: 23px;
+        padding-right:5px;
+    }
+
+    #contactInfo {
+        background-color:white;
+        padding:1rem;
+        border-radius: 15px;
+        margin:0 auto;
+        margin-top:1%;
+    }
+
+       /* #contactInfo input {
+        border:none;
+    }
+
+        #contactInfo input {
+            border-bottom: 1px solid gray;
+
+        }*/
+
+    #contactInfo label
+    {
+        font-size:130%;
+        font-weight:bold;
+    }
+
+    input[type=text], input[type=email], input[type=tel], textarea {
+        height: 50px;
+        width: 460px;
+        margin-bottom:4%;
+    }
+
+    input[type=checkbox], input[radio] {
+        margin-right:1%;
+    }
+    
+
 </style>
     <div id="content">
+    <form action="/Booking/Submit" method="post">
         <div id="rooms">
-            <table>
-                <tr>
-                    <td>
-                        <div id="offer">
-                            <div>
-                                <img src="https://i.imgur.com/aDKoVyp.jpg">
-                            </div>
-                            <div id="description">
-                            <b>NON-REFUNDABLE OFFER Breakfast and supper</b>
-                                <ul>
-                                    <li>
-                                        Breakfast (7.00 - 11.00) - special buffet in the Czerwona Restaurant
-                                    </li>
-                                    <li>
-                                        Dinner (18.30 - 21.00) - guest buffet at the Czerwona Restaurant
-                                    </li>
-                                    <li>
-                                        Tropicana (swimming pools, jacuzzi, slides) open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
-                                    </li>
-                                    <li>
-                                        Gym, open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
-                                        Children's club (9.00 - 18.00)
-                                    </li>
-                                    <li>
-                                        Children's club (9.00 - 18.00)
-                                    </li>
-                                </ul>
-                            </div>
-                            <div id="price">
-                                <b>$1337.45</b><br><br>
-                                <button id="button">Book</button>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="offer">
-                            <div>
-                                <img src="https://i.imgur.com/aDKoVyp.jpg">
-                            </div>
-                            <div id="description">
-                            <b>NON-REFUNDABLE OFFER Breakfast and supper</b>
-                                    <ul>
-                                        <li>
-                                            Breakfast (7.00 - 11.00) - special buffet in the Czerwona Restaurant
-                                        </li>
-                                        <li>
-                                            Dinner (18.30 - 21.00) - guest buffet at the Czerwona Restaurant
-                                        </li>
-                                        <li>
-                                            Tropicana (swimming pools, jacuzzi, slides) open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
-                                        </li>
-                                        <li>
-                                            Gym, open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
-                                            Children's club (9.00 - 18.00)
-                                        </li>
-                                        <li>
-                                            Children's club (9.00 - 18.00)
-                                        </li>
-                                    </ul>
-                            </div>
-                            <div id="price">
-                                <b>$1337.45</b><br><br>
-                                <button id="button">Book</button>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="offer">
-                            <div>
-                                <img src="https://i.imgur.com/aDKoVyp.jpg">
-                            </div>
-                            <div id="description">
-                            <b>NON-REFUNDABLE OFFER Breakfast and supper</b>
-                                    <ul>
-                                        <li>
-                                            Breakfast (7.00 - 11.00) - special buffet in the Czerwona Restaurant
-                                        </li>
-                                        <li>
-                                            Dinner (18.30 - 21.00) - guest buffet at the Czerwona Restaurant
-                                        </li>
-                                        <li>
-                                            Tropicana (swimming pools, jacuzzi, slides) open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
-                                        </li>
-                                        <li>
-                                            Gym, open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
-                                            Children's club (9.00 - 18.00)
-                                        </li>
-                                        <li>
-                                            Children's club (9.00 - 18.00)
-                                        </li>
-                                    </ul>
-                            </div>
-                            <div id="price">
-                                <b>$1337.45</b><br><br>
-                                <button id="button">Book</button>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div id="offer">
-                            <div>
-                                <img src="https://i.imgur.com/aDKoVyp.jpg">
-                            </div>
-                            <div id="description">
-                            <b>NON-REFUNDABLE OFFER Breakfast and supper</b>
-                                    <ul>
-                                        <li>
-                                            Breakfast (7.00 - 11.00) - special buffet in the Czerwona Restaurant
-                                        </li>
-                                        <li>
-                                            Dinner (18.30 - 21.00) - guest buffet at the Czerwona Restaurant
-                                        </li>
-                                        <li>
-                                            Tropicana (swimming pools, jacuzzi, slides) open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
-                                        </li>
-                                        <li>
-                                            Gym, open from: 11.00 - 21.00 Mon-Fri; 9.00 - 21.00 Sat-Sun
-                                            Children's club (9.00 - 18.00)
-                                        </li>
-                                        <li>
-                                            Children's club (9.00 - 18.00)
-                                        </li>
-                                    </ul>
-                            </div>
-                            <div id="price">
-                                <b>$1337.45</b><br><br>
-                                <button id="button">Book</button>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+        
 
+            <div id="bookingForm" style="display:none;">
+                <div id="contactInfo">
+                <label for="name">Guest information:</label>
+                    <table>
+                        <tr>
+                            <td style="width:58%">Name:</td>
+                            <td>Last Name:</td>
+                        </tr>
+                        <tr>
+                            <td ><input type="text" id="name" name="name" required></td>
+                            <td><input type="text" id="lastname" name="lastname" required></td>
+                        </tr>
+                        <tr>
+                            <td>E-mail adress:</td>
+                            <td>Phone number:</td>
+                        </tr>
+                        <tr>
+                            <td><input type="email" id="email" name="email" required></td>
+                            <td><input type="tel" id="phone" name="phone" required></td>
+                        </tr>
+                        <tr>
+                            <td>Address:</td>
+                            <td>Postal code:</td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" id="address" name="address" required></td>
+                            <td><input type="text" id="postalCode" name="postalCode" required></td>
+                        </tr>
+                        <tr>
+                            <td>City:</td>
+                        </tr>
+                        <tr>
+                            <td><input type="text" id="city" name="city" required></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="specialRequestsCheckbox" name="specialRequestsCheckbox" onclick="showSpecialRequests()">I have comments on this booking</td>
+                            
+                        </tr>
+                        <tr style="display:none" id="specialRequestsTr">
+                            <td>Additional comments:</td>
+                        </tr>
+                        <tr style="display:none" id="specialRequestsTr2" >
+                            <td><textarea id="specialRequests" name="specialRequests" rows="4"></textarea></td>
+                        </tr>
+                        
+                    </table>
+                </div>
+                
+                <div id="contactInfo">
+                    <label for="payment">Payment method:</label><br />
+                    <input type="radio" id="payment" name="payment" >Traditional transfer<br/>
+                    <input type="radio" id="payment" name="payment" >Przelewy24
+                </div>
+                
+                <div id="contactInfo">
+                    <label for="formal">Formal consents:</label><br />
+                    <input type="checkbox" id="formal" name="formal">I consent to the Hotel processing and sharing my data for the purpose of conducting marketing activities in the "GOLDEN CARD" loyalty program.<br />
+                    <input type="checkbox" id="formal" name="formal" required>I declare that I have read the Regulations for the Provision of Electronic Services and accept them.<br />
+                    <input type="checkbox" id="formal" name="formal" required>I have read the Privacy Policy and accept its content.<br />
+                    <input type="checkbox" id="formal" name="formal" required>I declare that I have read the Reservation Rules and accept their provisions.<br />
+                    <input type="checkbox" id="formal" name="formal" required>I have read the Hotel Regulations.
+                </div>
+               
+            </div>
+
+            <table id="ooo">             
+                <input type="hidden" name="roomId" value="@ViewBag.RoomId" />
+                <input type="hidden" name="checkIn" value="@ViewBag.CheckIn" />
+                <input type="hidden" name="checkOut" value="@ViewBag.CheckOut" />
+                <input type="hidden" name="adults" value="@ViewBag.Adults" />
+                <input type="hidden" name="children" value="@ViewBag.Children" />
+                
+                
+
+                <tr>
+                    @foreach(var offer in Model.Options.Take(3))
+                    {
+                    <td>
+                        <div id="offer">
+                            <div>
+                                <img src="@offer.PhotoUrl">
+                            </div>
+                            <div id="description">
+                            <b>@offer.Name</b>
+                                    <table>
+                                    @foreach(var o in offer.ContentItems.Take(5))
+                                    {
+                                            <tr>
+                                                <td id="items"><img src='@o.IconUrl'></td>
+                                                <td>@o.Text</td>
+                                            </tr>
+                                    }
+                                </table>
+                            </div>
+                            <div id="price">
+                                <b id="OfferPrice">$@offer.Price</b><br><br>
+                                <button onmousedown="openForm()" onmouseover="calculateTotalPrice(@offer.Price)" type="button">Book</button>
+                            </div>
+                        </div>
+                    </td>
+                    }
             </table>
+            
         </div>
         <div id="summary">
             <b>01-12-2023 <span style="padding: 0 6% 0;">&rarr;</span> 31-12-2023<br><br></b>
@@ -285,28 +258,58 @@
             <table>
                 <tr>
                     <td style="width: 80%;">Stay value</td>
-                    <td>$300.42</td>
+                <td>$<span id="stayValue">@ViewBag.Price</span></td>
                 </tr>
                 <tr>
                     <td>Value of services</td>
-                    <td>$300.42</td>
+                    <td id="valueOfServices">$0.00</td>
                 </tr>
             </table>
             <hr>
             <table>
                 <tr style="width: 80%;font-size:larger;font-weight: bold;">
                     <td style="width: 80%;">Total:</td>
-                    <td>$300.42</td>
+                    <td id="total"></td>
                 </tr>
-                <tr style="width: 80%;font-size:small;">
+                @*<tr style="width: 80%;font-size:small;">
                     <td>Prepayment</td>
                     <td style="text-align: right;">$300.42</td>
                 </tr>
                 <tr style="width: 80%;font-size:small;">
                     <td>Upon arrival</td>
                     <td style="text-align: right;">$300.42</td>
-                </tr>
+                </tr>*@
             </table>
+        <hr/>
+            <button id="submitBtn" type="submit" style="display:none;margin-left:2%;">Book</button>
         </div>
+        </form>
     </div>
     <div id="zzz"></div>
+<script>
+    function calculateTotalPrice(offerPrice) {
+        const stay = parseFloat(document.getElementById('stayValue').innerText);
+        const totalWithStay = stay + offerPrice;
+        document.getElementById('total').innerText = '$' + totalWithStay.toFixed(2);
+        document.getElementById('valueOfServices').innerText = '$' + offerPrice.toFixed(2);
+    }
+    function openForm() {
+        document.getElementById('ooo').style.display = 'none';
+        document.getElementById('submitBtn').style.display = 'block';
+        document.getElementById('bookingForm').style.display = 'block';
+    }
+    function showSpecialRequests()
+    {
+        var checkBox = document.getElementById("specialRequestsCheckbox");
+        var status = document.getElementById("specialRequestsTr");
+        var status2 = document.getElementById("specialRequestsTr2");
+
+        if (checkBox.checked == true) {
+            status.style.display = "block";
+            status2.style.display = "block";
+        } else {
+            status.style.display = "none";
+            status2.style.display = "none";
+        }
+    }
+</script>

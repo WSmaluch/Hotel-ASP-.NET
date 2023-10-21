@@ -4,6 +4,7 @@ using Hotel.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,31 +12,17 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Data.Migrations
 {
     [DbContext(typeof(HotelContext))]
-    partial class HotelContextModelSnapshot : ModelSnapshot
+    [Migration("20231009123233_addOptionsAndContentItem")]
+    partial class addOptionsAndContentItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.23")
+                .HasAnnotation("ProductVersion", "6.0.21")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("ContentItemOptions", b =>
-                {
-                    b.Property<int>("ContentItemsIdContentItem")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OptionsIdOption")
-                        .HasColumnType("int");
-
-                    b.HasKey("ContentItemsIdContentItem", "OptionsIdOption");
-
-                    b.HasIndex("OptionsIdOption");
-
-                    b.ToTable("ContentItemOptions");
-                });
 
             modelBuilder.Entity("FacilitiesRoom", b =>
                 {
@@ -79,6 +66,9 @@ namespace Hotel.Data.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("OptionsIdOption")
+                        .HasColumnType("int");
+
                     b.Property<string>("RemovedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -90,6 +80,8 @@ namespace Hotel.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdContentItem");
+
+                    b.HasIndex("OptionsIdOption");
 
                     b.ToTable("ContentItem");
                 });
@@ -206,13 +198,6 @@ namespace Hotel.Data.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhotoUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
 
                     b.Property<string>("RemovedBy")
                         .HasColumnType("nvarchar(max)");
@@ -871,21 +856,6 @@ namespace Hotel.Data.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("ContentItemOptions", b =>
-                {
-                    b.HasOne("Hotel.Data.Data.Booking.ContentItem", null)
-                        .WithMany()
-                        .HasForeignKey("ContentItemsIdContentItem")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hotel.Data.Data.Booking.Options", null)
-                        .WithMany()
-                        .HasForeignKey("OptionsIdOption")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("FacilitiesRoom", b =>
                 {
                     b.HasOne("Hotel.Data.Data.Booking.Extensions.Facilities", null)
@@ -899,6 +869,13 @@ namespace Hotel.Data.Migrations
                         .HasForeignKey("RoomsIdRoom")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Hotel.Data.Data.Booking.ContentItem", b =>
+                {
+                    b.HasOne("Hotel.Data.Data.Booking.Options", null)
+                        .WithMany("ContentItems")
+                        .HasForeignKey("OptionsIdOption");
                 });
 
             modelBuilder.Entity("Hotel.Data.Data.Booking.Reservation", b =>
@@ -926,6 +903,11 @@ namespace Hotel.Data.Migrations
             modelBuilder.Entity("Hotel.Data.Data.Booking.Extensions.Types", b =>
                 {
                     b.Navigation("Rooms");
+                });
+
+            modelBuilder.Entity("Hotel.Data.Data.Booking.Options", b =>
+                {
+                    b.Navigation("ContentItems");
                 });
 #pragma warning restore 612, 618
         }

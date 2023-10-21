@@ -19,7 +19,6 @@ namespace Hotel.Data
 		}
 
 		public DbSet<Pages> Pages { get; set; } = default!;
-
 		public DbSet<Layout>? Layout { get; set; }
 		public DbSet<Posts>? Posts { get; set; }
 		public DbSet<Banner>? Banner { get; set; }
