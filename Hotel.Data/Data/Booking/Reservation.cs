@@ -20,7 +20,7 @@ namespace Hotel.Data.Data.Booking
         public DateTime CheckOut { get; set; }
         public int NumberOfAdults { get; set; }
         public int NumberOfChildren { get; set; }
-        public string SpecialRequests { get; set; }
+        public string? SpecialRequests { get; set; }
         public double TotalPrice { get; set; }
     }
 }
