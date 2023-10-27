@@ -6,113 +6,108 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
-using Hotel.Data.Data.Booking;
+using Hotel.Data.Data.Booking.Extensions;
 
 namespace Hotel.Intranet.Controllers
 {
-    public class RoomsController : Controller
+    public class TypesController : Controller
     {
         private readonly HotelContext _context;
 
-        public RoomsController(HotelContext context)
+        public TypesController(HotelContext context)
         {
             _context = context;
         }
 
-        // GET: Rooms
+        // GET: Types
         public async Task<IActionResult> Index()
         {
-            var rooms = await _context.Room.Include(r => r.Type).Include(r => r.Facilities).ToListAsync();
-            return View(rooms);
+            var types = await _context.Types.Include(t => t.Rooms).Include(r => r.Facilities).ToListAsync();
+
+            return View(types);
         }
 
-        // GET: Rooms/Details/5
+        // GET: Types/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Room == null)
+            if (id == null || _context.Types == null)
             {
                 return NotFound();
             }
 
-            var room = await _context.Room
-                .Include(r => r.Type)
-                .Include(r => r.Facilities)
-                .FirstOrDefaultAsync(m => m.IdRoom == id);
-            if (room == null)
+            var types = await _context.Types
+                 .Include(t => t.Rooms)
+                 .Include(r => r.Facilities)
+                 .FirstOrDefaultAsync(m => m.IdType == id);
+            if (types == null)
             {
                 return NotFound();
             }
 
-            return View(room);
+            return View(types);
         }
 
-        // GET: Rooms/Create
+        // GET: Types/Create
         public IActionResult Create()
         {
-            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name");
             ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
+            ViewData["Rooms"] = new SelectList(_context.Room, "IdRoom", "Number");
             return View();
         }
 
-        // POST: Rooms/Create
+        // POST: Types/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdRoom,TypeId,Number,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Room room, List<int> facilities)
+        public async Task<IActionResult> Create([Bind("IdType,Name,Capacity,Description,PhotosURL,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types, List<int> facilities)
         {
             //if (ModelState.IsValid)
             //{
             if (facilities != null)
             {
-                // Dodaj wybrane udogodnienia do pokoju
                 foreach (var facilityId in facilities)
                 {
                     var facility = await _context.Facilities.FindAsync(facilityId);
                     if (facility != null)
                     {
-                        room.Facilities.Add(facility);
+                        types.Facilities.Add(facility);
                     }
                 }
-                //}
-                room.AddedDate = DateTime.Now;
-                room.AddedBy = "Admin";
-                _context.Add(room);
+                types.AddedDate = DateTime.Now;
+                types.AddedBy = "Admin";
+                _context.Add(types);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", room.TypeId);
             ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
-
-            return View(room);
+            return View(types);
         }
 
-        // GET: Rooms/Edit/5
+        // GET: Types/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Room == null)
+            if (id == null || _context.Types == null)
             {
                 return NotFound();
             }
 
-            var room = await _context.Room.FindAsync(id);
-            if (room == null)
+            var types = await _context.Types.FindAsync(id);
+            if (types == null)
             {
                 return NotFound();
             }
-            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", room.TypeId);
-            return View(room);
+            return View(types);
         }
 
-        // POST: Rooms/Edit/5
+        // POST: Types/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdRoom,TypeId,Number,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Room room)
+        public async Task<IActionResult> Edit(int id, [Bind("IdType,Name,Capacity,Description,PhotosURL,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types)
         {
-            if (id != room.IdRoom)
+            if (id != types.IdType)
             {
                 return NotFound();
             }
@@ -121,12 +116,12 @@ namespace Hotel.Intranet.Controllers
             {
                 try
                 {
-                    _context.Update(room);
+                    _context.Update(types);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RoomExists(room.IdRoom))
+                    if (!TypesExists(types.IdType))
                     {
                         return NotFound();
                     }
@@ -137,51 +132,49 @@ namespace Hotel.Intranet.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Description", room.TypeId);
-            return View(room);
+            return View(types);
         }
 
-        // GET: Rooms/Delete/5
+        // GET: Types/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Room == null)
+            if (id == null || _context.Types == null)
             {
                 return NotFound();
             }
 
-            var room = await _context.Room
-                .Include(r => r.Type)
-                .FirstOrDefaultAsync(m => m.IdRoom == id);
-            if (room == null)
+            var types = await _context.Types
+                .FirstOrDefaultAsync(m => m.IdType == id);
+            if (types == null)
             {
                 return NotFound();
             }
 
-            return View(room);
+            return View(types);
         }
 
-        // POST: Rooms/Delete/5
+        // POST: Types/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Room == null)
+            if (_context.Types == null)
             {
-                return Problem("Entity set 'HotelContext.Room'  is null.");
+                return Problem("Entity set 'HotelContext.Types'  is null.");
             }
-            var room = await _context.Room.FindAsync(id);
-            if (room != null)
+            var types = await _context.Types.FindAsync(id);
+            if (types != null)
             {
-                _context.Room.Remove(room);
+                _context.Types.Remove(types);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool RoomExists(int id)
+        private bool TypesExists(int id)
         {
-          return (_context.Room?.Any(e => e.IdRoom == id)).GetValueOrDefault();
+          return (_context.Types?.Any(e => e.IdType == id)).GetValueOrDefault();
         }
     }
 }

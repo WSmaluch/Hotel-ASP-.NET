@@ -7,13 +7,11 @@ namespace Hotel.Data.Data.Booking
     public class Room : AEntity
     {
         [Key]
-        public int IdRoom { get; set; }
-        public int RoomNumber { get; set; }
-        public decimal Price { get; set; }
-        public string PhotosURL { get; set; }
-        public int TypeId { get; set; }
-        public Types Type { get; set; }
-        public List<Facilities> Facilities { get; set; } = new List<Facilities>();
+        public int IdRoom { get; set; } //to zostaje
+        public int TypeId { get; set; } //to zostaje
+        public int Number { get; set; } //to zostaje
+        public Types Type { get; set; } //to zostaje
+        public List<Facilities?> Facilities { get; set; } = new List<Facilities>(); //to zostaje, bo to moga byc dodatkowe (tylko dla tego pokoju)
 
     }
 }

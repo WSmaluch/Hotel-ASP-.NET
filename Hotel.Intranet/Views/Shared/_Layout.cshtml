@@ -165,6 +165,14 @@
 							</ul>
 						</li>
 						<li class="submenu">
+							<a href="#"><i class="fas fa-user"></i> <span> Types </span> <span class="menu-arrow"></span></a>
+							<ul class="submenu_class" style="display: none;">
+								<li><a asp-area="" asp-controller="Types" asp-action="Index">Types</a></li>
+								<li><a asp-area="" asp-controller="Types" asp-action="Create">Add Types </a></li>
+								<li><a asp-area="" asp-controller="Types" asp-action="Edit">Edit Types </a></li>
+							</ul>
+						</li>
+						<li class="submenu">
 							<a href="#"><i class="fas fa-key"></i> <span> Rooms </span> <span class="menu-arrow"></span></a>
 							<ul class="submenu_class" style="display: none;">
 								<li><a href="@Url.Action("Index","Rooms")">All Rooms </a></li>

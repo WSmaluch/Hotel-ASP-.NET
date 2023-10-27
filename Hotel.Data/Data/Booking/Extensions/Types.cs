@@ -11,7 +11,11 @@ namespace Hotel.Data.Data.Booking.Extensions
         public int Capacity { get; set; }
         public string Description { get; set; }
         public List<Room> Rooms { get; set; }
-
+        public string PhotosURL { get; set; } //to do typow
+        //nowe
+        public int Size { get; set; }
+        public List<Facilities> Facilities { get; set; } = new List<Facilities>();
+        public int MaxAmountOfPeople { get; set; }
 
         //Two-Bedroom Apartment
         //Standard Triple Room

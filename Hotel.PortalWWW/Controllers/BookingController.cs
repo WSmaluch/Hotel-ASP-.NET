@@ -7,6 +7,7 @@ using System;
 using System.Globalization;
 using System.Net.Mail;
 using System.Net;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Hotel.PortalWWW.Controllers
 {
@@ -29,29 +30,118 @@ namespace Hotel.PortalWWW.Controllers
             DateTime SetcheckOut = checkout ?? checkin.Value.AddDays(7);
             return (SetcheckIn, SetcheckOut);
         }
+        //public async Task<IActionResult> Index(DateTime? checkIn, DateTime? checkOut, int adults, int children)
+        //{
+        //    (DateTime SetcheckIn, DateTime SetcheckOut) = CalculateCheckInCheckOut(checkIn, checkOut);
+
+
+        //    // Pobierz listę pokoi, które są dostępne w wybranym okresie
+        //    var availableRooms = await _context.Room
+        //        .Where(room => !_context.Reservations.Any(reservation =>
+        //            reservation.RoomId == room.IdRoom &&
+        //            reservation.IsActive &&
+        //            reservation.CheckIn <= checkOut &&
+        //            reservation.CheckOut >= checkIn))
+        //        .ToListAsync();
+
+        //    var model = new BookingModel
+        //    {
+        //        Options = await _context.Options.Include(o => o.ContentItems).ToListAsync(),
+        //        facilities = await _context.Facilities.ToListAsync(),
+        //        types = await _context.Types.ToListAsync(),
+        //        rooms = availableRooms
+        //    };
+
+        //    //ViewBag.CheckIn = checkIn;
+        //    ViewBag.CheckIn = checkIn.Value.ToString("yyyy/MM-dd");
+        //    ViewBag.CheckOut = checkOut.Value.ToString("yyyy/MM-dd");
+        //    ViewBag.Adults = adults;
+        //    ViewBag.Children = children;
+
+        //    return View(model);
+        //}
+
         public async Task<IActionResult> Index(DateTime? checkIn, DateTime? checkOut, int adults, int children)
         {
             (DateTime SetcheckIn, DateTime SetcheckOut) = CalculateCheckInCheckOut(checkIn, checkOut);
-            
 
-            // Pobierz listę pokoi, które są dostępne w wybranym okresie
-            var availableRooms = await _context.Room
-                .Where(room => !_context.Reservations.Any(reservation =>
-                    reservation.RoomId == room.IdRoom &&
-                    reservation.IsActive &&
-                    reservation.CheckIn <= checkOut &&
-                    reservation.CheckOut >= checkIn))
+            //var availableTypes = await _context.Types
+            //    .Where(type => type.MaxAmountOfPeople >= adults + children &&
+            //                   !_context.Reservations.Any(reservation =>
+            //                       reservation.Room.TypeId == type.IdType &&
+            //                       reservation.IsActive &&
+            //                       reservation.CheckIn <= checkOut &&
+            //                       reservation.CheckOut >= checkIn))
+            //    .ToListAsync();
+
+
+            //var availableTypes = await _context.Types
+            //    .Include(type => type.Facilities) // Pobierz udogodnienia dla każdego typu pokoju
+            //    .Where(type => !_context.Reservations.Any(reservation =>
+            //    reservation.Room.TypeId == type.IdType &&
+            //    reservation.IsActive &&
+            //    reservation.CheckIn <= checkOut &&
+            //    reservation.CheckOut >= checkIn) &&
+            //    (type.MaxAmountOfPeople >= adults + children))
+            //        .ToListAsync();
+
+            //to liczy ile jest pokojów kazdego typu
+            var roomCounts = await _context.Room
+                .GroupBy(rc => rc.TypeId)
+                .Select(roomGroup => new
+                {
+                    TypeId = roomGroup.Key,
+                    RoomCount = roomGroup.Count()
+                })
                 .ToListAsync();
+
+            //to liczy ile pokojow kazdego typu jest zarezerwowanych w danym okresie czasu (CZYLI NIE MOZNA ICH ZAREZERWOWAC)
+            var reservedRoomCounts = await _context.Reservations
+                .Where(reservation => reservation.CheckIn <= SetcheckOut && reservation.CheckOut >= SetcheckIn && reservation.IsActive)
+                .Join(
+                    _context.Room,
+                    reservation => reservation.RoomId,
+                    room => room.IdRoom,
+                    (reservation, room) => new { TypeId = room.TypeId }
+                )
+                .GroupBy(item => item.TypeId)
+                .Select(g => new
+                {
+                    TypeId = g.Key,
+                    ReservedRoomCount = g.Count()
+                })
+                .ToListAsync();
+
+            //zapytanie łączące dwa powyższe
+            var availableRoomTypeIds = roomCounts
+                .GroupJoin(
+                    reservedRoomCounts,
+                    rc => rc.TypeId,
+                    rrc => rrc.TypeId,
+                    (rc, r) => new
+                    {
+                        TypeId = rc.TypeId,
+                        RoomCount = rc.RoomCount,
+                        ReservedRoomCount = r.FirstOrDefault()?.ReservedRoomCount ?? 0
+                    })
+                .Where(result => result.RoomCount - result.ReservedRoomCount > 0)
+                .Select(result => result.TypeId)
+                .ToList();
+
+            //konwersja int na types i sprawdza czy podana ilosc ludzi sie zmieści
+            var availableRoomTypes = await _context.Types
+                .Where(type => availableRoomTypeIds.Contains(type.IdType) && type.MaxAmountOfPeople >= adults + children)
+                .ToListAsync();
+
+
 
             var model = new BookingModel
             {
                 Options = await _context.Options.Include(o => o.ContentItems).ToListAsync(),
                 facilities = await _context.Facilities.ToListAsync(),
-                types = await _context.Types.ToListAsync(),
-                rooms = availableRooms
+                types = availableRoomTypes
             };
 
-            //ViewBag.CheckIn = checkIn;
             ViewBag.CheckIn = checkIn.Value.ToString("yyyy/MM-dd");
             ViewBag.CheckOut = checkOut.Value.ToString("yyyy/MM-dd");
             ViewBag.Adults = adults;
@@ -59,13 +149,15 @@ namespace Hotel.PortalWWW.Controllers
 
             return View(model);
         }
+
         public decimal TotalPriceOfBooking(int roomId, DateTime checkIn, DateTime checkOut)
         {
             var days = (checkOut - checkIn).Days;
-            var totalPrice = days * _context.Room.Find(roomId).Price;
+            //var totalPrice = days * _context.Room.Find(roomId).Price;
+            var totalPrice = 111;
             return totalPrice;
         }
-        public async Task<IActionResult> Form(int roomId, DateTime checkIn, DateTime checkOut, int adults, int children)
+        public async Task<IActionResult> Form(int typeId, DateTime checkIn, DateTime checkOut, int adults, int children)
         {
             var model = new BookingModel
             {
@@ -77,12 +169,12 @@ namespace Hotel.PortalWWW.Controllers
 
             var days = (checkOut - checkIn).Days;
 
-            ViewBag.RoomId = roomId;
+            ViewBag.TypeId = typeId;
             ViewBag.CheckIn = checkIn;
             ViewBag.CheckOut = checkOut;
             ViewBag.Adults = adults;
             ViewBag.Children = children;
-            ViewBag.Price = TotalPriceOfBooking(roomId,checkIn,checkOut);
+            ViewBag.Price = TotalPriceOfBooking(typeId, checkIn,checkOut);
             
 
             return View(model);
@@ -90,7 +182,7 @@ namespace Hotel.PortalWWW.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Submit(
-            int roomId,
+            int typeId,
             string checkIn,
             string checkOut,
             int adults,
@@ -101,19 +193,34 @@ namespace Hotel.PortalWWW.Controllers
         {
             try
             {
+
+                var availableRooms = _context.Room
+                .Where(room => room.TypeId == typeId &&
+                   !_context.Reservations
+                .Where(reservation => reservation.IsActive == true &&
+                         reservation.CheckIn <= DateTime.Parse(checkOut) &&
+                         reservation.CheckOut >= DateTime.Parse(checkIn))
+                        .Select(reservation => reservation.RoomId)
+                        .Contains(room.IdRoom))
+                .ToList();
+
+                var selectedRoom = availableRooms.FirstOrDefault();
+
                 // Tworzenie obiektu rezerwacji na podstawie przekazanych danych
                 var reservation = new Reservation
                 {
-                    RoomId = roomId,
+                    //RoomId = roomId, //tutaj trzba zmienic zeby wybieralo losowy pokój z tego typu
+                    //RoomId = 8,   
+                    RoomId = selectedRoom.IdRoom,   
                     CheckIn = DateTime.Parse(checkIn),
                     CheckOut = DateTime.Parse(checkOut),
                     NumberOfAdults = adults,
                     NumberOfChildren = children,
                     Name = name,
                     SpecialRequests = specialRequests,
-                    TotalPrice = (double)TotalPriceOfBooking(roomId, DateTime.Parse(checkIn), DateTime.Parse(checkOut))
-
-            };
+                    //TotalPrice = (double)TotalPriceOfBooking(roomId, DateTime.Parse(checkIn), DateTime.Parse(checkOut))
+                    TotalPrice = 111
+                };
 
                 _context.Reservations.Add(reservation);
                 await _context.SaveChangesAsync();
@@ -129,9 +236,8 @@ namespace Hotel.PortalWWW.Controllers
                 ViewBag.Message = "An error occurred while processing your reservation.";
                 return View(); // Wróć do formularza z wyświetleniem błędów
             }
-
-            
         }
+
         private async Task SendConfirmationEmail(Reservation reservation, string email, int confirmationCode)
         {
             var smtpSettings = _configuration.GetSection("SmtpSettings");
@@ -147,7 +253,9 @@ namespace Hotel.PortalWWW.Controllers
         .Where(r => r.IdRoom == reservation.RoomId)
         .FirstOrDefaultAsync();
 
-    
+            var typeOfRoom = _context.Types.Find(_context.Room.Find(reservation.RoomId).TypeId);
+
+
 
             var message = new MailMessage
             {
@@ -346,17 +454,17 @@ namespace Hotel.PortalWWW.Controllers
                             We're thrilled that you've found the perfect room to suit your needs and preferences. Our team is dedicated to ensuring your stay is as comfortable and enjoyable as possible. 
                             If you have any special requests or need assistance with anything during your stay, please don't hesitate to reach out to our concierge services.<br/></p>
                             <div id='photo'>
-                                <img id='roomphoto' style='border-radius: 15px;' src=" + room.PhotosURL + @" alt='Room photo'>
+                                <img id='roomphoto' style='border-radius: 15px;' src="+ typeOfRoom.PhotosURL + @" alt='Room photo'>
                                 <table style='color:#0E3F3C'> 
                                     <tr>
-                                       <!-- <td width='90%'><h3>"+room.IdRoom+ @"</h3></td> -->
-                                        <td width='90%'><h3>STANDARD ECONOMIC ROOM</h3></td>
-                                        <td><h3>" + "$"+reservation.TotalPrice.ToString()+"/"+(reservation.CheckOut-reservation.CheckIn).Days+"days"+@"</h3></td>
+                                       <!-- <td width='90%'><h3>" + room.IdRoom + @"</h3></td> -->
+                                        <td width='90%'><h3>"+typeOfRoom.Name+@"</h3></td>
+                                        <td><h3>" + "$" + reservation.TotalPrice.ToString() + "/" + (reservation.CheckOut - reservation.CheckIn).Days + "days" + @"</h3></td>
                                     </tr>
                                 </table>
                                 <table style='float: left;'>
                                     <tr height='60px'>
-                                        <td><img id='icon' src='https://i.imgur.com/1wdIpUZ.png' alt='human'>"+reservation.NumberOfAdults.ToString() + "adult(s)" + (reservation.NumberOfChildren>0 ? reservation.NumberOfChildren.ToString() + "children(s)" : "")+ @"</td>
+                                        <td><img id='icon' src='https://i.imgur.com/1wdIpUZ.png' alt='human'>" + reservation.NumberOfAdults.ToString() + "adult(s)" + (reservation.NumberOfChildren > 0 ? reservation.NumberOfChildren.ToString() + "children(s)" : "") + @"</td>
                                     </tr>
                                     <tr style='float: left;'>
                                         <td width='130px'><img id='icon' src='https://i.imgur.com/WxRri4Y.png' alt='shower'> 1</td>

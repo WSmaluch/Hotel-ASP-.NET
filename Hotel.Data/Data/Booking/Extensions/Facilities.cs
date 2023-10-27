@@ -16,7 +16,7 @@ namespace Hotel.Data.Data.Booking.Extensions
         public string NameFacility { get; set; }
         [JsonIgnore]
         public List<Room> Rooms { get; set; } = new List<Room>();
-
+        public List<Types> Types { get; set; } = new List<Types>();
         //        TV
         //Linen
         //Dining table

@@ -203,7 +203,7 @@
         </div>
         <div id="rooms">
             <table style="float: left;width: 114%;">
-            @foreach (var room in Model.rooms)
+            @foreach (var room in Model.types)
             {
                 <tr>
                     <td>
@@ -212,9 +212,9 @@
                                 <img src="@room.PhotosURL" alt="Room Image">
                             </div>
                             <div id="description">
-                                Pokój dwuosobowy bez widoku na dolinę Wisły
+                                @room.Name
                                 <ul>
-                                    @foreach (var facility in Model.facilities)
+                                    @foreach (var facility in room.Facilities)
                                     {
                                         <li>@facility.NameFacility</li>
                                     }
@@ -222,8 +222,8 @@
                             </div>
                             <div id="price">
                                 Price from<br>
-                                <b>@room.Price</b><br><br>
-                                <a href="/Booking/Form?roomId=@room.IdRoom&checkIn=@ViewBag.CheckIn&checkOut=@ViewBag.CheckOut&adults=@ViewBag.Adults&children=@ViewBag.Children"><button id="button" style="display: inline-block; margin-right: 10px;">Select room</button></a>
+                                <b>Tu byla cena</b><br><br>
+                                <a href="/Booking/Form?typeId=@room.IdType&checkIn=@ViewBag.CheckIn&checkOut=@ViewBag.CheckOut&adults=@ViewBag.Adults&children=@ViewBag.Children"><button id="button" style="display: inline-block; margin-right: 10px;">Select room</button></a>
                             </div>
                         </div>
                     </td>
