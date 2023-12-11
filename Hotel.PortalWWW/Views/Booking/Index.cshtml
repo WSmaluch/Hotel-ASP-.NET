@@ -116,6 +116,44 @@
         width:100%;
         padding-bottom:10%;
     }
+
+    .popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup-content {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        max-width: 60%; /* Maksymalna szerokość popupa */
+        max-height: 40%; /* Maksymalna wysokość popupa */
+        margin: 0 auto; /* Wyśrodkowanie popupa na ekranie */
+    }
+
+    #popup-image {
+        width: 40%;
+        height: 30%;
+        float: left; /* Przesunięcie obrazka na lewą stronę */
+        margin-right: 20px; /* Dodatkowy margines po prawej stronie obrazka */
+    }
+
+    #noAvailable
+    {
+        font-size:x-large;
+        margin-left:15%;
+        width:100%;
+        background-color:white;
+    }
+    
 </style>
     <div id="content">
         <div id="setings">
@@ -201,7 +239,12 @@
                 </tr>
             </table>
         </div>
+    
+
         <div id="rooms">
+        <div id="noAvailable">
+            @ViewBag.Message
+            </div>
             <table style="float: left;width: 114%;">
             @foreach (var room in Model.types)
             {
@@ -220,16 +263,170 @@
                                     }
                                 </ul>
                             </div>
+                            
                             <div id="price">
                                 Price from<br>
                                 <b>Tu byla cena</b><br><br>
                                 <a href="/Booking/Form?typeId=@room.IdType&checkIn=@ViewBag.CheckIn&checkOut=@ViewBag.CheckOut&adults=@ViewBag.Adults&children=@ViewBag.Children"><button id="button" style="display: inline-block; margin-right: 10px;">Select room</button></a>
                             </div>
+                            <a style="padding-left:2%;color:darkgoldenrod;" class="popup-link"
+                               data-image-url="@room.PhotosURL"
+                               data-description="@room.Description"
+                               data-title="@room.Name"
+                               data-id="@room.IdType"
+                               data-room-id="@room.IdType">Read more @room.IdType</a>
+
+
+                            <div class="popup" id="popup">
+                                <div class="popup-content">
+                                    <img id="popup-image" src="" alt="Room Image">
+                                    <div style="padding-bottom:2.5%; color:#02464F; font-weight:bold; font-size:200%" id="popup-title"></div>
+                                    <div id="popup-description"></div>
+                                    <div id="popup-facilties" style="margin-top:2%;float:left;text-align:left;width:40em;height:5em">
+                                        <div id="popup-type"></div>
+                                        <ul style="list-style:square;border:1px solid black">
+                                            @foreach (var facility in room.Facilities)
+                                            {
+                                                if (room.Facilities.Any(f => f.IdFacility == facility.IdFacility))
+                                                {
+                                                    @*<li>To jest ID: @facility.IdFacility</li>*@
+                                                    <li>@facility.NameFacility</li>
+                                                }
+                                            }
+                                        </ul>
+
+                                    </div>
+                                    <button id="close-popup" style="float:right;">Close</button>
+                                </div>
+                            </div>
                         </div>
                     </td>
                 </tr>
+                
             }
             </table>
         </div>
     </div>
 <div id="zzz"></div>
+
+<script>
+    //document.addEventListener("DOMContentLoaded", function () {
+    //    var selectedRoomTypeId = 4
+    //    var popup = document.getElementById("popup");
+    //    var popupImage = document.getElementById("popup-image");
+    //    var popupDescription = document.getElementById("popup-description");
+    //    var popupType = document.getElementById("popup-type");
+    //    var popupTitle = document.getElementById("popup-title");
+    //    var popupFacilities = document.getElementById("popup-facilities");
+    //    var closePopupButton = document.getElementById("close-popup");
+
+    //    var popupLinks = document.querySelectorAll(".popup-link");
+
+    //    popupLinks.forEach(function (link) {
+    //        link.addEventListener("click", function () {
+    //            var imageUrl = link.getAttribute("data-image-url");
+    //            var description = link.getAttribute("data-description");
+    //            var title = link.getAttribute("data-title");
+    //            var typeid = link.getAttribute("data-id");
+
+
+    //            popupImage.src = imageUrl;
+    //            popupDescription.innerText = description;
+    //            popupTitle.innerText = title;
+    //            //popupFacilities.innerText=title;
+    //            //popupFacilities.innerHTML = str1;
+    //            popupType.innerText = typeid;
+
+    //            popup.style.zIndex = 100;
+    //            popup.style.display = "flex";
+    //        });
+    //    });
+
+    //    closePopupButton.addEventListener("click", function () {
+    //        popup.style.display = "none";
+    //    });
+    //});
+
+    //document.addEventListener("DOMContentLoaded", function () {
+    //    var selectedRoomTypeId = 
+    //    var popup = document.getElementById("popup");
+    //    var popupImage = document.getElementById("popup-image");
+    //    var popupDescription = document.getElementById("popup-description");
+    //    var popupType = document.getElementById("popup-type");
+    //    var popupTitle = document.getElementById("popup-title");
+    //    var popupFacilities = document.getElementById("popup-facilities");
+    //    var closePopupButton = document.getElementById("close-popup");
+
+    //    var currentRoomId; // Nowa zmienna przechowująca bieżący identyfikator pokoju
+
+    //    var popupLinks = document.querySelectorAll(".popup-link");
+
+    //    popupLinks.forEach(function (link) {
+    //        link.addEventListener("click", function () {
+    //            var imageUrl = link.getAttribute("data-image-url");
+    //            var description = link.getAttribute("data-description");
+    //            var title = link.getAttribute("data-title");
+    //            var typeid = link.getAttribute("data-id");
+
+    //            // Dodaj zmienną przechowującą bieżący identyfikator pokoju
+    //            currentRoomId = link.getAttribute("data-room-id");
+
+    //            popupImage.src = imageUrl;
+    //            popupDescription.innerText = description;
+    //            popupTitle.innerText = title;
+    //            popupType.innerText = typeid;
+                
+
+    //            popup.style.zIndex = 100;
+    //            popup.style.display = "flex";
+    //        });
+    //    });
+
+    //    closePopupButton.addEventListener("click", function () {
+    //        popup.style.display = "none";
+    //        currentRoomId = null; // Zresetuj bieżący identyfikator pokoju po zamknięciu popup'a
+    //    });
+    //});
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var popup = document.getElementById("popup");
+        var popupImage = document.getElementById("popup-image");
+        var popupDescription = document.getElementById("popup-description");
+        var popupType = document.getElementById("popup-type");
+        var popupTitle = document.getElementById("popup-title");
+        var popupFacilities = document.getElementById("popup-facilities");
+        var closePopupButton = document.getElementById("close-popup");
+
+        var currentRoomId; // Nowa zmienna przechowująca bieżący identyfikator pokoju
+
+        var popupLinks = document.querySelectorAll(".popup-link");
+
+        popupLinks.forEach(function (link) {
+            link.addEventListener("click", function () {
+                var imageUrl = link.getAttribute("data-image-url");
+                var description = link.getAttribute("data-description");
+                var title = link.getAttribute("data-title");
+                var typeid = link.getAttribute("data-id");
+
+                // Dodaj zmienną przechowującą bieżący identyfikator pokoju
+                currentRoomId = link.getAttribute("data-room-id");
+
+                popupImage.src = imageUrl;
+                popupDescription.innerText = description;
+                popupTitle.innerText = title;
+                popupType.innerText = typeid;
+
+                popup.style.zIndex = 100;
+                popup.style.display = "flex";
+            });
+        });
+
+        closePopupButton.addEventListener("click", function () {
+            popup.style.display = "none";
+            currentRoomId = null; // Zresetuj bieżący identyfikator pokoju po zamknięciu popup'a
+        });
+    });
+
+
+
+</script>

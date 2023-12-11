@@ -65,26 +65,6 @@ namespace Hotel.PortalWWW.Controllers
         {
             (DateTime SetcheckIn, DateTime SetcheckOut) = CalculateCheckInCheckOut(checkIn, checkOut);
 
-            //var availableTypes = await _context.Types
-            //    .Where(type => type.MaxAmountOfPeople >= adults + children &&
-            //                   !_context.Reservations.Any(reservation =>
-            //                       reservation.Room.TypeId == type.IdType &&
-            //                       reservation.IsActive &&
-            //                       reservation.CheckIn <= checkOut &&
-            //                       reservation.CheckOut >= checkIn))
-            //    .ToListAsync();
-
-
-            //var availableTypes = await _context.Types
-            //    .Include(type => type.Facilities) // Pobierz udogodnienia dla każdego typu pokoju
-            //    .Where(type => !_context.Reservations.Any(reservation =>
-            //    reservation.Room.TypeId == type.IdType &&
-            //    reservation.IsActive &&
-            //    reservation.CheckIn <= checkOut &&
-            //    reservation.CheckOut >= checkIn) &&
-            //    (type.MaxAmountOfPeople >= adults + children))
-            //        .ToListAsync();
-
             //to liczy ile jest pokojów kazdego typu
             var roomCounts = await _context.Room
                 .GroupBy(rc => rc.TypeId)
@@ -128,17 +108,20 @@ namespace Hotel.PortalWWW.Controllers
                 .Select(result => result.TypeId)
                 .ToList();
 
-            //konwersja int na types i sprawdza czy podana ilosc ludzi sie zmieści
+            //konwersja int na types, łączy z tabelą Facilities aby wybrac nalezace do typu i sprawdza czy podana ilosc ludzi sie zmieści
             var availableRoomTypes = await _context.Types
-                .Where(type => availableRoomTypeIds.Contains(type.IdType) && type.MaxAmountOfPeople >= adults + children)
-                .ToListAsync();
+           .Where(type => availableRoomTypeIds.Contains(type.IdType) && type.MaxAmountOfPeople >= adults + children)
+           .Include(type => type.Facilities) // Include facilities for each type
+           .ToListAsync();
 
-
+            if (availableRoomTypes.Count == 0)
+            {
+                ViewBag.Message = "No available rooms";
+            }
 
             var model = new BookingModel
             {
                 Options = await _context.Options.Include(o => o.ContentItems).ToListAsync(),
-                facilities = await _context.Facilities.ToListAsync(),
                 types = availableRoomTypes
             };
 
@@ -209,8 +192,6 @@ namespace Hotel.PortalWWW.Controllers
                 // Tworzenie obiektu rezerwacji na podstawie przekazanych danych
                 var reservation = new Reservation
                 {
-                    //RoomId = roomId, //tutaj trzba zmienic zeby wybieralo losowy pokój z tego typu
-                    //RoomId = 8,   
                     RoomId = selectedRoom.IdRoom,   
                     CheckIn = DateTime.Parse(checkIn),
                     CheckOut = DateTime.Parse(checkOut),
@@ -227,6 +208,9 @@ namespace Hotel.PortalWWW.Controllers
                 int confirmationCode = reservation.IdReservation;
                 await SendConfirmationEmail(reservation, email, confirmationCode);
                 ViewBag.Message = "Reservation submitted successfully!";
+                ViewBag.TypeOfRoom = _context.Types.Find(_context.Room.Find(reservation.RoomId).TypeId);
+                ViewBag.Reservation = reservation;
+                
                 //ViewBag.Message = reservation.Room.RoomNumber.ToString();
                 return View();
             }
@@ -458,7 +442,7 @@ namespace Hotel.PortalWWW.Controllers
                                 <table style='color:#0E3F3C'> 
                                     <tr>
                                        <!-- <td width='90%'><h3>" + room.IdRoom + @"</h3></td> -->
-                                        <td width='90%'><h3>"+typeOfRoom.Name+@"</h3></td>
+                                        <td width='90%'><h3>" + typeOfRoom.Name + @"</h3></td>
                                         <td><h3>" + "$" + reservation.TotalPrice.ToString() + "/" + (reservation.CheckOut - reservation.CheckIn).Days + "days" + @"</h3></td>
                                     </tr>
                                 </table>

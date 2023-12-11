@@ -5,7 +5,198 @@
 
 <!-- bradcam_area_start -->
 <div class="bradcam_area breadcam_bg_1">
-    <h3>Submit</h3>
+    <h3>Reservation confirmed</h3>
 </div>
 
-<h1>@ViewBag.Message</h1>
+@*<h1>@ViewBag.Message</h1>*@
+<style>
+    body {
+        font-family: 'Helvetica Neue', sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+
+    }
+
+    #header {
+        background-color: #DBDFE2;
+        color: black;
+        overflow: hidden;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        width: 60%;
+        margin-left: 20%;
+    }
+
+    #logo {
+        float: left;
+        width: 50%;
+        padding-left: 10%;
+    }
+
+    #contact {
+        float: left;
+        padding-left: 20%;
+        text-align: right;
+        color: #21464E;
+    }
+
+    #content {
+        /*background-color: lightgray;*/
+        color: white;
+        background-image: url('https://i.imgur.com/k3i1s0S.png');
+        background-repeat: no-repeat, repeat;
+        background-color: white;
+        background-position: center top 27%;
+    }
+
+    #left {
+        width: 20%;
+        float: left;
+        min-height: 1px;
+    }
+
+    #main {
+        width: 60%;
+        float: left;
+        background-color: white;
+        color: black;
+        text-align: center;
+        border-radius: 3%;
+        margin-bottom:2%;
+        margin-top: 2%;
+
+    }
+
+        #main table {
+            text-align: left;
+        }
+
+        #main p {
+            text-align: center;
+        }
+
+    #right {
+        width: 20%;
+        float: left;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    #mainLogo {
+        padding-top: 3%;
+        width: 100px;
+    }
+
+    h1 {
+        color: #0E3F3C;
+        font-size: 28px;
+    }
+
+    p {
+        font-size: 16px;
+        line-height: 1.6;
+        text-align: left;
+        margin: 10px 0;
+    }
+
+    #description {
+        padding: 0 15% 0;
+    }
+
+    #photo {
+        padding: 1%;
+        background-color: #F6F5F3;
+        border-radius: 15px;
+        width: 52%;
+        margin-top: 20px;
+        margin-left: 25%;
+        margin-bottom: 3%;
+    }
+
+    #icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    #buttonAllInfo {
+        display: inline-block;
+        margin-right: 10px;
+        border: 2px solid #02464F;
+        background-color: #02464F;
+        color: white;
+        padding: 14px 28px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        border-radius: 15px;
+        text-decoration: none;
+    }
+
+    #buttonDownload {
+        display: inline-block;
+        border: 2px solid #02464F;
+        color: #02464F;
+        padding: 14px 28px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        border-radius: 15px;
+        text-decoration: none;
+    }
+
+    #warning {
+        font-size: small;
+        padding: 0 10% 0;
+        color: rgb(99, 98, 98);
+    }
+
+    .forQuery {
+        padding-top: 40px;
+        padding-bottom: 60px;
+    }
+</style>
+<div id="content">
+    <div id="left"></div>
+    <div id="main">
+        <img src="https://i.imgur.com/IxtZwtE.png" alt="Logo" id="mainLogo">
+        <h1>Your dream apartment awaits!</h1>
+        <p>Thank You @ViewBag.Reservation.Name!</p>
+        <p id="description">
+            Congratulations on your recent purchase of the beautiful apartment located at Trapise Resort.<br /><br />
+            We're thrilled that you've found the perfect room to suit your needs and preferences. Our team is dedicated to ensuring your stay is as comfortable and enjoyable as possible.
+            If you have any special requests or need assistance with anything during your stay, please don't hesitate to reach out to our concierge services.<br />
+        </p>
+
+        <div id="photo">
+            <img id="roomphoto" style="border-radius: 15px;" src="@ViewBag.TypeOfRoom.PhotosURL" alt='Room photo'>
+            <table style="color:#0E3F3C">
+                <tr>
+                    <td width="90%"><h3>@ViewBag.TypeOfRoom.Name</h3></td>
+                    <td><h3>$1,800/night</h3></td>
+                </tr>
+            </table>
+            <table style="float: left;">
+                <tr height="60px">
+                    <td><img id="icon" src="https://i.imgur.com/1wdIpUZ.png" alt="human">@ViewBag.Reservation.NumberOfAdults adult(s)</td>
+                </tr>
+                <tr style="float: left;">
+                    <td width="130px"><img id="icon" src="https://i.imgur.com/WxRri4Y.png" alt="shower"> 1</td>
+                    <td width="130px"><img id="icon" src="https://i.imgur.com/CZdNj90.png" alt="bed"> 1</td>
+                    <td width="130px"><img id="icon" src="https://i.imgur.com/8ETVSV2.png" alt="size"> 1</td>
+                </tr>
+            </table>
+            <br>
+            <div style="margin-top: 100px;">
+                <hr>
+                <a href=""><button id="buttonAllInfo" style="display: inline-block; margin-right: 10px;" onclick="showInvoice()">Show invoice</button></a>
+                <a href="https://drive.google.com/file/d/1JWQweTBgC1wTOHquws4UjKBKmOXglUaa/view?usp=sharing" download><button id="buttonDownload" style="display: inline-block;">Download Agreement</button></a>
+            </div>
+        </div>
+    </div>
+    <div id="right"></div>
+</div>
