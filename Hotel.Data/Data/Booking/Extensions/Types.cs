@@ -16,6 +16,7 @@ namespace Hotel.Data.Data.Booking.Extensions
         public int Size { get; set; }
         public List<Facilities> Facilities { get; set; } = new List<Facilities>();
         public int MaxAmountOfPeople { get; set; }
+        public List<RoomPricing> RoomPricings { get; set; } = new List<RoomPricing>();
 
         //Two-Bedroom Apartment
         //Standard Triple Room

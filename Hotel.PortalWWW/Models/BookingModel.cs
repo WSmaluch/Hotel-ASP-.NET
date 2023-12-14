@@ -14,5 +14,6 @@ namespace Hotel.PortalWWW.Models
         public IEnumerable<Types> types { get; set; } // Lista dostępnych typów pokoi
         public IEnumerable<Room> rooms { get; set; } // Lista dostępnych pokoi
         public List<Options> Options { get; set; }
+        public Dictionary<int, decimal> PricesByRoomType { get; set; }
     }
 }

@@ -1,0 +1,84 @@
+﻿@using System.Globalization;
+@{
+    CultureInfo.CurrentCulture = new CultureInfo("en-US");
+    CultureInfo.CurrentUICulture = new CultureInfo("en-US");
+}
+@model IEnumerable<Hotel.Data.Data.Booking.RoomPricing>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<div id="monthName"><h1>@Model.FirstOrDefault()?.ValidFrom.ToString("MMMM yyyy")</h1></div>
+
+<style>
+    .col-md-12 {
+        margin-left: -22%;
+        font-size: small;
+        float: left;
+    }
+
+    body {
+        overflow-x: scroll;
+    }
+
+    .price-cell {
+        
+        
+    }
+
+    #monthName {
+        text-align: center;
+    }
+
+    td img{
+        width:30%;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 scrollable-table">
+            <table class="table table-bordered">
+                <thead class="table-header">
+                    <tr>
+                        <th>Type\Day</th>
+                        @for (int day = 1; day <= 31; day++)
+                        {
+                            <th>@day</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var type in Model.Select(rp => rp.Type).Distinct())
+                    {
+                        <tr>
+                            <td style="width:100px">@type.Name</td>
+                            @for (int day = 1; day <= 31; day++)
+                            {
+                                DateTime currentDay = new DateTime(DateTime.Now.Year, DateTime.Now.Month, day); 
+
+                                <td class="price-cell">
+                                    @foreach (var roomPricing in Model.Where(rp => rp.Type == type))
+                                    {
+                                        if (currentDay >= roomPricing.ValidFrom && currentDay <= roomPricing.ValidTo)
+                                        {
+                                            @:<img src="https://i.imgur.com/7PGRPUi.png" alt="A:"/>@roomPricing.BasePriceAdult
+                                            @:<img src="https://i.imgur.com/dzaEgVZ.png" alt="C:"/>@roomPricing.BasePriceChildren
+                                        }
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

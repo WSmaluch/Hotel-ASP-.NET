@@ -15,7 +15,9 @@ namespace Hotel.PortalWWW.Controllers
     {
         private readonly HotelContext _context;
         private readonly IConfiguration _configuration;
-        private double totalPrice { get; set; }
+        private decimal totalPrice;
+
+        private decimal TotalPrice { get => totalPrice; set => totalPrice = value; }
 
         public BookingController(HotelContext context, IConfiguration configuration)
         {
@@ -23,44 +25,13 @@ namespace Hotel.PortalWWW.Controllers
             _configuration = configuration;
         }
 
-        
+
         private (DateTime checkIn, DateTime checkOut) CalculateCheckInCheckOut(DateTime? checkin, DateTime? checkout)
         {
             DateTime SetcheckIn = checkin ?? DateTime.Today;
             DateTime SetcheckOut = checkout ?? checkin.Value.AddDays(7);
             return (SetcheckIn, SetcheckOut);
         }
-        //public async Task<IActionResult> Index(DateTime? checkIn, DateTime? checkOut, int adults, int children)
-        //{
-        //    (DateTime SetcheckIn, DateTime SetcheckOut) = CalculateCheckInCheckOut(checkIn, checkOut);
-
-
-        //    // Pobierz listę pokoi, które są dostępne w wybranym okresie
-        //    var availableRooms = await _context.Room
-        //        .Where(room => !_context.Reservations.Any(reservation =>
-        //            reservation.RoomId == room.IdRoom &&
-        //            reservation.IsActive &&
-        //            reservation.CheckIn <= checkOut &&
-        //            reservation.CheckOut >= checkIn))
-        //        .ToListAsync();
-
-        //    var model = new BookingModel
-        //    {
-        //        Options = await _context.Options.Include(o => o.ContentItems).ToListAsync(),
-        //        facilities = await _context.Facilities.ToListAsync(),
-        //        types = await _context.Types.ToListAsync(),
-        //        rooms = availableRooms
-        //    };
-
-        //    //ViewBag.CheckIn = checkIn;
-        //    ViewBag.CheckIn = checkIn.Value.ToString("yyyy/MM-dd");
-        //    ViewBag.CheckOut = checkOut.Value.ToString("yyyy/MM-dd");
-        //    ViewBag.Adults = adults;
-        //    ViewBag.Children = children;
-
-        //    return View(model);
-        //}
-
         public async Task<IActionResult> Index(DateTime? checkIn, DateTime? checkOut, int adults, int children)
         {
             (DateTime SetcheckIn, DateTime SetcheckOut) = CalculateCheckInCheckOut(checkIn, checkOut);
@@ -122,11 +93,20 @@ namespace Hotel.PortalWWW.Controllers
             var model = new BookingModel
             {
                 Options = await _context.Options.Include(o => o.ContentItems).ToListAsync(),
-                types = availableRoomTypes
+                types = availableRoomTypes,
+                PricesByRoomType = new Dictionary<int, decimal>() 
             };
 
-            ViewBag.CheckIn = checkIn.Value.ToString("yyyy/MM-dd");
-            ViewBag.CheckOut = checkOut.Value.ToString("yyyy/MM-dd");
+            // Oblicz ceny dla poszczególnych typów pokoi
+            foreach (var roomType in availableRoomTypes)
+            {
+                int typeId = roomType.IdType;
+                decimal totalPrice = GetTotalPrice(typeId, SetcheckIn, SetcheckOut, adults, children);
+                model.PricesByRoomType.Add(typeId, totalPrice);
+            }
+
+            ViewBag.CheckIn = SetcheckIn.ToString("yyyy/MM-dd");
+            ViewBag.CheckOut = SetcheckOut.ToString("yyyy/MM-dd");
             ViewBag.Adults = adults;
             ViewBag.Children = children;
 
@@ -136,7 +116,6 @@ namespace Hotel.PortalWWW.Controllers
         public decimal TotalPriceOfBooking(int roomId, DateTime checkIn, DateTime checkOut)
         {
             var days = (checkOut - checkIn).Days;
-            //var totalPrice = days * _context.Room.Find(roomId).Price;
             var totalPrice = 111;
             return totalPrice;
         }
@@ -144,7 +123,7 @@ namespace Hotel.PortalWWW.Controllers
         {
             var model = new BookingModel
             {
-                Options = await _context.Options.Include(o => o.ContentItems).Where(o=>o.IsActive).ToListAsync(),
+                Options = await _context.Options.Include(o => o.ContentItems).Where(o => o.IsActive).ToListAsync(),
                 facilities = await _context.Facilities.ToListAsync(),
                 types = await _context.Types.ToListAsync(),
                 rooms = await _context.Room.ToListAsync()
@@ -157,10 +136,107 @@ namespace Hotel.PortalWWW.Controllers
             ViewBag.CheckOut = checkOut;
             ViewBag.Adults = adults;
             ViewBag.Children = children;
-            ViewBag.Price = TotalPriceOfBooking(typeId, checkIn,checkOut);
-            
+            ViewBag.Price = TotalPriceOfBooking(typeId, checkIn, checkOut);
+
 
             return View(model);
+        }
+
+        private decimal GetTotalPrice(int typeId, DateTime checkIn, DateTime checkOut, int adults, int children)
+        {
+            // Find the applicable room pricing based on the room type and date range
+            var roomPricing = _context.RoomPricing
+                .Where(rp => rp.TypeId == typeId && rp.ValidFrom <= checkIn && rp.ValidTo >= checkOut)
+                .FirstOrDefault();
+
+            if (roomPricing == null)
+            {
+                // Handle the case when there's no applicable pricing
+                return 0; // You can choose to return some default value or handle it differently
+            }
+
+            // Calculate the number of nights
+            int numberOfNights = (int)(checkOut - checkIn).TotalDays;
+
+            // Calculate the total price based on room pricing and duration
+            if (_context.Types.Find(typeId).MaxAmountOfPeople < (adults + children))
+            {
+                var over = adults + children - _context.Types.Find(typeId).MaxAmountOfPeople;
+                TotalPrice = (decimal)((double)(roomPricing.BasePriceAdult * adults) + (double)(roomPricing.BasePriceChildren * children) + ((double)(roomPricing.BasePriceAdult * over) * 0.5)) * numberOfNights;
+            }
+            else
+            {
+                TotalPrice = (roomPricing.BasePriceAdult * adults + roomPricing.BasePriceChildren * children) * numberOfNights;
+            }
+
+            return TotalPrice;
+        }
+
+        public List<Room> GetAvailableRooms(int typeId, string checkIn, string checkOut)
+        {
+            DateTime checkInDate = DateTime.Parse(checkIn);
+            DateTime checkOutDate = DateTime.Parse(checkOut);
+
+            var availableRooms = _context.Room
+                .Where(room => room.TypeId == typeId &&
+                    !_context.Reservations
+                        .Where(reservation => reservation.IsActive == true &&
+                            reservation.CheckIn <= checkOutDate &&
+                            reservation.CheckOut >= checkInDate)
+                        .Select(reservation => reservation.RoomId)
+                        .Contains(room.IdRoom))
+                .ToList();
+
+            return availableRooms;
+        }
+
+
+        public decimal CalculateFinalPrice(int typeId, string checkIn, string checkOut, int adults, int children)
+        {
+            var availableRooms = GetAvailableRooms(typeId, checkIn, checkOut);
+
+            var selectedRoom = availableRooms.FirstOrDefault();
+
+            int totalRooms = 0;
+            foreach (var item in _context.Room)
+            {
+                if (item.TypeId == typeId)
+                {
+                    totalRooms++;
+                }
+            }
+
+            int occupancy = totalRooms - availableRooms.Count;
+            double occupancyPercentage = 0;
+
+            if (totalRooms > 0)
+            {
+                occupancyPercentage = ((double)occupancy / totalRooms) * 100;
+            }
+
+            decimal basePrice = GetTotalPrice(typeId, DateTime.Parse(checkIn), DateTime.Parse(checkOut), adults, children);
+
+            // Doliczenie opłaty za obłożenie w zależności od procentowego obłożenia
+            decimal occupancyFee = 0;
+
+            if (occupancyPercentage <= 30)
+            {
+                occupancyFee = (decimal)((double)basePrice * 0.05); //5% dodatkowej opłaty dla obłożenia poniżej lub równego 30%
+            }
+            else if (occupancyPercentage <= 50)
+            {
+                occupancyFee = (decimal)((double)basePrice * 0.1); // 10% dodatkowej opłaty dla obłożenia poniżej lub równego 50%
+            }
+            else if (occupancyPercentage <= 70)
+            {
+                occupancyFee = (decimal)((double)basePrice * 0.15); // 15% dodatkowej opłaty dla obłożenia poniżej lub równego 70%
+            }
+            else
+            {
+                occupancyFee = (decimal)((double)basePrice * 0.2); // 20% dodatkowej opłaty dla obłożenia powyżej 70%
+            }
+
+            return TotalPrice = basePrice + occupancyFee;
         }
 
         [HttpPost]
@@ -176,31 +252,19 @@ namespace Hotel.PortalWWW.Controllers
         {
             try
             {
-
-                var availableRooms = _context.Room
-                .Where(room => room.TypeId == typeId &&
-                   !_context.Reservations
-                .Where(reservation => reservation.IsActive == true &&
-                         reservation.CheckIn <= DateTime.Parse(checkOut) &&
-                         reservation.CheckOut >= DateTime.Parse(checkIn))
-                        .Select(reservation => reservation.RoomId)
-                        .Contains(room.IdRoom))
-                .ToList();
-
-                var selectedRoom = availableRooms.FirstOrDefault();
+                var availableRooms = GetAvailableRooms(typeId, checkIn, checkOut);
 
                 // Tworzenie obiektu rezerwacji na podstawie przekazanych danych
                 var reservation = new Reservation
                 {
-                    RoomId = selectedRoom.IdRoom,   
+                    RoomId = availableRooms.FirstOrDefault().IdRoom,
                     CheckIn = DateTime.Parse(checkIn),
                     CheckOut = DateTime.Parse(checkOut),
                     NumberOfAdults = adults,
                     NumberOfChildren = children,
                     Name = name,
                     SpecialRequests = specialRequests,
-                    //TotalPrice = (double)TotalPriceOfBooking(roomId, DateTime.Parse(checkIn), DateTime.Parse(checkOut))
-                    TotalPrice = 111
+                    TotalPrice = (double)CalculateFinalPrice(typeId, checkIn, checkOut, adults, children)
                 };
 
                 _context.Reservations.Add(reservation);
@@ -210,15 +274,12 @@ namespace Hotel.PortalWWW.Controllers
                 ViewBag.Message = "Reservation submitted successfully!";
                 ViewBag.TypeOfRoom = _context.Types.Find(_context.Room.Find(reservation.RoomId).TypeId);
                 ViewBag.Reservation = reservation;
-                
-                //ViewBag.Message = reservation.Room.RoomNumber.ToString();
                 return View();
             }
             catch (Exception ex)
             {
-                // Obsługa błędów, np. w przypadku problemów z bazą danych
                 ViewBag.Message = "An error occurred while processing your reservation.";
-                return View(); // Wróć do formularza z wyświetleniem błędów
+                return View();
             }
         }
 
@@ -433,12 +494,12 @@ namespace Hotel.PortalWWW.Controllers
                     <div id='main'>
                         <img src='https://i.imgur.com/IxtZwtE.png' alt='Logo' id='mainLogo'>
                         <h1>Your dream apartment awaits!</h1>
-                        <p>Hello " + reservation.Name+"!"+ @"</p>
+                        <p>Hello " + reservation.Name + "!" + @"</p>
                         <p id='description'>Congratulations on your recent purchase of the beautiful apartment located at Trapise Resort.<br/><br/>
                             We're thrilled that you've found the perfect room to suit your needs and preferences. Our team is dedicated to ensuring your stay is as comfortable and enjoyable as possible. 
                             If you have any special requests or need assistance with anything during your stay, please don't hesitate to reach out to our concierge services.<br/></p>
                             <div id='photo'>
-                                <img id='roomphoto' style='border-radius: 15px;' src="+ typeOfRoom.PhotosURL + @" alt='Room photo'>
+                                <img id='roomphoto' style='border-radius: 15px;' src=" + typeOfRoom.PhotosURL + @" alt='Room photo'>
                                 <table style='color:#0E3F3C'> 
                                     <tr>
                                        <!-- <td width='90%'><h3>" + room.IdRoom + @"</h3></td> -->

@@ -148,14 +148,14 @@
 								<li><a asp-area="" asp-controller="Options" asp-action="Edit">Edit Options </a></li>
 							</ul>
 						</li>
-						<li class="submenu">
+						@*<li class="submenu">
 							<a href="#"><i class="fas fa-user"></i> <span> Customers </span> <span class="menu-arrow"></span></a>
 							<ul class="submenu_class" style="display: none;">
 								<li><a href="all-customer.html"> All customers </a></li>
 								<li><a href="edit-customer.html"> Edit Customer </a></li>
 								<li><a href="add-customer.html"> Add Customer </a></li>
 							</ul>
-						</li>
+						</li>*@
 						<li class="submenu">
 							<a href="#"><i class="fas fa-user"></i> <span> Pages </span> <span class="menu-arrow"></span></a>
 							<ul class="submenu_class" style="display: none;">
@@ -173,6 +173,14 @@
 							</ul>
 						</li>
 						<li class="submenu">
+							<a href="#"><i class="far fa-money-bill-alt"></i> <span> RoomPricing </span> <span class="menu-arrow"></span></a>
+							<ul class="submenu_class" style="display: none;">
+								<li><a asp-area="" asp-controller="RoomPricing" asp-action="Index">RoomPricing</a></li>
+								<li><a asp-area="" asp-controller="RoomPricing" asp-action="Create">Add RoomPricing </a></li>
+								<li><a asp-area="" asp-controller="RoomPricing" asp-action="Edit">Edit RoomPricing </a></li>
+							</ul>
+						</li>
+						<li class="submenu">
 							<a href="#"><i class="fas fa-key"></i> <span> Rooms </span> <span class="menu-arrow"></span></a>
 							<ul class="submenu_class" style="display: none;">
 								<li><a href="@Url.Action("Index","Rooms")">All Rooms </a></li>
@@ -180,7 +188,7 @@
 								<li><a href="@Url.Action("Create","Rooms")" "> Add Rooms </a></li>
 							</ul>
 						</li>
-						<li class="submenu">
+						@*<li class="submenu">
 							<a href="#"><i class="fas fa-user"></i> <span> Staff </span> <span class="menu-arrow"></span></a>
 							<ul class="submenu_class" style="display: none;">
 								<li><a href="all-staff.html">All Staff </a></li>
@@ -306,7 +314,7 @@
 								<li><a href="">Level 1 </a></li>
 								<li><a href="">Level 2 </a></li>
 							</ul>
-						</li>
+						</li>*@
 					</ul>
 				</div>
 			</div>

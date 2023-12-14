@@ -266,7 +266,7 @@
                             
                             <div id="price">
                                 Price from<br>
-                                <b>Tu byla cena</b><br><br>
+                                <b>@Model.PricesByRoomType[room.IdType]</b><br><br>
                                 <a href="/Booking/Form?typeId=@room.IdType&checkIn=@ViewBag.CheckIn&checkOut=@ViewBag.CheckOut&adults=@ViewBag.Adults&children=@ViewBag.Children"><button id="button" style="display: inline-block; margin-right: 10px;">Select room</button></a>
                             </div>
                             <a style="padding-left:2%;color:darkgoldenrod;" class="popup-link"
