@@ -9,7 +9,7 @@ namespace Hotel.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "BasePrice",
+                name: "BasePriceAdult",
                 table: "RoomPricing",
                 newName: "BasePriceChildren");
 
@@ -30,7 +30,7 @@ namespace Hotel.Data.Migrations
             migrationBuilder.RenameColumn(
                 name: "BasePriceChildren",
                 table: "RoomPricing",
-                newName: "BasePrice");
+                newName: "BasePriceAdult");
         }
     }
 }

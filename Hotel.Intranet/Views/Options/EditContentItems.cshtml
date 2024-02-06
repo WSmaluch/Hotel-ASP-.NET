@@ -1,0 +1,60 @@
+﻿@model Hotel.Data.Data.Booking.Options
+
+@{
+	ViewData["Title"] = "Add Content items to Room";
+}
+<div class="content container-fluid">
+	<div class="page-header">
+		<div class="row align-items-center">
+			<div class="col">
+				<h3 class="page-title mt-5">Add ContentItems to room</h3>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				<label>ContentItems</label>
+                <h7 style="color:red;">The previous content items will be reset.</h7>
+				<div class="input-group">
+					<select asp-for="ContentItems" class="form-control" multiple asp-items="ViewBag.ContentItems"></select>
+					<div class="input-group-append">
+						<a href="#" class="btn btn-primary" id="addContentItem">
+							<i style="margin-top:35px" class="fas fa-plus"></i>
+						</a>
+					</div>
+				</div>
+				<button type="button" class="btn btn-primary" id="addContentItemsButton">Add ContentItems</button>
+			</div>
+		</div>
+	</div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('#addContentItem').click(function () {
+                window.location.href = '/ContentItem/Create';
+            });
+
+            // Obsługa przycisku "Add ContentItems"
+            $('#addContentItemsButton').click(function () {
+                var selectedFacilityIds = $('#ContentItems').val();
+                var optionId = @Model.IdOption;
+
+                $.post('/Options/AddContentItems', { optionId: optionId, contentItemIds: selectedFacilityIds })
+                    .done(function (data) {
+                        console.log(data);
+
+                        // Przekierowanie do strony edycji dla pokoju po dodaniu udogodnień
+                        window.location.href = '/Options/Edit/' + optionId;
+                    })
+                    .fail(function (error) {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>
+}

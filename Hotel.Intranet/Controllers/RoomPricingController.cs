@@ -20,11 +20,29 @@ namespace Hotel.Intranet.Controllers
         }
 
         // GET: RoomPricing
-        public async Task<IActionResult> Index()
+        public ActionResult Index(int? month, int? year)
         {
-            var hotelContext = _context.RoomPricing.Include(r => r.Type);
-            return View(await hotelContext.ToListAsync());
+            if (!month.HasValue || !year.HasValue)
+            {
+                // Domyślne wartości dla pierwszego załadowania strony
+                var defaultDate = DateTime.Now;
+                month = defaultDate.Month;
+                year = defaultDate.Year;
+            }
+
+            // Pobierz dane do modelu na podstawie miesiąca i roku
+            var model = _context.RoomPricing
+                .Where(rp => rp.ValidFrom.Month == month && rp.ValidFrom.Year == year)
+                .Include(r=>r.Type)
+                .ToList();
+
+            ViewBag.CurrentMonth = month;
+            ViewBag.CurrentYear = year;
+
+            return View(model);
         }
+
+
 
         // GET: RoomPricing/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -45,31 +63,39 @@ namespace Hotel.Intranet.Controllers
             return View(roomPricing);
         }
 
-        // GET: RoomPricing/Create
         public IActionResult Create()
         {
             ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name");
             return View();
         }
 
-        // POST: RoomPricing/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PricingId,TypeId,ValidFrom,ValidTo,BasePriceAdult,BasePriceChildren,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] RoomPricing roomPricing)
         {
             //if (ModelState.IsValid)
             //{
-            roomPricing.AddedDate = DateTime.Now;
-            roomPricing.AddedBy = "Admin";
-            _context.Add(roomPricing);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                // Sprawdź, czy istnieje już cena dla tego typu pokoju na dany dzień
+                if (_context.RoomPricing.Any(rp => rp.TypeId == roomPricing.TypeId && rp.ValidFrom.Date == roomPricing.ValidFrom.Date))
+                {
+                    ModelState.AddModelError("ValidFrom", "Cena już istnieje dla tego typu pokoju na podany dzień.");
+                    ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", roomPricing.TypeId);
+                    return View(roomPricing);
+                }
+                else
+                { 
+                    roomPricing.AddedBy = "Admin";
+                    roomPricing.AddedDate = DateTime.Now;
+                    _context.Add(roomPricing);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             //}
+
             ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", roomPricing.TypeId);
             return View(roomPricing);
         }
+
 
         // GET: RoomPricing/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -100,8 +126,8 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
                     _context.Update(roomPricing);
@@ -119,7 +145,7 @@ namespace Hotel.Intranet.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", roomPricing.TypeId);
             return View(roomPricing);
         }
@@ -166,5 +192,18 @@ namespace Hotel.Intranet.Controllers
         {
           return (_context.RoomPricing?.Any(e => e.PricingId == id)).GetValueOrDefault();
         }
+
+        private IEnumerable<RoomPricing> GetRoomPricingData(int month, int year)
+        {
+            // Tutaj dodaj kod pobierający dane z bazy danych na podstawie miesiąca i roku
+            // Możesz wykorzystać Entity Framework, Dapper lub inne narzędzie dostępu do danych
+            Console.WriteLine("KRZAK");
+            // Poniżej znajduje się przykładowy kod, który zwraca dane dla danego miesiąca i roku
+            return _context.RoomPricing
+                .Include(r => r.Type)
+                .Where(rp => rp.ValidFrom.Month == month && rp.ValidFrom.Year == year)
+                .ToList();
+        }
+
     }
 }

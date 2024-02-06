@@ -38,45 +38,25 @@
                 <input asp-for="EndDate" class="form-control" />
                 <span asp-validation-for="EndDate" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="AddedBy" class="control-label"></label>
-                <input asp-for="AddedBy" class="form-control" />
-                <span asp-validation-for="AddedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AddedDate" class="control-label"></label>
-                <input asp-for="AddedDate" class="form-control" />
-                <span asp-validation-for="AddedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedBy" class="control-label"></label>
-                <input asp-for="ModifiedBy" class="form-control" />
-                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedDate" class="control-label"></label>
-                <input asp-for="ModifiedDate" class="form-control" />
-                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RemovedBy" class="control-label"></label>
-                <input asp-for="RemovedBy" class="form-control" />
-                <span asp-validation-for="RemovedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RemovedDate" class="control-label"></label>
-                <input asp-for="RemovedDate" class="form-control" />
-                <span asp-validation-for="RemovedDate" class="text-danger"></span>
-            </div>
+            @if (ViewBag.Content != null)
+            {
+                <div class="col-md-4">
+                    <h4>Selected Content Items</h4>
+                    <ul>
+                        @foreach (var item in ViewBag.Content)
+                        {
+                            <li>@item.Title</li>
+                        }
+                    </ul>
+                </div>
+            }
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
+        <div class="col-md-4">
+            <a asp-action="EditContentItems" asp-route-id="@Model.IdOption" class="btn btn-secondary">Edit Content Items</a>
+        </div>
     </div>
 </div>
 

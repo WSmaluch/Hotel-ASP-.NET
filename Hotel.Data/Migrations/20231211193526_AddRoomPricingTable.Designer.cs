@@ -372,7 +372,7 @@ namespace Hotel.Data.Migrations
                     b.Property<DateTime>("AddedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("BasePrice")
+                    b.Property<decimal>("BasePriceAdult")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsActive")

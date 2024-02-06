@@ -48,7 +48,7 @@ namespace Hotel.Intranet.Controllers
         // GET: Options/Create
         public IActionResult Create()
         {
-            ViewData["ContentItems"] = new SelectList(_context.ContentItem, "IdContentItem", "Text");
+            ViewData["ContentItems"] = new SelectList(_context.ContentItem, "IdContentItem", "Title");
             return View();
         }
 
@@ -59,9 +59,9 @@ namespace Hotel.Intranet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdOption,Name,PhotoUrl,Price,StartDate,EndDate,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Options options, List<int> ContentItems)
         {
-            //if (ModelState.IsValid)
-            //{
-            if (ContentItems != null)
+			//if (ModelState.IsValid)
+			//{
+			if (ContentItems != null)
             {
                 foreach (var contentItemId in ContentItems)
                 {
@@ -89,11 +89,20 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            var options = await _context.Options.FindAsync(id);
+            var options = await _context.Options.Include(r => r.ContentItems).FirstOrDefaultAsync(r => r.IdOption == id);
+
             if (options == null)
             {
                 return NotFound();
             }
+
+            var allFacilities = await _context.ContentItem.ToListAsync();
+
+            var selectedContent = options.ContentItems.ToList();
+
+            ViewBag.Content = selectedContent;
+
+            ViewData["ContentItems"] = new SelectList(_context.ContentItem, "IdContentItem", "Title");
             return View(options);
         }
 
@@ -135,19 +144,32 @@ namespace Hotel.Intranet.Controllers
         // GET: Options/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Options == null)
+            //if (id == null || _context.Options == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //var options = await _context.Options
+            //    .FirstOrDefaultAsync(m => m.IdOption == id);
+            //if (options == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //return View(options);
+
+            if (_context.Options == null)
             {
-                return NotFound();
+                return Problem("Entity set 'HotelContext.Options'  is null.");
+            }
+            var options = await _context.Options.FindAsync(id);
+            if (options != null)
+            {
+                _context.Options.Remove(options);
             }
 
-            var options = await _context.Options
-                .FirstOrDefaultAsync(m => m.IdOption == id);
-            if (options == null)
-            {
-                return NotFound();
-            }
-
-            return View(options);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Options/Delete/5
@@ -172,6 +194,51 @@ namespace Hotel.Intranet.Controllers
         private bool OptionsExists(int id)
         {
           return (_context.Options?.Any(e => e.IdOption == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> EditContentItems(int? id)
+        {
+            if (id == null || _context.Options == null)
+            {
+                return NotFound();
+            }
+
+            var options = await _context.Options
+                .Include(t => t.ContentItems)
+                .FirstOrDefaultAsync(t => t.IdOption == id);
+
+            if (options == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.ContentItems = new SelectList(_context.ContentItem, "IdContentItem", "Title");
+
+
+            return View(options);
+        }
+
+        [HttpPost]
+        public IActionResult AddContentItems(int optionId, List<int> contentItemIds)
+        {
+            var room = _context.Options.Include(r => r.ContentItems).FirstOrDefault(r => r.IdOption == optionId);
+
+            room.ContentItems.Clear();
+
+            if (room != null)
+            {
+                foreach (var facilityId in contentItemIds)
+                {
+                    var contentItemToAdd = _context.ContentItem.FirstOrDefault(f => f.IdContentItem == facilityId);
+                    if (contentItemToAdd != null && !room.ContentItems.Contains(contentItemToAdd))
+                    {
+                        room.ContentItems.Add(contentItemToAdd);
+                    }
+                }
+
+                _context.SaveChanges();
+            }
+            return RedirectToAction(nameof(Edit), new { id = optionId });
         }
     }
 }

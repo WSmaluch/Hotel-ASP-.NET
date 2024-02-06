@@ -4,53 +4,143 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <div class="mt-5">
+                    <h4 class="card-title float-left mt-2">Rooms</h4>
+                    <a asp-action="Create" class="btn btn-primary float-right veiwbutton ">Add Room</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card card-table">
+                <div class="card-body booking_card">
+                    <div class="table-responsive">
+                        <table class="datatable table table-stripped table table-hover table-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Room ID</th>
+                                    <th>Type</th>
+                                    <th>Number</th>
+                                    <th>Facilities</th>
+                                    <th>Status</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var room in Model)
+                                {
+                                    <tr>
+                                        <td>@room.IdRoom</td>
+                                        <td>@room.Type.Name</td>
+                                        <td>@room.Number</td>
+                                        <td>
+                                            @foreach (var roomType in ViewBag.Types)
+                                            {
+                                                if (roomType.IdType == room.TypeId)
+                                                {
+                                                    foreach (var fac in roomType.Facilities)
+                                                    {
+                                                        <span>@fac.NameFacility</span>
+                                                    }
+                                                    break; 
+                                                }
+                                            }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Number)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Type)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </th>
-            <th>
-                Facilities
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Number)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
-                <td>
-                    @foreach (var facility in item.Facilities)
-                    {
-                        <span>@facility.NameFacility</span>
-                    }
-                </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdRoom">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdRoom">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdRoom">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                                            @foreach (var facility in room.Facilities)
+                                            {
+                                                <span><b>@facility.NameFacility</b></span>
+                                            }
+                                        </td>
+                                        <td>
+                                                <div class="actions">
+                                                    @if (room.StatusId == 1)
+                                                    {
+                                                                <a href="@Url.Action("ChangeStatus", "Rooms", new { id = room.IdRoom })" class="btn btn-sm bg-primary-light mr-2">Reserved</a>
+                                                    }
+                                                    else if (room.StatusId == 3)
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Rooms", new { id = room.IdRoom })" class="btn btn-sm bg-success-light mr-2">Checked in</a>
+                                                    }
+                                                    else if (room.StatusId == 5)
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Rooms", new { id = room.IdRoom })" class="btn btn-sm bg-danger-light mr-2">Cancelled</a>
+                                                    }
+                                                    else if (room.StatusId == 6)
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Rooms", new { id = room.IdRoom })" class="btn btn-sm bg-warning-light mr-2">Checked out</a>
+                                                    }
+                                                    else if (room.StatusId == 7)
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Rooms", new { id = room.IdRoom })" class="btn btn-sm bg-info-light mr-2">Cleaned</a>
+                                                    }
+                                                    else if (room.StatusId == 8)
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Rooms", new { id = room.IdRoom })" class="btn btn-sm bg-secondary-light mr-2">To clean</a>
+                                                    }
+                                                    else if (room.StatusId == 9)
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Rooms", new { id = room.IdRoom })" class="btn btn-sm bg-success-light mr-2">Ready</a>
+                                                    }
+                                                    else if (room.StatusId == 11)
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Rooms", new { id = room.IdRoom })" class="btn btn-sm bg-danger mr-2">Blocked</a>
+                                                    }
+                                                    else if (room.StatusId == 12)
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Rooms", new { id = room.IdRoom })" class="btn btn-sm bg-primary mr-2">To repair</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Rooms", new { id = room.IdRoom })" class="btn btn-sm bg-secondary-light mr-2">Undefined</a>
+                                                    }
+                                                </div>
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="dropdown dropdown-action">
+                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v ellipse_color"></i></a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item" asp-action="Edit" asp-route-id="@room.IdRoom"><i class="fas fa-pencil-alt m-r-5"></i> Edit</a>
+                                                    <a class="dropdown-item" href="#" onclick="confirmRoom(@room.IdRoom)"><i class="fas fa-trash-alt m-r-5"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="delete_asset" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h3 class="delete_class">Are you sure?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                    <button type="button" class="btn btn-danger" onclick="deleteRoom()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var roomIdToDelete;
+
+    function confirmRoom(roomId) {
+        roomIdToDelete = roomId;
+        $('#delete_asset').modal('show');
+    }
+
+    function deleteRoom() {
+        window.location.href = '/Rooms/Delete/' + roomIdToDelete;
+    }
+</script>

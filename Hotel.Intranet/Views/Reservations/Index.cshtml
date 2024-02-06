@@ -1,111 +1,249 @@
 ﻿@model IEnumerable<Hotel.Data.Data.Booking.Reservation>
+<style>
+    .checkedOutRow {
+        display: none;
+    }
+</style>
+    <div class="content container-fluid">
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col" >
+                    <div class="mt-5">
+                        <h4 class="card-title float-left mt-2">Reservations</h4><br/>
+                    <div style="padding-left:40%">
+                        <button class="fa fa-arrow-left" id="previousMonth" style="border:none;background-color:transparent;"></button>
+                            <span style="background-color:#009688; border-radius:10px;font-size:30px; padding:5px;font-weight:bold" id="currentMonth"></span>
+                        <button class="fa fa-arrow-right" id="nextMonth" style="border:none;background-color:transparent;" ></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-table">
+                    <div class="card-body booking_card">
+                        <div class="table-responsive">
+                        <div class="form-check">
+                            <input type="checkbox" id="showCheckedOut" class="form-check-input" />
+                            <label for="showCheckedOut" class="form-check-label">Show Checked Out Reservations</label>
+                        </div>
+                            <table class="datatable table table-stripped table table-hover table-center mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Booking ID</th>
+                                        <th>Name</th>
+                                        <th>Room Number</th>
+                                        <th>Arrival Date</th>
+                                        <th>Depature Date</th>
+                                        <th>Days</th>
+                                        <th>Adults/Children</th>
+                                        <th>Special request</th>
+                                        <th>Total price</th>
+                                        <th>Option</th>
+                                        <th>Status</th>
+                                        <th class="text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var reservation in Model)
+                                {
+                                    var rowId = "reservationRow_" + reservation.IdReservation;
+                                    <tr id="@rowId" class="reservationRow @((reservation.ReservationStatus?.StatusName == "CheckedOut") ? "checkedOutRow" : "")" data-month="@reservation.CheckIn.Month" data-year="@reservation.CheckIn.Year">
+                                        <td>@reservation.IdReservation</td>
+                                            <td>@reservation.Name @reservation.LastName</td>
+                                            <td>@reservation.RoomId</td>
+                                            <td>@reservation.CheckIn.ToString("dd-MM-yyyy")</td>
+                                            <td>@reservation.CheckOut.ToString("dd-MM-yyyy")</td>
+                                            <td>@((int)(reservation.CheckOut - reservation.CheckIn).TotalDays)</td>
+                                            <td>@reservation.NumberOfAdults/@reservation.NumberOfChildren</td>
+                                            <td>@reservation.SpecialRequests</td>
+                                            <td>@reservation.TotalPrice</td>
+                                            <td style="white-space: normal;">@reservation.Option?.Name</td>
+                                        <td>
+                                            @if (reservation.ReservationStatus != null)
+                                            {
+                                                <div class="actions">
+                                                    @if (reservation.ReservationStatus.StatusName == "Reserved")
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Reservations", new { id = reservation.IdReservation })" class="btn btn-sm bg-primary-light mr-2">Reserved</a>
+                                                    }
+                                                    else if (reservation.ReservationStatus.StatusName == "CheckedIn")
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Reservations", new { id = reservation.IdReservation })" class="btn btn-sm bg-success-light mr-2">Checked in</a>
+                                                    }
+                                                    else if (reservation.ReservationStatus.StatusName == "Cancelled")
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Reservations", new { id = reservation.IdReservation })" class="btn btn-sm bg-danger-light mr-2">Cancelled</a>
+                                                    }
+                                                    else if (reservation.ReservationStatus.StatusName == "CheckedOut")
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Reservations", new { id = reservation.IdReservation })" class="btn btn-sm bg-warning-light mr-2">Checked out</a>
+                                                    }
+                                                    else if (reservation.ReservationStatus.StatusName == "Cleaned")
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Reservations", new { id = reservation.IdReservation })" class="btn btn-sm bg-info-light mr-2">Cleaned</a>
+                                                    }
+                                                    else if (reservation.ReservationStatus.StatusName == "ToClean")
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Reservations", new { id = reservation.IdReservation })" class="btn btn-sm bg-secondary-light mr-2">To clean</a>
+                                                    }
+                                                    else if (reservation.ReservationStatus.StatusName == "Ready")
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Reservations", new { id = reservation.IdReservation })" class="btn btn-sm bg-success-light mr-2">Ready</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="@Url.Action("ChangeStatus", "Reservations", new { id = reservation.IdReservation })" class="btn btn-sm bg-secondary-light mr-2">Undefined</a>
+                                                    }
+                                                </div>
+                                            }
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="dropdown dropdown-action">
+                                                <a href="mailto:@reservation.Email" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v ellipse_color"></i></a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a href="mailto:@reservation.Email" class="dropdown-item"><i class="fas fa-envelope m-r-5"></i> Send email</a>
+                                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@reservation.IdReservation"><i class="fas fa-pencil-alt m-r-5"></i> Edit</a>
+                                                    <a class="dropdown-item" href="#" onclick="confirmDelete(@reservation.IdReservation)"><i class="fas fa-trash-alt m-r-5"></i> Delete</a>
+                                                    @if (reservation.ReservationStatus?.StatusName == "CheckedOut")
+                                                    {
+                                                        <a class="dropdown-item" href="@Url.Action("GenerateInvoice", new { reservationId = reservation.IdReservation })" class="btn btn-sm bg-info-light mr-2"><i class="fas fa-print m-r-5"></i>Print Invoice</a>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </td>
+                                        </tr>
+                                        }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<div id="delete_asset" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h3 class="delete_class">Are you sure?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                    <button type="button" class="btn btn-danger" onclick="deleteReservation()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var reservationIdToDelete;
 
-@{
-    ViewData["Title"] = "Index";
-}
+    function confirmDelete(reservationId) {
+        reservationIdToDelete = reservationId;
+        $('#delete_asset').modal('show');
+    }
 
-<h1>Index</h1>
+    function deleteReservation() {
+        window.location.href = '/Reservations/Delete/' + reservationIdToDelete;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Room)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CheckIn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CheckOut)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumberOfAdults)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumberOfChildren)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SpecialRequests)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsActive)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AddedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RemovedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RemovedDate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CheckIn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CheckOut)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfAdults)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumberOfChildren)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SpecialRequests)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AddedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RemovedBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RemovedDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdReservation">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdReservation">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdReservation">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    document.addEventListener('DOMContentLoaded', function () {
+        var checkedOutRows = document.getElementsByClassName('checkedOutRow');
+        var showCheckedOutCheckbox = document.getElementById('showCheckedOut');
+
+        showCheckedOutCheckbox.addEventListener('change', function () {
+            updateRowsVisibility();
+        });
+
+        function hideCheckedOutRows() {
+            for (var i = 0; i < checkedOutRows.length; i++) {
+                checkedOutRows[i].style.display = 'none';
+            }
+        }
+
+        function showCheckedOutRows() {
+            for (var i = 0; i < checkedOutRows.length; i++) {
+                checkedOutRows[i].style.display = 'table-row';
+            }
+        }
+
+        function updateRowsVisibility() {
+            var checkboxState = showCheckedOutCheckbox.checked;
+            var currentMonth = parseInt(document.getElementById('currentMonth').textContent);
+
+            for (var i = 0; i < checkedOutRows.length; i++) {
+                var isRowCheckedOut = checkedOutRows[i].classList.contains('checkedOutRow');
+                var rowMonth = parseInt(checkedOutRows[i].getAttribute('data-month'));
+
+                if (isRowCheckedOut && checkboxState && rowMonth === currentMonth) {
+                    checkedOutRows[i].style.display = 'table-row';
+                } else {
+                    checkedOutRows[i].style.display = 'none';
+                }
+            }
+        }
+
+        // Domyślnie ukryj wiersze z CheckedOut
+        hideCheckedOutRows();
+
+        // Pobierz kolekcję wszystkich wierszy z klasą reservationRow
+        var allRows = document.getElementsByClassName('reservationRow');
+        var previousMonthButton = document.getElementById('previousMonth');
+        var nextMonthButton = document.getElementById('nextMonth');
+        var currentMonthSpan = document.getElementById('currentMonth');
+
+        showReservationsForCurrentMonth();
+
+        previousMonthButton.addEventListener('click', function () {
+            var currentMonth = parseInt(currentMonthSpan.textContent.split(' ')[0]);
+            var currentYear = parseInt(currentMonthSpan.textContent.split(' ')[1]);
+
+            if (currentMonth === 1) {
+                showReservationsForMonth(12, currentYear - 1);
+            } else {
+                showReservationsForMonth(currentMonth - 1, currentYear);
+            }
+        });
+
+        nextMonthButton.addEventListener('click', function () {
+            var currentMonth = parseInt(currentMonthSpan.textContent.split(' ')[0]);
+            var currentYear = parseInt(currentMonthSpan.textContent.split(' ')[1]);
+
+            if (currentMonth === 12) {
+                showReservationsForMonth(1, currentYear + 1);
+            } else {
+                showReservationsForMonth(currentMonth + 1, currentYear);
+            }
+        });
+
+        function showReservationsForCurrentMonth() {
+            var currentDate = new Date();
+            showReservationsForMonth(currentDate.getUTCMonth() + 1, currentDate.getFullYear());
+        }
+
+        function showReservationsForMonth(month, year) {
+            month = month === 0 ? 12 : month;
+            month = Math.max(1, Math.min(12, month));
+            year = Math.max(1, year);
+
+            currentMonthSpan.textContent = month + ' ' + year;
+
+            for (var i = 0; i < allRows.length; i++) {
+                var reservationMonth = parseInt(allRows[i].getAttribute('data-month'));
+                var reservationYear = parseInt(allRows[i].getAttribute('data-year'));
+
+                if (reservationMonth === month && reservationYear === year) {
+                    allRows[i].style.display = 'table-row';
+                } else {
+                    allRows[i].style.display = 'none';
+                }
+            }
+
+            if (!showCheckedOutCheckbox.checked) {
+                hideCheckedOutRows();
+            }
+        }
+
+    });
+</script>

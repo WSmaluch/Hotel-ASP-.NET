@@ -1,0 +1,21 @@
+﻿@model Hotel.Data.Data.Desktop.RepairTask
+
+@{
+    ViewData["Title"] = "Change Status";
+}
+
+<h1>Change Status</h1>
+
+<form asp-action="ChangeStatus" asp-route-id="@Model.Id" method="post">
+    <div class="form-group">
+        <label for="newStatusId">Select new status:</label>
+        <select class="form-control" id="newStatusId" name="newStatusId">
+            @foreach (var status in ViewBag.Statuses)
+            {
+                <option value="@status.StatusId">@status.StatusName</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Change Status</button>
+</form>

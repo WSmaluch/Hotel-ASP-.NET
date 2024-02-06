@@ -13,7 +13,8 @@ namespace Hotel.Data.Data.Booking
     {
         [Key]
         public int IdContentItem { get; set; }
-        public string Text { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
         public string IconUrl { get; set; }
         [JsonIgnore]
         public List<Options> Options { get; set; } = new List<Options>();

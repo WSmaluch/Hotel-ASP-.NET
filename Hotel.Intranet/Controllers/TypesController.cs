@@ -60,7 +60,7 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdType,Name,Capacity,Description,PhotosURL,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types, List<int> facilities)
+        public async Task<IActionResult> Create([Bind("IdType,Name,Description,PhotosURL,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types, List<int> facilities)
         {
             //if (ModelState.IsValid)
             //{
@@ -92,11 +92,16 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            var types = await _context.Types.FindAsync(id);
+            var types = await _context.Types.Include(t => t.Facilities).FirstOrDefaultAsync(t => t.IdType == id);
+
             if (types == null)
             {
                 return NotFound();
             }
+
+            // Pobierz wszystkie dostępne udogodnienia
+            ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
+
             return View(types);
         }
 
@@ -105,17 +110,18 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdType,Name,Capacity,Description,PhotosURL,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types)
+        public async Task<IActionResult> Edit(int id, [Bind("IdType,Name,Description,PhotosURL,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types)
         {
             if (id != types.IdType)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
+                    types.ModifiedDate = DateTime.Now;
                     _context.Update(types);
                     await _context.SaveChangesAsync();
                 }
@@ -130,27 +136,27 @@ namespace Hotel.Intranet.Controllers
                         throw;
                     }
                 }
+                ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             return View(types);
         }
 
         // GET: Types/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Types == null)
+            if (_context.Types == null)
             {
-                return NotFound();
+                return Problem("Entity set 'HotelContext.Types'  is null.");
+            }
+            var type = await _context.Types.FindAsync(id);
+            if (type != null)
+            {
+                _context.Types.Remove(type);
             }
 
-            var types = await _context.Types
-                .FirstOrDefaultAsync(m => m.IdType == id);
-            if (types == null)
-            {
-                return NotFound();
-            }
-
-            return View(types);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Types/Delete/5
@@ -176,5 +182,52 @@ namespace Hotel.Intranet.Controllers
         {
           return (_context.Types?.Any(e => e.IdType == id)).GetValueOrDefault();
         }
+
+        public async Task<IActionResult> EditFacilities(int? id)
+        {
+            if (id == null || _context.Types == null)
+            {
+                return NotFound();
+            }
+
+            var types = await _context.Types
+                .Include(t => t.Facilities)
+                .FirstOrDefaultAsync(t => t.IdType == id);
+
+            if (types == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
+
+            return View(types);
+        }
+
+        [HttpPost]
+        public IActionResult AddFacilities(int typeId, List<int> facilityIds)
+        {
+            var types = _context.Types.Include(r => r.Facilities).FirstOrDefault(r => r.IdType == typeId);
+
+            types.Facilities.Clear();
+
+            if (types != null)
+            {
+                foreach (var facilityId in facilityIds)
+                {
+                    var facilityToAdd = _context.Facilities.FirstOrDefault(f => f.IdFacility == facilityId);
+                    if (facilityToAdd != null && !types.Facilities.Contains(facilityToAdd))
+                    {
+                        types.Facilities.Add(facilityToAdd);
+                    }
+                }
+
+                _context.SaveChanges();
+            }
+
+            // Przekieruj użytkownika z powrotem do widoku edycji pokoju lub innego, w zależności od potrzeb
+            return RedirectToAction(nameof(Edit), new { id = typeId });
+        }
+
     }
 }

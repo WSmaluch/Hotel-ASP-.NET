@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Blog";
+}
+<!-- Dołączanie stylów Slick Carousel -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+
+<!-- Dołączanie skryptów jQuery i Slick Carousel -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js">
+    </script>
+<style>
+    .forQuery {
+        padding-top: 40px;
+        padding-bottom: 60px;
+    }
+
+    .mySlides {
+        display: none;
+    }
+</style>
+<!-- bradcam_area_start -->
+<div class="bradcam_area breadcam_bg" style="background-image:url(https://i.imgur.com/ccGTCmJ.png)">
+    <h3>Details</h3>
+</div>
+<!-- bradcam_area_end -->
+<!--================Blog Area =================-->
+<section class="room_details_area section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mb-5 mb-lg-0">
+                <div class="room_details_left" style="position: relative;">
+                    <div id="gallery" class="main_image" style="position: relative;">
+                        @foreach (var photoURL in ViewBag.PhotoURLs)
+                        {
+                            <img class="mySlides" src="@photoURL" style="width:100%;">
+                        }
+                        <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)" style="position: absolute; top: 50%; left: 0; transform: translateY(-50%);">&#10094;</button>
+                        <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)" style="position: absolute; top: 50%; right: 0; transform: translateY(-50%);">&#10095;</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="room_details_sidebar">
+                    <h2>@ViewBag.Type.Name</h2>
+                    <p>@ViewBag.Type.Description</p>
+                    <h3>Facilities</h3>
+                    <ul class="list">
+                        @foreach (var facility in ViewBag.Type.Facilities)
+                        {
+                            <li>@facility.NameFacility</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    var slideIndex = 1;
+    showDivs(slideIndex);
+
+    function plusDivs(n) {
+        showDivs(slideIndex += n);
+    }
+
+    function showDivs(n) {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        if (n > x.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = x.length }
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        x[slideIndex - 1].style.display = "block";
+    }
+</script>

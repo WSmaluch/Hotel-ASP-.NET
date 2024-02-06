@@ -6,7 +6,7 @@
 	<div class="page-header">
 		<div class="row">
 			<div class="col-sm-12 mt-5">
-				<h3 class="page-title mt-3">Good Morning Soeng Souy!</h3>
+				<h3 class="page-title mt-3">Good Morning!</h3>
 				<ul class="breadcrumb">
 					<li class="breadcrumb-item active">Dashboard</li>
 				</ul>
@@ -19,8 +19,8 @@
 				<div class="card-body">
 					<div class="dash-widget-header">
 						<div>
-							<h3 class="card_widget_header">236</h3>
-							<h6 class="text-muted">Total Booking</h6>
+							<h3 class="card_widget_header">@ViewBag.Reservations.Count</h3>
+							<h6 class="text-muted">Total Reservation in this month</h6>
 						</div>
 						<div class="ml-auto mt-md-3 mt-lg-0">
 							<span class="opacity-7 text-muted">
@@ -41,8 +41,8 @@
 				<div class="card-body">
 					<div class="dash-widget-header">
 						<div>
-							<h3 class="card_widget_header">180</h3>
-							<h6 class="text-muted">Available Rooms</h6>
+							<h3 class="card_widget_header">@ViewBag.avaliable</h3>
+							<h6 class="text-muted">Rooms available for today's night</h6>
 						</div>
 						<div class="ml-auto mt-md-3 mt-lg-0">
 							<span class="opacity-7 text-muted">
@@ -61,8 +61,8 @@
 				<div class="card-body">
 					<div class="dash-widget-header">
 						<div>
-							<h3 class="card_widget_header">1538</h3>
-							<h6 class="text-muted">Enquiry</h6>
+							<h3 class="card_widget_header">@ViewBag.Occupancy %</h3>
+							<h6 class="text-muted">Today's Occupancy</h6>
 						</div>
 						<div class="ml-auto mt-md-3 mt-lg-0">
 							<span class="opacity-7 text-muted">
@@ -84,8 +84,8 @@
 				<div class="card-body">
 					<div class="dash-widget-header">
 						<div>
-							<h3 class="card_widget_header">364</h3>
-							<h6 class="text-muted">Collections</h6>
+							<h3 class="card_widget_header">@ViewBag.TotalCapacity</h3>
+							<h6 class="text-muted">Total capacity</h6>
 						</div>
 						<div class="ml-auto mt-md-3 mt-lg-0">
 							<span class="opacity-7 text-muted">
@@ -106,7 +106,7 @@
 		<div class="col-md-12 col-lg-6">
 			<div class="card card-chart">
 				<div class="card-header">
-					<h4 class="card-title">VISITORS</h4>
+					<h4 class="card-title">STATS</h4>
 				</div>
 				<div class="card-body">
 					<div id="line-chart"></div>
@@ -116,7 +116,7 @@
 		<div class="col-md-12 col-lg-6">
 			<div class="card card-chart">
 				<div class="card-header">
-					<h4 class="card-title">ROOMS BOOKED</h4>
+					<h4 class="card-title">MOST POPULAR ROOM IN THIS MONTH</h4>
 				</div>
 				<div class="card-body">
 					<div id="donut-chart"></div>
@@ -129,7 +129,7 @@
 			<div class="card card-table flex-fill">
 				<div class="card-header">
 					<h4 class="card-title float-left mt-2">Booking</h4>
-					<button type="button" class="btn btn-primary float-right veiwbutton">Veiw All</button>
+					<button type="button" class="btn btn-primary float-right veiwbutton"><a style="color:white" asp-area="" asp-controller="Reservations" asp-action="Index">View All</a></button>
 				</div>
 				<div class="card-body">
 					<div class="table-responsive">
@@ -137,80 +137,31 @@
 							<thead>
 								<tr>
 									<th>Booking ID</th>
+									<th>Room Number</th>
 									<th>Name</th>
-									<th>Email ID</th>
-									<th>Aadhar Number</th>
-									<th class="text-center">Room Type</th>
-									<th class="text-right">Number</th>
+									<th>CheckIn</th>
+									<th>CheckOut</th>
 									<th class="text-center">Status</th>
+									<th class="text-center">Total Price</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td class="text-nowrap">
-										<div>BKG-0001</div>
-									</td>
-									<td class="text-nowrap">Tommy Bernal</td>
-									<td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3743585a5a4e55524559565b77524f565a475b521954585a">[email&#160;protected]</a></td>
-									<td>12414786454545</td>
-									<td class="text-center">Double</td>
-									<td class="text-right">
-										<div>631-254-6480</div>
-									</td>
-									<td class="text-center"> <span class="badge badge-pill bg-success inv-badge">INACTIVE</span> </td>
-								</tr>
-								<tr>
-									<td class="text-nowrap">
-										<div>BKG-0002</div>
-									</td>
-									<td class="text-nowrap">Ellen Thill</td>
-									<td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="89fbe0eae1e8fbedebfbe6ebfafdc9ecf1e8e4f9e5eca7eae6e4">[email&#160;protected]</a></td>
-									<td>5456223232322</td>
-									<td class="text-center">Double</td>
-									<td class="text-right">
-										<div>830-468-1042</div>
-									</td>
-									<td class="text-center"> <span class="badge badge-pill bg-success inv-badge">INACTIVE</span> </td>
-								</tr>
-								<tr>
-									<td class="text-nowrap">
-										<div>BKG-0003</div>
-									</td>
-									<td class="text-nowrap">Corina Kelsey</td>
-									<td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="76131a1a1318021e1f1a1a36130e171b061a135815191b">[email&#160;protected]</a></td>
-									<td>454543232625</td>
-									<td class="text-center">Single</td>
-									<td class="text-right">
-										<div>508-335-5531</div>
-									</td>
-									<td class="text-center"> <span class="badge badge-pill bg-success inv-badge">INACTIVE</span> </td>
-								</tr>
-								<tr>
-									<td class="text-nowrap">
-										<div>BKG-0004</div>
-									</td>
-									<td class="text-nowrap">Carolyn Lane</td>
-									<td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="50333f22393e313b353c23352910373d31393c7e333f3d">[email&#160;protected]</a></td>
-									<td>2368989562621</td>
-									<td class="text-center">Double</td>
-									<td class="text-right">
-										<div>262-260-1170</div>
-									</td>
-									<td class="text-center"> <span class="badge badge-pill bg-success inv-badge">INACTIVE</span> </td>
-								</tr>
-								<tr>
-									<td class="text-nowrap">
-										<div>BKG-0005</div>
-									</td>
-									<td class="text-nowrap">Denise</td>
-									<td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1c7f7d6e73706572707d72795c7b717d7570327f7371">[email&#160;protected]</a></td>
-									<td>3245455582287</td>
-									<td class="text-center">Single</td>
-									<td class="text-right">
-										<div>570-458-0070</div>
-									</td>
-									<td class="text-center"> <span class="badge badge-pill bg-success inv-badge">INACTIVE</span> </td>
-								</tr>
+								@foreach(var res in ViewBag.ActiveReservations)
+								{
+									<tr>
+										<td class="text-nowrap">
+											<div>@res.IdReservation</div>
+										</td>
+										<td class="text-nowrap">@res.RoomId</td>
+										<td class="text-nowrap">
+											<div>@res.Name</div>
+										</td>
+										<td>@res.CheckIn.ToString("dd-MM-yyyy")</td>
+										<td>@res.CheckOut.ToString("dd-MM-yyyy")</td>
+										<td class="text-center"> <span class="badge badge-pill bg-success inv-badge">@res.IsActive</span> </td>
+										<td>@res.TotalPrice</td>
+									</tr>
+								}
 							</tbody>
 						</table>
 					</div>
@@ -219,3 +170,61 @@
 		</div>
 	</div>
 </div>
+<script>
+	function donutChart() {
+		var data = [
+	@foreach (var type in ViewBag.RoomTypes)
+	{
+		var reservationCount = ViewBag.ReservationsByType.ContainsKey(type.IdType) ?
+		ViewBag.ReservationsByType[type.IdType] : 0;
+		<text>{ label: "@type.Name", value: "@reservationCount" }, </text>
+
+	}
+	];
+
+		window.donutChart = Morris.Donut({
+			element: 'donut-chart',
+			data: data,
+			backgroundColor: '#f2f5fa',
+			labelColor: '#009688',
+			colors: ['#0BA462', '#39B580', '#67C69D', '#95D7BB'],
+			resize: true,
+			redraw: true
+		});
+	}
+
+	// Wywołaj funkcję po załadowaniu strony
+	document.addEventListener("DOMContentLoaded", function () {
+		donutChart();
+	});
+
+	function lineChart() {
+		var data = [
+	@foreach (var res in ViewBag.Last3MonthsReservations)
+	{
+		<text>{ y: '@($"{res.CheckOut.Year}-{res.CheckOut.Month:D2}")', a: '@res.Count' }, </text>
+	}
+		];
+
+		window.lineChart = Morris.Line({
+			element: 'line-chart',
+			data: data,
+			xkey: 'y',
+			ykeys: ['a'],
+			labels: ['Rezerwacje'],
+			lineColors: ['#009688', '#cdc6c6'],
+			lineWidth: '3px',
+			resize: true,
+			redraw: true,
+			xLabels: 'year',
+			xLabelFormat: function (date) {
+				return date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0');
+			}
+		});
+	}
+
+	document.addEventListener("DOMContentLoaded", function () {
+		lineChart();
+	});
+
+</script>

@@ -1,0 +1,55 @@
+﻿@model DateTime?
+
+@{
+    ViewData["Title"] = "Create Reservation - Choose Date";
+}
+
+<h1>Choose Reservation Date</h1>
+
+<div class="row">
+    <div class="col-xl-6">
+        <label for="checkin">Check-in Date:</label>
+        <input name="checkin" id="datepicker" type="text" placeholder="Select date" class="datepicker">
+    </div>
+    <div class="col-xl-6">
+        <label for="checkout">Check-out Date:</label>
+        <input name="checkout" id="datepicker2" type="text" placeholder="Select date" class="datepicker">
+    </div>
+    <div class="col-xl-6">
+        <label for="numberofadults">Number of adults:</label>
+        <input name="numberofadults" id="numberofadults" type="text" placeholder="Enter number of adults">
+    </div>
+    <div class="col-xl-6">
+        <label for="numberofchildrens">Number of children:</label>
+        <input name="numberofchildrens" id="numberofchildrens" type="text" placeholder="Enter number of children">
+    </div>
+</div>
+
+<button id="continueButton" class="btn btn-primary">Continue to Create Reservation</button>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".datepicker").datepicker();
+
+            $("#continueButton").on("click", function () {
+                var checkInDate = $("#datepicker").datepicker("getDate");
+                var checkOutDate = $("#datepicker2").datepicker("getDate");
+                var numberOfAdults = $("#numberofadults").val();
+                var numberOfChildrens = $("#numberofchildrens").val();
+
+                // Przekierowanie z danymi w parametrach
+                var url = "/Reservations/Create?checkIn=" + encodeURIComponent(checkInDate.toISOString()) +
+                    "&checkOut=" + encodeURIComponent(checkOutDate.toISOString()) +
+                    "&NumberOfAdults=" + numberOfAdults +
+                    "&NumberOfChildren=" + numberOfChildrens;
+
+                window.location.href = url;
+            });
+        });
+    </script>
+}

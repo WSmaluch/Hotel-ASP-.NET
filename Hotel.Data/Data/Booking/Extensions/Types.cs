@@ -1,5 +1,6 @@
 ﻿using Hotel.Data.Data.CMS.Abstract;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hotel.Data.Data.Booking.Extensions
 {
@@ -8,7 +9,6 @@ namespace Hotel.Data.Data.Booking.Extensions
         [Key]
         public int IdType { get; set; }
         public string Name { get; set; }
-        public int Capacity { get; set; }
         public string Description { get; set; }
         public List<Room> Rooms { get; set; }
         public string PhotosURL { get; set; } //to do typow

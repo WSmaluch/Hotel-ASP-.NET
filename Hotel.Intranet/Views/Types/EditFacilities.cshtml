@@ -1,0 +1,57 @@
+﻿@model Hotel.Data.Data.Booking.Extensions.Types
+
+@{
+    ViewData["Title"] = "Add Facilities to Type";
+}
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title mt-5">Add facilities to type</h3>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>Facilities</label><br/>
+                <h7 style="color:red;">The previous facilities will be reset.</h7>
+                <div class="input-group">
+                    <select asp-for="Facilities" class="form-control" multiple asp-items="ViewBag.Facilities"></select>
+                    <div class="input-group-append">
+                        <a href="#" class="btn btn-primary" id="addFacility">
+                            <i style="margin-top:35px" class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary" id="addFacilitiesButton">Add Facilities</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('#addFacility').click(function () {
+                window.location.href = '/Facilities/Create';
+            });
+
+            $('#addFacilitiesButton').click(function () {
+                var selectedFacilityIds = $('#Facilities').val();
+                var typeId = @Model.IdType;
+
+                $.post('/Types/AddFacilities', { typeId: typeId, facilityIds: selectedFacilityIds })
+                    .done(function (data) {
+                        console.log(data);
+                        window.location.href = '/Types/Edit/' + typeId;
+                    })
+                    .fail(function (error) {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>
+}

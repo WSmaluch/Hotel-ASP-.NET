@@ -10,35 +10,85 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Confirm" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="RoomId" class="control-label"></label>
-                <select asp-for="RoomId" class ="form-control" asp-items="ViewBag.RoomId"></select>
+                <select asp-for="RoomId" class ="form-control" asp-items="ViewBag.Rooms"></select>
             </div>
+
+            <div class="form-group">
+                <label asp-for="OptionId" class="control-label">Select Option</label>
+                <select asp-for="OptionId" class="form-control" asp-items="ViewBag.Options"></select>
+                <span asp-validation-for="OptionId" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="CheckIn" class="control-label"></label>
-                <input asp-for="CheckIn" class="form-control" />
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="City" class="control-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AdressFirstLine" class="control-label"></label>
+                <input asp-for="AdressFirstLine" class="form-control" />
+                <span asp-validation-for="AdressFirstLine" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PostalCode" class="control-label"></label>
+                <input asp-for="PostalCode" class="form-control" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="CheckIn" class="control-label">Check-In Date</label>
+                <input type="text" class="form-control" value="@((ViewBag.CheckIn as DateTime?)?.ToString("dd-MM-yyyy"))" readonly />
+                <input type="hidden" asp-for="CheckIn" />
                 <span asp-validation-for="CheckIn" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="CheckOut" class="control-label"></label>
-                <input asp-for="CheckOut" class="form-control" />
+                <label asp-for="CheckOut" class="control-label">Check-Out Date</label>
+                <input type="text" class="form-control" value="@((ViewBag.CheckOut as DateTime?)?.ToString("dd-MM-yyyy"))" readonly />
+                <input type="hidden" asp-for="CheckOut" />
                 <span asp-validation-for="CheckOut" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="NumberOfAdults" class="control-label"></label>
-                <input asp-for="NumberOfAdults" class="form-control" />
+                <label asp-for="NumberOfAdults" class="control-label">Number of adults</label>
+                <input type="text" class="form-control" value="@ViewBag.NumberOfAdults.ToString()" readonly />
+                <input type="hidden" asp-for="NumberOfAdults" />
                 <span asp-validation-for="NumberOfAdults" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="NumberOfChildren" class="control-label"></label>
-                <input asp-for="NumberOfChildren" class="form-control" />
+                <label asp-for="NumberOfChildren" class="control-label">Number of Childrens</label>
+                <input type="text" class="form-control" value="@ViewBag.NumberOfChildren.ToString()" readonly />
+                <input type="hidden" asp-for="NumberOfChildren" />
                 <span asp-validation-for="NumberOfChildren" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -46,50 +96,11 @@
                 <input asp-for="SpecialRequests" class="form-control" />
                 <span asp-validation-for="SpecialRequests" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="AddedBy" class="control-label"></label>
-                <input asp-for="AddedBy" class="form-control" />
-                <span asp-validation-for="AddedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AddedDate" class="control-label"></label>
-                <input asp-for="AddedDate" class="form-control" />
-                <span asp-validation-for="AddedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedBy" class="control-label"></label>
-                <input asp-for="ModifiedBy" class="form-control" />
-                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedDate" class="control-label"></label>
-                <input asp-for="ModifiedDate" class="form-control" />
-                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RemovedBy" class="control-label"></label>
-                <input asp-for="RemovedBy" class="form-control" />
-                <span asp-validation-for="RemovedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RemovedDate" class="control-label"></label>
-                <input asp-for="RemovedDate" class="form-control" />
-                <span asp-validation-for="RemovedDate" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

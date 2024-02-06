@@ -1,0 +1,62 @@
+﻿@model Hotel.Data.Data.Booking.Room
+
+@{
+	ViewData["Title"] = "Add Facilities to Room";
+}
+<div class="content container-fluid">
+	<div class="page-header">
+		<div class="row align-items-center">
+			<div class="col">
+				<h3 class="page-title mt-5">Add facilities to room</h3>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				<label>Facilities</label><br/>
+                <h7 style="color:red;">The previous facility will be reset.</h7>
+                <div class="input-group">
+                    <select asp-for="Facilities" class="custom-select form-control" multiple asp-items="ViewBag.Facilities"></select>
+                    <div class="input-group-append">
+                        <a href="#" class="btn btn-primary" id="addFacility">
+                            <i style="margin-top: 15px;" class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <br/>
+				<button type="button" class="btn btn-primary" id="addFacilitiesButton">Add Facilities</button>
+			</div>
+		</div>
+	</div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('#addFacility').click(function () {
+                window.location.href = '/Facilities/Create';
+            });
+
+            // Obsługa przycisku "Add Facilities"
+            $('#addFacilitiesButton').click(function () {
+                var selectedFacilityIds = $('#Facilities').val();
+                var roomId = @Model.IdRoom;
+
+                $.post('/Rooms/AddFacilities', { roomId: roomId, facilityIds: selectedFacilityIds })
+                    .done(function (data) {
+                        console.log(data);
+
+                        // Przekierowanie do strony edycji dla pokoju po dodaniu udogodnień
+                        window.location.href = '/Rooms/Edit/' + roomId;
+                    })
+                    .fail(function (error) {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    </script>
+}

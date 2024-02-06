@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Raport";
+}
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" ></script>
+<style>
+    #container
+    {
+        padding-left:40%;
+        background-color:beige;
+    }
+</style>
+<h1>Raport</h1>
+<div id="container">
+    <form id="pdfForm" action="/GenerateRaport" method="get">
+        <label for="year">Year:</label>
+        <select id="year" name="year">
+            <!-- Year options -->
+        </select>
+
+        <label for="month">Month:</label>
+        <select id="month" name="month">
+            <!-- Month options -->
+        </select>
+
+        <!-- Przycisk submit zamiast linku -->
+        <button type="submit">Generate PDF</button>
+    </form>
+</div>
+
+<script>
+    // Initialize the combobox for the year
+    var currentYear = new Date().getFullYear();
+    for (var i = currentYear; i >= currentYear - 10; i--) {
+        $("#year").append('<option value="' + i + '">' + i + '</option>');
+    }
+
+    // Initialize the combobox for the month
+    var months = [
+        { value: 1, name: 'January' },
+        { value: 2, name: 'February' },
+        { value: 3, name: 'March' },
+        { value: 4, name: 'April' },
+        { value: 5, name: 'May' },
+        { value: 6, name: 'June' },
+        { value: 7, name: 'July' },
+        { value: 8, name: 'August' },
+        { value: 9, name: 'September' },
+        { value: 10, name: 'October' },
+        { value: 11, name: 'November' },
+        { value: 12, name: 'December' }
+    ];
+
+    for (var j = 0; j < months.length; j++) {
+        $("#month").append('<option value="' + months[j].value + '">' + months[j].name + '</option>');
+    }
+</script>

@@ -19,22 +19,22 @@
                 <span asp-validation-for="TypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ValidFrom" class="control-label"></label>
+                <label>Valid From</label>
                 <input asp-for="ValidFrom" class="form-control" />
                 <span asp-validation-for="ValidFrom" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ValidTo" class="control-label"></label>
+                <label>Valid To</label>
                 <input asp-for="ValidTo" class="form-control" />
                 <span asp-validation-for="ValidTo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BasePriceAdult" class="control-label"></label>
+                <label>Base price</label>
                 <input asp-for="BasePriceAdult" class="form-control" />
                 <span asp-validation-for="BasePriceAdult" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BasePriceChildren" class="control-label"></label>
+                <label>Additional price</label>
                 <input asp-for="BasePriceChildren" class="form-control" />
                 <span asp-validation-for="BasePriceChildren" class="text-danger"></span>
             </div>
@@ -44,41 +44,12 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="AddedBy" class="control-label"></label>
-                <input asp-for="AddedBy" class="form-control" />
-                <span asp-validation-for="AddedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AddedDate" class="control-label"></label>
-                <input asp-for="AddedDate" class="form-control" />
-                <span asp-validation-for="AddedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedBy" class="control-label"></label>
-                <input asp-for="ModifiedBy" class="form-control" />
-                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedDate" class="control-label"></label>
-                <input asp-for="ModifiedDate" class="form-control" />
-                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RemovedBy" class="control-label"></label>
-                <input asp-for="RemovedBy" class="form-control" />
-                <span asp-validation-for="RemovedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RemovedDate" class="control-label"></label>
-                <input asp-for="RemovedDate" class="form-control" />
-                <span asp-validation-for="RemovedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
+
 
 <div>
     <a asp-action="Index">Back to List</a>

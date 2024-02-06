@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Hotel.Data.Data.Booking.Extensions.Facilities>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<div class="page-header">
+    <div class="row align-items-center" style="margin-top:-2%">
+        <div class="col">
+            <div class="mt-5">
+                <h4 class="card-title float-left mt-2">Facilities</h4>
+                <a asp-action="Create" class="btn btn-primary float-right veiwbutton" style="margin-right:3%">Add facilities</a>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Facility
+            </th>
+            <th class="text-right">
+                Actions
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td >
+                @Html.DisplayFor(modelItem => item.NameFacility)
+            </td>
+                <td class="text-right">
+                    <div class="dropdown dropdown-action">
+                        <a class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v ellipse_color"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.IdFacility"><i class="fas fa-pencil-alt m-r-5"></i> Edit</a>
+                            <a class="dropdown-item" href="#" onclick="confirmDelete(@item.IdFacility)"><i class="fas fa-trash-alt m-r-5"></i> Delete</a>
+                        </div>
+                    </div>
+                </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div id="delete_asset" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h3 class="delete_class">Are you sure?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                    <button type="button" class="btn btn-danger" onclick="deleteFacility()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function confirmDelete(facilityId) {
+        facilityIdToDelete = facilityId;
+        $('#delete_asset').modal('show');
+    }
+
+    function deleteFacility() {
+        window.location.href = '/Facilities/Delete/' + facilityIdToDelete;
+    }
+</script>

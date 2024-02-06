@@ -10,4 +10,39 @@ Dla danej kategorii, dla danej kategorii pokoju. Wyświetlać minimalne ceny na 
 8. Drukowanie faktur/rachunków.
 9. Blokowanie pokoju.
 10. Dokonywanie testowych płatności.
-11. Raporty - ile dochodu w danym miesiącu.
+11. Raporty - ile dochodu w danym miesiącu.21
+
+
+NOWA LISTA
+Zamiast photoURL dodać edytor zdjęć. (łatwiejsze wybieranie zdjeć)
+Poprawić wszystkie CRUD - w szczególności EDIT - chyba tak/ale sprawdzic jeszcze raz
+Dokonywanie testowych płatności.
+poprawic wyswietlanie rezerwacji(miesiac, rok) - prawie gotowe, dodać więcej checkboxów nie tylko do checkedout 
+
+
+WYKONANO:
+2. przemyśleć pola w kategorii pokojów - usunięto capacity(zbędne)
+7. Widok, który wyświetla wszystkie udogodnienia z pokoju wraz z udogodnieniami z kategorii pokoju. - gotowe
+11. Dodac tabele ze statusami - (zarezerwowano,zameldowany,odwołany, wymeldowany, poprzatane, do posprzatania, gotowy) - gotowe
+14. Wymeldowywanie. - w rezerwacjach mam zmiane statusu
+18. Raporty - ile dochodu w danym miesiącu. - gotowe
+16. Blokowanie pokoju. - (da sie zmienić status, + jak sprząta to się blokuje z automatu. Dodać jeszcze na index Room zmiane statusu jak na rezerwacjach)
+15. Drukowanie faktur/rachunków. - prawie gotowe (do modelu rezerwacji dodać adres/mail itp.) - gotowe
+12. Obsluga meldowania.(w rezerwacjach mam zmiane statusu)
+19. Dodać Mozliwość zgłaszania napraw w intranecie i realizacji napraw na desktopie - jest dodane w intranecie, dodać w desktopie!
+13. Obsluga kosztów pobytu (teraz jest cena bazowa za pokoj w danym terminie, jeżeli jest to pokój dwuosobowy to jest doliczana 'additionalPrice', czyli opłata za trzecia osobe + koszty za obłożenie)
+1. uruchomic wykresy na glownym panelu
+5. Dodać CRUD do Facilities
+21. Na podobnej zasadzie zrobić roompricing jak w pkt 20.
+8. Opanować ustawianie cenników dla pokoi
+repiar task - StatusName error
+poprawić labelki w repair task add
+Edycja cennika
+Zrobić edycje katerogii (typów)
+Nie działa edycja pokoju - podpiąc edit, dodać edycja facilities
+Dodać add reservation z intranet
+Poprawić obliczanie ceny za pobyt (dwa cenniki)!!!! ważne
+
+
+EntityFrameworkCore\Add-Migration AddSomeClass -context HotelContext
+EntityFrameworkCore\update-database

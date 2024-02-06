@@ -49,27 +49,30 @@ namespace Hotel.PortalWWW.Controllers
                    where offer.IsActive == true
                    select offer
                 ).ToList();
-
+            ViewBag.Types =
+            (
+                   from type in _context.Types
+                   select type
+                ).ToList();
             return View();
         }
 
         public IActionResult About()
         {
-            var aboutPage = _context.AboutPage.FirstOrDefault(); //important
-            ViewBag.AboutUs =
-            (
-                   from about in _context.AboutPage
-                   where about.IsActive == true
-                   select about
-                ).ToList().FirstOrDefault();
-            ViewBag.AboutBanner =
-            (
-                   from aboutPhoto in _context.AboutSilderPhoto
-                   where aboutPhoto.IsActive == true
-                   select aboutPhoto
-                ).ToList();
+            ViewBag.AboutPage = _context.AboutPage
+         .Where(about => about.IsActive)
+         .FirstOrDefault();
 
-            return View(aboutPage);
+            ViewBag.AboutBanner = _context.AboutSilderPhoto
+        .Where(aboutPhoto => aboutPhoto.IsActive)
+        .ToList();
+
+
+            ViewBag.AboutUs = _context.AboutPage
+        .Where(about => about.IsActive)
+        .ToList();
+
+            return View();
         }
 
 
@@ -81,12 +84,18 @@ namespace Hotel.PortalWWW.Controllers
                    where offer.IsActive == true
                    select offer
                 ).ToList();
+
+            ViewBag.Types =
+            (
+                   from type in _context.Types
+                   select type
+                ).ToList();
+
             return View();
         }
 
         public IActionResult Blog()
         {
-            //var blogPage = _context.Post;
             ViewBag.Posts =
             (
                    from post in _context.Post
@@ -98,8 +107,30 @@ namespace Hotel.PortalWWW.Controllers
 
         public IActionResult Contact()
         {
-            var contactpage = _context.ContactPage.FirstOrDefault(); //important
-            return View(contactpage);
+            ViewBag.Contact = _context.ContactPage
+         .Where(contact => contact.IsActive)
+         .FirstOrDefault();
+            return View();
+        }
+
+        public IActionResult RoomTypeDetails(int typeId)
+        {
+            var type = _context.Types
+             .Where(t => t.IsActive && t.IdType == typeId)
+             .FirstOrDefault();
+
+                ViewBag.Type = type;
+
+                ViewBag.Fac = _context.Types
+                 .Where(t => t.IsActive && t.IdType == typeId)
+                 .Include(type => type.Facilities)
+                 .FirstOrDefault().Facilities;
+
+
+                ViewBag.PhotoURLs = type.PhotosURL.Split(';');
+
+            return View();
+
         }
 
         public IActionResult Privacy()

@@ -9,13 +9,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
-<div id="monthName"><h1>@Model.FirstOrDefault()?.ValidFrom.ToString("MMMM yyyy")</h1></div>
+<h1 id="monthTitle">Index</h1>
 
 <style>
     .col-md-12 {
@@ -29,22 +23,63 @@
     }
 
     .price-cell {
-        
-        
     }
 
     #monthName {
         text-align: center;
     }
 
-    td img{
-        width:30%;
+    td img {
+        width: 30%;
     }
-</style>
 
+    #monthNavigation {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+        #monthNavigation button {
+            margin: 5px;
+        }
+</style>
+<div class="page-header">
+    
+</div>
 <div class="container">
     <div class="row">
         <div class="col-md-12 scrollable-table">
+            <div>
+                <div style="float:left;width:50%">
+                    <div class="row align-items-center">
+                        <div class="col" style="margin-top:-1%">
+                            <div class="mt-5">
+                                <a asp-action="Create" class="btn btn-primary float-left veiwbutton " style="margin-right:3%">Add new pricing</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="width:30%;float:left;">
+                    <div id="monthNavigation">
+                        <button onclick="changeMonth(-1)">Previous</button>
+                        <h1 id="monthTitle">@Model.FirstOrDefault()?.ValidFrom.ToString("MMMM yyyy")</h1>
+                        <button onclick="changeMonth(1)">Next</button>
+                    </div>
+                </div>
+            </div>
+            <div id="editForm" style="display:none;">
+                <form id="monthEditForm" asp-action="Edit">
+                    <label>Select a month:</label>
+                    <select id="monthSelector" class="form-control">
+                        @foreach (var roomPricing in Model)
+                        {
+                            <option value="@roomPricing.PricingId">
+                                @roomPricing.Type.Name - @roomPricing.ValidFrom.ToString("dd/MM/yyyy") to @roomPricing.ValidTo.ToString("dd/MM/yyyy")
+                            </option>
+                        }
+                    </select>
+                    <button type="button" onclick="submitForm()" class="btn btn-primary">Edit</button>
+                </form>
+            </div>
             <table class="table table-bordered">
                 <thead class="table-header">
                     <tr>
@@ -59,26 +94,52 @@
                     @foreach (var type in Model.Select(rp => rp.Type).Distinct())
                     {
                         <tr>
-                            <td style="width:100px">@type.Name</td>
+                            <td style="width:100px">@type.Name<br />
+                                <a asp-action="Edit" asp-route-id="@Model.FirstOrDefault(rp => rp.Type == type)?.PricingId">Edit</a>
+                                </td>
+                            
                             @for (int day = 1; day <= 31; day++)
                             {
-                                DateTime currentDay = new DateTime(DateTime.Now.Year, DateTime.Now.Month, day); 
+                                @*DateTime currentDay = new DateTime(DateTime.Now.Year, DateTime.Now.Month, day);  //nie zmienia się, cały czas jest DateTime.Now.Month
+                                DateTime previousMonth = currentDay.AddMonths(-1);*@
 
                                 <td class="price-cell">
-                                    @foreach (var roomPricing in Model.Where(rp => rp.Type == type))
+                                    @foreach (var roomPricing in Model.Where(rp => rp.Type == type && day >= rp.ValidFrom.Day && day <= rp.ValidTo.Day))
                                     {
-                                        if (currentDay >= roomPricing.ValidFrom && currentDay <= roomPricing.ValidTo)
-                                        {
-                                            @:<img src="https://i.imgur.com/7PGRPUi.png" alt="A:"/>@roomPricing.BasePriceAdult
-                                            @:<img src="https://i.imgur.com/dzaEgVZ.png" alt="C:"/>@roomPricing.BasePriceChildren
-                                        }
+                                        @:<b>@roomPricing.BasePriceAdult</b>
+                                        @:@roomPricing.BasePriceChildren
                                     }
                                 </td>
                             }
                         </tr>
+                        
                     }
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<script>
+    var currentMonth = new Date('@Model.FirstOrDefault()?.ValidFrom.ToString("yyyy-MM-dd")');
+
+    function changeMonth(offset) {
+        currentMonth.setMonth(currentMonth.getMonth() + offset);
+        var url = '/RoomPricing/Index?month=' + (currentMonth.getMonth() + 1) + '&year=' + currentMonth.getFullYear();
+        window.location.href = url;
+    }
+
+    document.getElementById("editButton").addEventListener("click", function () {
+        editFormVisible = !editFormVisible;
+        document.getElementById("editForm").style.display = editFormVisible ? "block" : "none";
+    });
+
+    var editFormVisible = false;
+
+    function submitForm() {
+        var selectedId = document.getElementById('monthSelector').value;
+        if (selectedId) {
+            window.location.href = '/RoomPricing/Edit/' + selectedId;
+        }
+    }
+</script>

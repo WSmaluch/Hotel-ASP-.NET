@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+@*<h1>Create</h1>
 
 <h4>Options</h4>
 <hr />
@@ -61,4 +61,89 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+*@
+
+<div class="content container-fluid">
+		<div class="page-header">
+			<div class="row align-items-center">
+				<div class="col">
+					<h3 class="page-title mt-5">Add Option</h3>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12">
+				<form asp-action="Create">
+					<div class="row formtype">
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>Name</label>
+								<input asp-for="Name" class="form-control" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+							<label>Price</label>
+							<input asp-for="Price" class="form-control" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+								<label>StartDate</label>
+								<input asp-for="StartDate" class="form-control" />
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group">
+							<label>EndDate</label>
+							<input asp-for="EndDate" class="form-control" />
+							</div>
+						</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label>ContentItems</label>
+							<div class="input-group">
+								<select asp-for="ContentItems" class="form-control" multiple asp-items="ViewBag.ContentItems"></select>
+								<div class="input-group-append">
+									<a href="#" class="btn btn-primary" id="addContentItems" >
+										<i style="margin-top:35px" class="fas fa-plus"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+							<div class="form-group">
+							<label>PhotoUrl</label>
+							<input asp-for="PhotoUrl" class="form-control" />
+							</div>
+						</div>
+                    @*<div class="col-md-4">
+                        <div class="form-group">
+                            <label>File Upload</label>
+                            <div class="custom-file mb-3">
+                                <input type="file" class="custom-file-input" id="customFile" name="PhotosURL">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+                        </div>
+                    </div>*@
+					</div>
+				<button type="submit" class="btn btn-primary buttonedit ml-2">Save</button>
+				</form>
+
+			</div>
+		</div>
+	</div>
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+	<script>
+		$(document).ready(function () {
+			$('#addFacility').click(function () {
+				window.location.href = '/ContentItem/Create';
+			});
+		});
+	</script>
 }

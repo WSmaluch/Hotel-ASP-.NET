@@ -22,7 +22,14 @@ namespace Hotel.Intranet.Controllers
         // GET: Rooms
         public async Task<IActionResult> Index()
         {
-            var rooms = await _context.Room.Include(r => r.Type).Include(r => r.Facilities).ToListAsync();
+            var rooms = await _context.Room.Include(r => r.Type).Include(r => r.RoomStatus).Include(r => r.Facilities).ToListAsync();
+
+            var d = await _context.Types.Include(t => t.Rooms).Include(r => r.Facilities).ToListAsync();
+
+
+            var f = _context.Types;
+            ViewBag.Types = d;
+
             return View(rooms);
         }
 
@@ -75,7 +82,9 @@ namespace Hotel.Intranet.Controllers
                     }
                 }
                 //}
+                room.StatusId = 9;
                 room.AddedDate = DateTime.Now;
+                room.IsActive = true;
                 room.AddedBy = "Admin";
                 _context.Add(room);
                 await _context.SaveChangesAsync();
@@ -96,12 +105,26 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Room.FindAsync(id);
+            var room = await _context.Room
+           .Include(r => r.Facilities)
+           .FirstOrDefaultAsync(r => r.IdRoom == id);
+
             if (room == null)
             {
                 return NotFound();
             }
             ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", room.TypeId);
+            ViewBag.Statuses = new SelectList(_context.Status, "StatusId", "StatusName", room.StatusId);
+
+            // Pobierz wszystkie dostępne udogodnienia
+            var allFacilities = await _context.Facilities.ToListAsync();
+
+            // Ustal, które z udogodnień są przypisane do danego pokoju
+            var selectedFacilities = room.Facilities.ToList();
+
+            // Przypisz wszystkie udogodnienia do ViewBag.Facilities z zaznaczonymi udogodnieniami dla danego pokoju
+            ViewBag.Facilities = selectedFacilities;
+
             return View(room);
         }
 
@@ -110,18 +133,18 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdRoom,TypeId,Number,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Room room)
+        public async Task<IActionResult> Edit(int id, [Bind("IdRoom,TypeId,Number,StatusId,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Room room)
         {
             if (id != room.IdRoom)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
-                    _context.Update(room);
+                _context.Update(room);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -136,7 +159,7 @@ namespace Hotel.Intranet.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
+            //}
             ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Description", room.TypeId);
             return View(room);
         }
@@ -144,20 +167,18 @@ namespace Hotel.Intranet.Controllers
         // GET: Rooms/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Room == null)
+            if (_context.Room == null)
             {
-                return NotFound();
+                return Problem("Entity set 'HotelContext.Room'  is null.");
+            }
+            var room = await _context.Room.FindAsync(id);
+            if (room != null)
+            {
+                _context.Room.Remove(room);
             }
 
-            var room = await _context.Room
-                .Include(r => r.Type)
-                .FirstOrDefaultAsync(m => m.IdRoom == id);
-            if (room == null)
-            {
-                return NotFound();
-            }
-
-            return View(room);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Rooms/Delete/5
@@ -183,5 +204,94 @@ namespace Hotel.Intranet.Controllers
         {
           return (_context.Room?.Any(e => e.IdRoom == id)).GetValueOrDefault();
         }
-    }
+
+        // GET: Rooms/ChangeStatus/5
+        public async Task<IActionResult> ChangeStatus(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var room = await _context.Room.FindAsync(id);
+            if (room == null)
+            {
+                return NotFound();
+            }
+
+            // Pobierz dostępne statusy z bazy danych i przekaż do widoku
+            ViewBag.Statuses = await _context.Status.ToListAsync();
+
+            return View(room);
+        }
+
+        // POST: Rooms/ChangeStatus/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeStatus(int id, int newStatusId)
+        {
+            var room = await _context.Room.FindAsync(id);
+            if (room == null)
+            {
+                return NotFound();
+            }
+
+            room.StatusId = newStatusId;
+            // Zapisz zmiany
+            _context.Update(room);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> EditFacilities(int? id)
+        {
+            if (id == null || _context.Types == null)
+            {
+                return NotFound();
+            }
+
+            var room = await _context.Room
+                .Include(t => t.Facilities)
+                .FirstOrDefaultAsync(t => t.IdRoom == id);
+
+            if (room == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
+
+            return View(room);
+        }
+
+		[HttpPost]
+		public IActionResult AddFacilities(int roomId, List<int> facilityIds)
+		{
+			// Tutaj dodaj logikę dodawania udogodnień do pokoju (roomId)
+			// Użyj facilityIds do określenia, które udogodnienia zostały wybrane
+
+			// Przykładowa logika:
+			var room = _context.Room.Include(r => r.Facilities).FirstOrDefault(r => r.IdRoom == roomId);
+
+            room.Facilities.Clear();
+
+			if (room != null)
+			{
+				foreach (var facilityId in facilityIds)
+				{
+					var facilityToAdd = _context.Facilities.FirstOrDefault(f => f.IdFacility == facilityId);
+					if (facilityToAdd != null && !room.Facilities.Contains(facilityToAdd))
+					{
+						room.Facilities.Add(facilityToAdd);
+					}
+				}
+
+				_context.SaveChanges();
+			}
+
+			// Przekieruj użytkownika z powrotem do widoku edycji pokoju lub innego, w zależności od potrzeb
+			return RedirectToAction(nameof(Edit), new { id = roomId });
+		}
+	}
 }

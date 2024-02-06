@@ -216,7 +216,7 @@
             <table>
                 <tr>
                     <td style="width: 80%;">Stay value</td>
-                    <td>$000</td>
+                    <td id="total">$000</td>
                 </tr>
                 <tr>
                     <td>Value of services</td>
@@ -227,7 +227,7 @@
             <table>
                 <tr style="width: 80%;font-size:larger;font-weight: bold;">
                     <td style="width: 80%;">Total:</td>
-                    <td>$000</td>
+                    <td id="total">$000</td>
                 </tr>
                 <tr style="width: 80%;font-size:small;">
                     <td>Prepayment</td>
@@ -266,15 +266,17 @@
                             
                             <div id="price">
                                 Price from<br>
-                                <b>@Model.PricesByRoomType[room.IdType]</b><br><br>
-                                <a href="/Booking/Form?typeId=@room.IdType&checkIn=@ViewBag.CheckIn&checkOut=@ViewBag.CheckOut&adults=@ViewBag.Adults&children=@ViewBag.Children"><button id="button" style="display: inline-block; margin-right: 10px;">Select room</button></a>
+                                <b id="priceOfType">@Model.PricesByRoomType[room.IdType]</b><br><br>
+                                <a href="/Booking/Form?typeId=@room.IdType&checkIn=@ViewBag.CheckIn&checkOut=@ViewBag.CheckOut&adults=@ViewBag.Adults&children=@ViewBag.Children">
+                                    <button onmouseout="clearTotalPrice()" onmouseover="calculateTotalPrice()" id="button" style="display: inline-block; margin-right: 10px;">Select room</button>
+                                </a>
                             </div>
-                            <a style="padding-left:2%;color:darkgoldenrod;" class="popup-link"
+                            @*<a style="padding-left:2%;color:darkgoldenrod;" class="popup-link"
                                data-image-url="@room.PhotosURL"
                                data-description="@room.Description"
                                data-title="@room.Name"
                                data-id="@room.IdType"
-                               data-room-id="@room.IdType">Read more @room.IdType</a>
+                        data-room-id="@room.IdType">*@<a style="padding-left:2%;color:darkgoldenrod;" href="/Home/RoomTypeDetails?typeId=@room.IdType"> Read more</a>@*</a>*@
 
 
                             <div class="popup" id="popup">
@@ -296,7 +298,10 @@
                                         </ul>
 
                                     </div>
-                                    <button id="close-popup" style="float:right;">Close</button>
+                                    <a href="/RoomType/Details/@room.IdType">
+                                        <button style="margin-top: 10px;">Read more</button>
+                                    </a>
+                                    @*<button id="close-popup" style="float:right;">Close</button>*@
                                 </div>
                             </div>
                         </div>
@@ -310,83 +315,15 @@
 <div id="zzz"></div>
 
 <script>
-    //document.addEventListener("DOMContentLoaded", function () {
-    //    var selectedRoomTypeId = 4
-    //    var popup = document.getElementById("popup");
-    //    var popupImage = document.getElementById("popup-image");
-    //    var popupDescription = document.getElementById("popup-description");
-    //    var popupType = document.getElementById("popup-type");
-    //    var popupTitle = document.getElementById("popup-title");
-    //    var popupFacilities = document.getElementById("popup-facilities");
-    //    var closePopupButton = document.getElementById("close-popup");
 
-    //    var popupLinks = document.querySelectorAll(".popup-link");
+    function calculateTotalPrice() {
+        var value = document.getElementById("priceOfType").innerText;
+        document.getElementById('total').innerText = '$'+value;
+    }
 
-    //    popupLinks.forEach(function (link) {
-    //        link.addEventListener("click", function () {
-    //            var imageUrl = link.getAttribute("data-image-url");
-    //            var description = link.getAttribute("data-description");
-    //            var title = link.getAttribute("data-title");
-    //            var typeid = link.getAttribute("data-id");
-
-
-    //            popupImage.src = imageUrl;
-    //            popupDescription.innerText = description;
-    //            popupTitle.innerText = title;
-    //            //popupFacilities.innerText=title;
-    //            //popupFacilities.innerHTML = str1;
-    //            popupType.innerText = typeid;
-
-    //            popup.style.zIndex = 100;
-    //            popup.style.display = "flex";
-    //        });
-    //    });
-
-    //    closePopupButton.addEventListener("click", function () {
-    //        popup.style.display = "none";
-    //    });
-    //});
-
-    //document.addEventListener("DOMContentLoaded", function () {
-    //    var selectedRoomTypeId = 
-    //    var popup = document.getElementById("popup");
-    //    var popupImage = document.getElementById("popup-image");
-    //    var popupDescription = document.getElementById("popup-description");
-    //    var popupType = document.getElementById("popup-type");
-    //    var popupTitle = document.getElementById("popup-title");
-    //    var popupFacilities = document.getElementById("popup-facilities");
-    //    var closePopupButton = document.getElementById("close-popup");
-
-    //    var currentRoomId; // Nowa zmienna przechowująca bieżący identyfikator pokoju
-
-    //    var popupLinks = document.querySelectorAll(".popup-link");
-
-    //    popupLinks.forEach(function (link) {
-    //        link.addEventListener("click", function () {
-    //            var imageUrl = link.getAttribute("data-image-url");
-    //            var description = link.getAttribute("data-description");
-    //            var title = link.getAttribute("data-title");
-    //            var typeid = link.getAttribute("data-id");
-
-    //            // Dodaj zmienną przechowującą bieżący identyfikator pokoju
-    //            currentRoomId = link.getAttribute("data-room-id");
-
-    //            popupImage.src = imageUrl;
-    //            popupDescription.innerText = description;
-    //            popupTitle.innerText = title;
-    //            popupType.innerText = typeid;
-                
-
-    //            popup.style.zIndex = 100;
-    //            popup.style.display = "flex";
-    //        });
-    //    });
-
-    //    closePopupButton.addEventListener("click", function () {
-    //        popup.style.display = "none";
-    //        currentRoomId = null; // Zresetuj bieżący identyfikator pokoju po zamknięciu popup'a
-    //    });
-    //});
+    function clearTotalPrice() {
+        document.getElementById('total').innerText = '$000';
+    }
 
     document.addEventListener("DOMContentLoaded", function () {
         var popup = document.getElementById("popup");

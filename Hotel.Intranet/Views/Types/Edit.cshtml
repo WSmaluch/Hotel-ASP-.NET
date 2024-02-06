@@ -19,11 +19,6 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Capacity" class="control-label"></label>
-                <input asp-for="Capacity" class="form-control" />
-                <span asp-validation-for="Capacity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
@@ -45,50 +40,107 @@
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                    <input class="form-check-input" asp-for="IsActive"/> @Html.DisplayNameFor(model => model.IsActive)
                 </label>
             </div>
-            <div class="form-group">
-                <label asp-for="AddedBy" class="control-label"></label>
-                <input asp-for="AddedBy" class="form-control" />
-                <span asp-validation-for="AddedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AddedDate" class="control-label"></label>
-                <input asp-for="AddedDate" class="form-control" />
-                <span asp-validation-for="AddedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedBy" class="control-label"></label>
-                <input asp-for="ModifiedBy" class="form-control" />
-                <span asp-validation-for="ModifiedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedDate" class="control-label"></label>
-                <input asp-for="ModifiedDate" class="form-control" />
-                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RemovedBy" class="control-label"></label>
-                <input asp-for="RemovedBy" class="form-control" />
-                <span asp-validation-for="RemovedBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RemovedDate" class="control-label"></label>
-                <input asp-for="RemovedDate" class="form-control" />
-                <span asp-validation-for="RemovedDate" class="text-danger"></span>
+            <div class="col-md-4">
+                <h4>Selected Facilities</h4>
+                <ul>
+                    @foreach (var facility in Model.Facilities)
+                    {
+                        <li>@facility.NameFacility</li>
+                    }
+                </ul>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
+        <div class="col-md-4">
+            <a asp-action="EditFacilities" asp-route-id="@Model.IdType" class="btn btn-secondary">Edit Facilities</a>
+        </div>
     </div>
 </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
 
+@*<hr/>
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+            </div>
+        </div>
+    </div>
+<div class="row">
+    <div class="col-md-15">
+        <form asp-action="Edit">
+            <div class="row formtype">
+                <input type="hidden" asp-for="IdType" />
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="PhotosURL" class="control-label"></label>
+                        <input asp-for="PhotosURL" class="form-control" />
+                        <span asp-validation-for="PhotosURL" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="Size" class="control-label"></label>
+                        <input asp-for="Size" class="form-control" />
+                        <span asp-validation-for="Size" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Facilities</label>
+                        <div class="input-group">
+                            <select asp-for="Facilities" class="form-control" multiple asp-items="ViewBag.Facilities"></select>
+                            <div class="input-group-append">
+                                <a href="#" class="btn btn-primary" id="addFacility">
+                                    <i style="margin-top:35px" class="fas fa-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                    </label>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>File Upload</label>
+                        <div class="custom-file mb-3">
+                            <input type="file" class="custom-file-input" id="customFile" name="PhotosURL">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary buttonedit ml-2">Save</button>
+        </form>
+
+    </div>
+</div>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+</div>*@
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

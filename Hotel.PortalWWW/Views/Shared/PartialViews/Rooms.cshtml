@@ -1,0 +1,24 @@
+﻿@model IEnumerable<Hotel.Data.Data.Booking.Extensions.Types>
+@foreach (var type in Model)
+{
+    <div class="single_rooms">
+        <div class="room_thumb">
+            @{
+                // Podziel linki na tablicę
+                string[] photoURLs = type.PhotosURL.Split(';');
+
+                // Użyj pierwszego linku (jeśli istnieje)
+                string firstPhotoURL = photoURLs.Length > 0 ? photoURLs[0] : "";
+            }
+            <a href="@Url.Action("RoomTypeDetails", "Home", new { typeId = type.IdType })">
+                <img src="@firstPhotoURL" alt="">
+            </a>
+            <div class="room_heading d-flex justify-content-between align-items-center">
+                <div class="room_heading_inner">
+                    <a href="@Url.Action("RoomTypeDetails", "Home", new { typeId = type.IdType })"><h3>@type.Name</h3></a>
+                </div>
+                <a href="#test-form" class="popup-with-form">book now</a>
+            </div>
+        </div>
+    </div>
+}

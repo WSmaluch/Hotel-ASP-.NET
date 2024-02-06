@@ -1,5 +1,6 @@
 ﻿@model Hotel.PortalWWW.Models.BookingModel
 @{
+    var numberOfNights = (int)((DateTime)ViewBag.CheckOut - (DateTime)ViewBag.CheckIn).TotalDays;
     ViewData["Title"] = "Form";
 }
 <div class="bradcam_area breadcam_bg_1">
@@ -115,15 +116,6 @@
         margin-top:1%;
     }
 
-       /* #contactInfo input {
-        border:none;
-    }
-
-        #contactInfo input {
-            border-bottom: 1px solid gray;
-
-        }*/
-
     #contactInfo label
     {
         font-size:130%;
@@ -216,7 +208,8 @@
                 <input type="hidden" name="checkOut" value="@ViewBag.CheckOut" />
                 <input type="hidden" name="adults" value="@ViewBag.Adults" />
                 <input type="hidden" name="children" value="@ViewBag.Children" />
-                
+                <input type="hidden" id="selectedOfferId" value="" />
+
                 
 
                 <tr>
@@ -234,15 +227,15 @@
                                     {
                                             <tr>
                                                 <td id="items"><img src='@o.IconUrl'></td>
-                                                <td>@o.Text</td>
+                                                <td>@o.Title - @o.Description</td>
                                             </tr>
                                     }
                                 </table>
                             </div>
                             <div id="price">
-                                <b id="OfferPrice">$@offer.Price</b><br><br>
-                                <button onmousedown="openForm()" onmouseover="calculateTotalPrice(@offer.Price)" type="button">Book</button>
-                            </div>
+                                    <b id="OfferPrice">$@(offer.Price * numberOfNights)</b><br><br>
+                                    <button onmousedown="openForm(this)" data-offer-id="@offer.IdOption" onmouseover="calculateTotalPrice(@offer.Price * @numberOfNights)" type="button" onclick="asd(@offer.IdOption)">Select offer</button>
+                                </div>
                         </div>
                     </td>
                     }
@@ -269,14 +262,6 @@
                     <td style="width: 80%;">Total:</td>
                     <td id="total"></td>
                 </tr>
-                @*<tr style="width: 80%;font-size:small;">
-                    <td>Prepayment</td>
-                    <td style="text-align: right;">$300.42</td>
-                </tr>
-                <tr style="width: 80%;font-size:small;">
-                    <td>Upon arrival</td>
-                    <td style="text-align: right;">$300.42</td>
-                </tr>*@
             </table>
         <hr/>
             <button id="submitBtn" type="submit" style="display:none;margin-left:2%;">Book</button>
@@ -291,11 +276,20 @@
         document.getElementById('total').innerText = '$' + totalWithStay.toFixed(2);
         document.getElementById('valueOfServices').innerText = '$' + offerPrice.toFixed(2);
     }
-    function openForm() {
+    function openForm(button) {
+        var offerId = button.getAttribute('data-offer-id');
+        //alert('Offer ID: ' + offerId);
         document.getElementById('ooo').style.display = 'none';
         document.getElementById('submitBtn').style.display = 'block';
         document.getElementById('bookingForm').style.display = 'block';
     }
+
+    function setOfferId(offerId)
+    {
+        document.getElementById('selectedOfferId').value = offerId;
+        alert(offerId);
+    }
+
     function showSpecialRequests()
     {
         var checkBox = document.getElementById("specialRequestsCheckbox");
@@ -309,5 +303,10 @@
             status.style.display = "none";
             status2.style.display = "none";
         }
+    }
+    function asd(offerid)
+    {
+        document.getElementById('selectedOfferId').value = offerid;
+        alert('offer '+offerid);
     }
 </script>

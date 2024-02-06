@@ -3,8 +3,8 @@
     ViewData["Title"] = "Contact";
 }
 <!-- bradcam_area_start -->
-<div class="bradcam_area breadcam_bg_2" style="background-image:url(@Model.BannerUrl)">
-        <h3>@Model.BannerTitle</h3>
+<div class="bradcam_area breadcam_bg_2" style="background-image:url(@ViewBag.Contact.BannerUrl)">
+    <h3>@ViewBag.Contact.BannerTitle</h3>
     </div>
     <!-- bradcam_area_end -->
 
@@ -12,7 +12,7 @@
     <section class="contact-section">
             <div class="container">
                 <div class="d-none d-sm-block mb-5 pb-4">
-            <iframe src="@Model.Localization" width="1200" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe src=@ViewBag.Contact.Localization" width="1200" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
     
     
@@ -53,21 +53,21 @@
                         <div class="media contact-info">
                             <span class="contact-info__icon"><i class="ti-home"></i></span>
                             <div class="media-body">
-                                <h3>@Model.AddresLine1</h3>
-                                <p>@Model.City, @Model.Country</p>
+                                <h3>@ViewBag.Contact.AddresLine1</h3>
+                                <p>@ViewBag.Contact.City, @ViewBag.Contact.Country</p>
                             </div>
                         </div>
                         <div class="media contact-info">
                             <span class="contact-info__icon"><i class="ti-tablet"></i></span>
                             <div class="media-body">
-                                <h3>@Model.PhoneNumber</h3>
+                                <h3>@ViewBag.Contact.PhoneNumber</h3>
                                 <p>Mon to Fri 9am to 6pm</p>
                             </div>
                         </div>
                         <div class="media contact-info">
                             <span class="contact-info__icon"><i class="ti-email"></i></span>
                             <div class="media-body">
-                                <h3>@Model.Email</h3>
+                                <h3>@ViewBag.Contact.Email</h3>
                                 <p>Send us your query anytime!</p>
                             </div>
                         </div>

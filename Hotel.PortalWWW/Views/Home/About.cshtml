@@ -1,14 +1,13 @@
-﻿@model Hotel.Data.Data.CMS.About.AboutPage
-@{
+﻿@{
     ViewData["Title"] = "About";
 }
 <!-- bradcam_area_start -->
-<div class="bradcam_area breadcam_bg" style="background-image:url(@Model.BannerUrl)">
-    <h3>@Model.BannerTitle</h3>
+<div class="bradcam_area breadcam_bg" style="background-image:url(@ViewBag.AboutPage.BannerUrl)">
+    <h3>@ViewBag.AboutPage.BannerTitle</h3>
 </div>
 <!-- bradcam_area_end -->
 <!-- about_area_start -->
-@await Html.PartialAsync("PartialViews/AboutUsPanel",(Hotel.Data.Data.CMS.About.AboutPage)ViewBag.AboutUs)
+@await Html.PartialAsync("PartialViews/AboutUsPanel",(Hotel.Data.Data.CMS.About.AboutPage)ViewBag.AboutPage)
 <!-- about_area_end -->
 <!-- about_info_area_start -->
 @await Html.PartialAsync("PartialViews/AboutBanner",(IEnumerable<Hotel.Data.Data.CMS.About.AboutSilderPhoto>)ViewBag.AboutBanner)
@@ -20,20 +19,20 @@
             <div class="col-xl-6 col-md-6">
                 <div class="single_about_info">
                     <h3>
-                        @Model.Content2Title
+                        @ViewBag.AboutPage.Content2Title
                     </h3>
                     <p>
-                        @Model.Content2Description
+                        @ViewBag.AboutPage.Content2Description
                     </p>
                 </div>
             </div>
             <div class="col-xl-6 col-md-6">
                 <div class="single_about_info">
                     <h3>
-                        @Model.Content3Title
+                        @ViewBag.AboutPage.Content3Title
                     </h3>
                     <p>
-                        @Model.Content3Description
+                        @ViewBag.AboutPage.Content3Description
                     </p>
                 </div>
             </div>
