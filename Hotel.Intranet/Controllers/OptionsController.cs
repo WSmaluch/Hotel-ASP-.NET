@@ -57,10 +57,20 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdOption,Name,PhotoUrl,Price,StartDate,EndDate,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Options options, List<int> ContentItems)
+        public async Task<IActionResult> Create([Bind("IdOption,Name,PhotoUrl,Price,StartDate,EndDate,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Options options, List<int> ContentItems, IFormFile photoFile)
         {
 			//if (ModelState.IsValid)
 			//{
+			if (photoFile != null && photoFile.Length > 0)
+			{
+				// Przetwarzanie przesłanego pliku
+				var imageService = new ImgurService();
+				var imageUrl = await imageService.UploadImageAsync(photoFile);
+
+				// Zapisanie linku do obrazu w obiekcie Types
+				options.PhotoUrl = imageUrl;
+			}
+
 			if (ContentItems != null)
             {
                 foreach (var contentItemId in ContentItems)

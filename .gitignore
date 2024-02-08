@@ -362,3 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Hotel.PortalWWW/appsettings.json
+/notatka.txt
+/Hotel.Intranet/appsettings.json

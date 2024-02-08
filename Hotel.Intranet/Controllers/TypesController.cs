@@ -55,37 +55,78 @@ namespace Hotel.Intranet.Controllers
             return View();
         }
 
-        // POST: Types/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdType,Name,Description,PhotosURL,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types, List<int> facilities)
-        {
-            //if (ModelState.IsValid)
-            //{
-            if (facilities != null)
-            {
-                foreach (var facilityId in facilities)
-                {
-                    var facility = await _context.Facilities.FindAsync(facilityId);
-                    if (facility != null)
-                    {
-                        types.Facilities.Add(facility);
-                    }
-                }
-                types.AddedDate = DateTime.Now;
-                types.AddedBy = "Admin";
-                _context.Add(types);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
-            return View(types);
-        }
+		// POST: Types/Create
+		// To protect from overposting attacks, enable the specific properties you want to bind to.
+		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+		//[HttpPost]
+		//[ValidateAntiForgeryToken]
+		//public async Task<IActionResult> Create([Bind("IdType,Name,Description,PhotosURL,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types, List<int> facilities)
+		//{
+		//    //if (ModelState.IsValid)
+		//    //{
+		//    if (facilities != null)
+		//    {
+		//        foreach (var facilityId in facilities)
+		//        {
+		//            var facility = await _context.Facilities.FindAsync(facilityId);
+		//            if (facility != null)
+		//            {
+		//                types.Facilities.Add(facility);
+		//            }
+		//        }
+		//        types.AddedDate = DateTime.Now;
+		//        types.AddedBy = "Admin";
+		//        _context.Add(types);
+		//        await _context.SaveChangesAsync();
+		//        return RedirectToAction(nameof(Index));
+		//    }
+		//    ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
+		//    return View(types);
+		//}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create([Bind("IdType,Name,Description,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types, List<int> facilities, IFormFile photoFile)
+		{
+			//if (ModelState.IsValid)
+			//{
+				if (photoFile != null && photoFile.Length > 0)
+				{
+					// Przetwarzanie przesłanego pliku
+					var imageService = new ImgurService();
+					var imageUrl = await imageService.UploadImageAsync(photoFile);
 
-        // GET: Types/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+					// Zapisanie linku do obrazu w obiekcie Types
+					types.PhotosURL = imageUrl;
+				}
+
+				// Dodanie obiektu Types do bazy danych
+				types.AddedDate = DateTime.Now;
+				types.AddedBy = "Admin";
+
+				// Dodanie związków z obiektami Facilities
+				if (facilities != null)
+				{
+					foreach (var facilityId in facilities)
+					{
+						var facility = await _context.Facilities.FindAsync(facilityId);
+						if (facility != null)
+						{
+							types.Facilities.Add(facility);
+						}
+					}
+				}
+
+				_context.Add(types);
+				await _context.SaveChangesAsync();
+				return RedirectToAction(nameof(Index));
+			//}
+
+			ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
+			return View(types);
+		}
+
+		// GET: Types/Edit/5
+		public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Types == null)
             {
