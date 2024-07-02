@@ -13,11 +13,15 @@ namespace Hotel.Intranet.Controllers
     public class TypesController : Controller
     {
         private readonly HotelContext _context;
+        private readonly IConfiguration _configuration;
 
-        public TypesController(HotelContext context)
+
+		public TypesController(HotelContext context, IConfiguration configuration)
         {
             _context = context;
-        }
+            _configuration = configuration;
+
+		}
 
         // GET: Types
         public async Task<IActionResult> Index()
@@ -92,12 +96,13 @@ namespace Hotel.Intranet.Controllers
 				if (photoFile != null && photoFile.Length > 0)
 				{
 					// Przetwarzanie przesłanego pliku
-					var imageService = new ImgurService();
+					var imageService = new ImgurService(_configuration);
 					var imageUrl = await imageService.UploadImageAsync(photoFile);
 
 					// Zapisanie linku do obrazu w obiekcie Types
 					types.PhotosURL = imageUrl;
 				}
+
 
 				// Dodanie obiektu Types do bazy danych
 				types.AddedDate = DateTime.Now;
@@ -151,16 +156,25 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdType,Name,Description,PhotosURL,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types)
+        public async Task<IActionResult> Edit(int id, [Bind("IdType,Name,Description,PhotosURL,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types, IFormFile photoFile)
         {
             if (id != types.IdType)
             {
                 return NotFound();
             }
 
+            if (photoFile != null && photoFile.Length > 0)
+            {
+                // Przetwarzanie przesłanego pliku
+                var imageService = new ImgurService(_configuration);
+                var imageUrl = await imageService.UploadImageAsync(photoFile);
+
+                // Zapisanie linku do obrazu w obiekcie Types
+                types.PhotosURL = imageUrl;
+            }
             //if (ModelState.IsValid)
             //{
-                try
+            try
                 {
                     types.ModifiedDate = DateTime.Now;
                     _context.Update(types);

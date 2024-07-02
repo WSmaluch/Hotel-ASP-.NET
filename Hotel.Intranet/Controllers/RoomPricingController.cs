@@ -20,27 +20,44 @@ namespace Hotel.Intranet.Controllers
         }
 
         // GET: RoomPricing
-        public ActionResult Index(int? month, int? year)
+        public ActionResult Index(int? month, int? year, int? selectedRoomTypeId)
         {
             if (!month.HasValue || !year.HasValue)
             {
-                // Domyślne wartości dla pierwszego załadowania strony
                 var defaultDate = DateTime.Now;
                 month = defaultDate.Month;
                 year = defaultDate.Year;
             }
 
-            // Pobierz dane do modelu na podstawie miesiąca i roku
-            var model = _context.RoomPricing
-                .Where(rp => rp.ValidFrom.Month == month && rp.ValidFrom.Year == year)
-                .Include(r=>r.Type)
-                .ToList();
-
             ViewBag.CurrentMonth = month;
             ViewBag.CurrentYear = year;
 
-            return View(model);
+            ViewBag.RoomTypes = _context.Types
+                .Select(rt => new SelectListItem
+                {
+                    Value = rt.IdType.ToString(),
+                    Text = rt.Name
+                })
+                .ToList();
+
+            if (selectedRoomTypeId.HasValue)
+            {
+                ViewBag.SelectedRoomTypeId = selectedRoomTypeId;
+            }
+
+            var roomPricings = _context.RoomPricing
+                .Where(rp => rp.ValidFrom.Month == month && rp.ValidFrom.Year == year)
+                .Include(r => r.Type)
+                .ToList();
+
+            if (selectedRoomTypeId.HasValue)
+            {
+                roomPricings = roomPricings.Where(rp => rp.TypeId == selectedRoomTypeId).ToList();
+            }
+
+            return View(roomPricings);
         }
+
 
 
 
@@ -191,18 +208,6 @@ namespace Hotel.Intranet.Controllers
         private bool RoomPricingExists(int id)
         {
           return (_context.RoomPricing?.Any(e => e.PricingId == id)).GetValueOrDefault();
-        }
-
-        private IEnumerable<RoomPricing> GetRoomPricingData(int month, int year)
-        {
-            // Tutaj dodaj kod pobierający dane z bazy danych na podstawie miesiąca i roku
-            // Możesz wykorzystać Entity Framework, Dapper lub inne narzędzie dostępu do danych
-            Console.WriteLine("KRZAK");
-            // Poniżej znajduje się przykładowy kod, który zwraca dane dla danego miesiąca i roku
-            return _context.RoomPricing
-                .Include(r => r.Type)
-                .Where(rp => rp.ValidFrom.Month == month && rp.ValidFrom.Year == year)
-                .ToList();
         }
 
     }

@@ -7,9 +7,10 @@ public class ImgurService
 	private readonly string _clientId;
 	private readonly HttpClient _httpClient;
 
-	public ImgurService()
+	public ImgurService(IConfiguration configuration)
 	{
-		_clientId = "9e2cf320158a934";
+		_clientId = configuration["ImgurApi:ClientId"];
+		//_clientId = "9e2cf320158a934";
 		_httpClient = new HttpClient();
 	}
 

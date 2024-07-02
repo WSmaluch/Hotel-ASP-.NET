@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdOption" />
             <div class="form-group">
@@ -19,9 +19,17 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PhotoUrl" class="control-label"></label>
-                <input asp-for="PhotoUrl" class="form-control" />
-                <span asp-validation-for="PhotoUrl" class="text-danger"></span>
+                <label class="control-label">Photo</label>
+                <div>
+                    <img src="@Model.PhotoUrl" class="img-fluid" alt="Your image" style="max-width: 100%; max-height: 200px;" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Photo</label>
+                <div>
+                    <input type="file" id="photoFile" name="photoFile" class="form-control-file">
+                    <img id="imagePreview" src="#" alt="Your image" style="display:none; max-width: 100%; max-height: 200px;" />
+                </div>
             </div>
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
@@ -65,5 +73,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

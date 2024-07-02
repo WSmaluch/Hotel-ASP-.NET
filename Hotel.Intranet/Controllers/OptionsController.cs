@@ -13,11 +13,13 @@ namespace Hotel.Intranet.Controllers
     public class OptionsController : Controller
     {
         private readonly HotelContext _context;
+		private readonly IConfiguration _configuration;
 
-        public OptionsController(HotelContext context)
+		public OptionsController(HotelContext context,IConfiguration configuration)
         {
             _context = context;
-        }
+            _configuration = configuration;
+		}
 
         // GET: Options
         public async Task<IActionResult> Index()
@@ -64,7 +66,7 @@ namespace Hotel.Intranet.Controllers
 			if (photoFile != null && photoFile.Length > 0)
 			{
 				// Przetwarzanie przesłanego pliku
-				var imageService = new ImgurService();
+				var imageService = new ImgurService(_configuration);
 				var imageUrl = await imageService.UploadImageAsync(photoFile);
 
 				// Zapisanie linku do obrazu w obiekcie Types
@@ -121,11 +123,21 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdOption,Name,PhotoUrl,Price,StartDate,EndDate,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Options options)
+        public async Task<IActionResult> Edit(int id, [Bind("IdOption,Name,PhotoUrl,Price,StartDate,EndDate,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Options options, IFormFile photoFile)
         {
             if (id != options.IdOption)
             {
                 return NotFound();
+            }
+
+            if (photoFile != null && photoFile.Length > 0)
+            {
+                // Przetwarzanie przesłanego pliku
+                var imageService = new ImgurService(_configuration);
+                var imageUrl = await imageService.UploadImageAsync(photoFile);
+
+                // Zapisanie linku do obrazu w obiekcie Types
+                options.PhotoUrl = imageUrl;
             }
 
             if (ModelState.IsValid)

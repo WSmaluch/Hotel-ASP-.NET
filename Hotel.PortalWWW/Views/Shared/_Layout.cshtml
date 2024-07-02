@@ -332,7 +332,12 @@
                 rightIcon: '<span class="fa fa-caret-down"></span>'
             },
             defaultViewDate: { year: new Date().getFullYear(), month: new Date().getMonth(), day: new Date().getDate() },
-            
+            disableDates: function (date) {
+                const currentDate = new Date();
+                currentDate.setDate(currentDate.getDate() - 1);
+                return date.setHours(0, 0, 0, 0) >= currentDate ? true : false;
+            }
+
         });
         $('#datepicker2').datepicker({
             iconsLibrary: 'fontawesome',
@@ -340,9 +345,13 @@
                 rightIcon: '<span class="fa fa-caret-down"></span>'
             },
             defaultViewDate: { year: new Date().getFullYear(), month: new Date().getMonth(), day: new Date().getDate() },
-            
-        });
+            disableDates: function (date) {
+                const currentDate = new Date();
+                currentDate.setDate(currentDate.getDate() - 1);
+                return date.setHours(0, 0, 0, 0) >= currentDate ? true : false;
+            }
 
+        });
     </script>
 
 

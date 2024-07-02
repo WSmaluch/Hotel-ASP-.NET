@@ -156,7 +156,7 @@ namespace Hotel.PortalWWW.Controllers
             string postalCode,
             string city,
             //testowo ustawiam 1, ale docelowo przycisk ze strony form ma tu przekazać optionId
-            int selectedOfferId=1
+            int selectedOfferId
             )
         {
 
@@ -195,6 +195,8 @@ namespace Hotel.PortalWWW.Controllers
                 ViewBag.Message = "Reservation submitted successfully!";
                 ViewBag.TypeOfRoom = _context.Types.Find(_context.Room.Find(reservation.RoomId).TypeId);
                 ViewBag.Reservation = reservation;
+                ViewBag.OfferName = _context.Options.Find(selectedOfferId).Name;
+                ViewBag.Days = days;
                 return View();
             }
             catch (Exception ex)
