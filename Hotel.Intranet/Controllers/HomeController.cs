@@ -100,7 +100,7 @@ namespace Hotel.Intranet.Controllers
 			}
 
 			ViewBag.ActiveReservations = _context.Reservations
-				.Where(res => res.CheckIn.Month == DateTime.Now.Month && res.IsActive)
+				.Where(res => res.CheckIn.Month == DateTime.Now.Month && res.IsActive && (res.StatusId == 1 || res.StatusId == 3) )
 				.ToList();
 
 			return View();
@@ -260,124 +260,135 @@ namespace Hotel.Intranet.Controllers
             {
                 earnedMoney += r.TotalPrice;
             }
-            string ticketHtml = @"
-        <!DOCTYPE html>
-            <html lang='en'>
-            <head>
-                <meta charset='UTF-8'>
-                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-                <title>Monthly Raport</title>
-                <style>
-                    body {
-                        font-family: 'Arial', sans-serif;
-                        margin: 20px;
-                        font-size:80%;
-                    }
+			string ticketHtml = @"
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Monthly Raport</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            font-size:80%;
+        }
 
-                    section {
-                        margin-bottom: 20px;
-                    }
+        section {
+            margin-bottom: 20px;
+        }
 
-                    h2 {
-                        color: #333;
-                    }
+        h2 {
+            color: #333;
+        }
 
-                    table {
-                        border-collapse: collapse;
-                        width: 100%;
-                        margin-top: 10px;
-                    }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+        }
 
-                    th, td {
-                        border: 1px solid #ddd;
-                        padding: 8px;
-                        text-align: left;
-                    }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
 
-                    th {
-                        background-color: #f2f2f2;
-                    }
+        th {
+            background-color: #f2f2f2;
+        }
 
-                    #logoImg
-                    {
-                    padding-left:42%;                    
-                    width: 20%;
-                    }
-                    #header
-                    {
-                        float: left;
-                    }
-                </style>
-            </head>
-            <body>
+        #logoImg {
+            padding-left:42%;                    
+            width: 20%;
+        }
 
-                <img id='logoImg' src='https://i.imgur.com/EYUZVwh.png'><br/>
-                <h1 >Monthly Report - "+dateinfo.GetMonthName(month)+"  "+year+@"</h1>
-                <hr/>
+        #header {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+    <img id='logoImg' src='https://i.imgur.com/EYUZVwh.png'><br/>
+    <h1>Monthly Report - " + (dateinfo?.GetMonthName(month) ?? "Unknown Month") + " " + year + @"</h1>
+    <hr/>
+    <section>
+        <h2 id='header'>1. General Summary</h2>
+        <table>
+            <tr>
+                <th>Monthly Profit</th>
+                <td>Total Profit: $" + earnedMoney.ToString("F2") + @"</td>
+                <td>Average Daily Profit: $" + Math.Round((earnedMoney / DateTime.DaysInMonth(year, month)), 2).ToString("F2") + @"</td>
+            </tr>
+            <tr>
+                <th>Number of Reservations</th>
+                <td>Total Number of Reservations: " + totalRes + @"</td>
+                <td>Average Daily Reservations: " + (totalRes / DateTime.DaysInMonth(year, month)) + @"</td>
+            </tr>
+        </table>
+    </section>";
 
-                <section>
-                    <h2 id='header'>1. General Summary</h2>
-                    <table>
-                        <tr>
-                            <th>Monthly Profit</th>
-                            <td>Total Profit: $"+earnedMoney+@"</td>
-                            <td>Average Daily Profit: $"+Math.Round(earnedMoney / DateTime.DaysInMonth(year,month),2)+@"</td>
-                        </tr>
-                        <tr>
-                            <th>Number of Reservations</th>
-                            <td>Total Number of Reservations: "+totalRes+ @"</td>
-                            <td>Average Daily Reservations: "+ totalRes / DateTime.DaysInMonth(year,month)+ @"</td>
-                        </tr>
-                    </table>
-                </section>
+			if (mostCommonTypeId != null && secondMostCommonTypeId != null)
+			{
+				ticketHtml += @"
+    <section>
+        <h2>2. Room Analysis</h2>
+        <table>
+            <tr>
+                <th>Most frequently chosen room type</th>
+                <td>" + (_context.Types.Find(mostCommonTypeId)?.Name ?? "Unknown Type") + @"</td>
+            </tr>
+            <tr>
+                <th>Percentage of Room Selection</th>
+                <td>" + (_context.Types.Find(mostCommonTypeId)?.Name ?? "Unknown Type") + @": " + mostCommonTypePercentage + @"%</td>
+                <td>" + (_context.Types.Find(secondMostCommonTypeId)?.Name ?? "Unknown Type") + @" " + secondMostCommonTypePercentage + @"%</td>
+            </tr>
+        </table>
+    </section>";
+			}
 
-                <section>
-                    <h2>2. Room Analysis</h2>
-                    <table>
-                        <tr>
-                            <th>Most frequently chosen room type</th>
-                            <td>"+ _context.Types.Find(mostCommonTypeId).Name + @"</td>
-                        </tr>
-                        <tr>
-                            <th>Percentage of Room Selection</th>
-                            <td>"+ _context.Types.Find(mostCommonTypeId).Name + @": "+ mostCommonTypePercentage + @"%</td>
-                            <td>"+ _context.Types.Find(secondMostCommonTypeId).Name + @" "+ secondMostCommonTypePercentage + @"%</td>
-                        </tr>
-                    </table>
-                </section>
+			if (mostCommonOptionId != null && secondMostCommonOptionId != null)
+			{
+				ticketHtml += @"
+    <section>
+        <h2>3. Offer Analysis</h2>
+        <table>
+            <tr>
+                <th>Most Chosen Offers</th>
+                <td>" + (_context.Options.Find(mostCommonOptionId)?.Name ?? "Unknown Option") + @" " + mostCommonTypePercentage + @"% of reservations</td>
+                <td>" + (_context.Options.Find(secondMostCommonOptionId)?.Name ?? "Unknown Option") + @" " + secondMostCommonTypePercentage + @"% of reservations</td>
+            </tr>
+        </table>
+    </section>";
+			}
 
-                <section>
-                    <h2>3. Offer Analysis</h2>
-                    <table>
-                        <tr>
-                            <th>Most Chosen Offers</th>
-                            <td>"+ _context.Options.Find(mostCommonOptionId).Name + @" "+ mostCommonTypePercentage + @"% of reservations</td>
-                            <td>"+ _context.Options.Find(secondMostCommonOptionId).Name + @" "+ secondMostCommonTypePercentage + @"% of reservations</td>
-                        </tr>
-                    </table>
-                </section>
+			if (mostCrowdedDayOfWeek != null && secondMostCrowdedDayOfWeek != null && thirdMostCrowdedDayOfWeek != null)
+			{
+				ticketHtml += @"
+    <section>
+        <h2>4. Days of the Week Analysis</h2>
+        <table>
+            <tr>
+                <th>Most Crowded Days</th>
+                <td>Day of the Week: " + (mostCrowdedDayOfWeek?.DayOfWeek.ToString() ?? "Unknown Day") + @"</td>
+                <td>Percentage of Reservations</td>
+                <td>" + (mostCrowdedDayOfWeek?.DayOfWeek.ToString() ?? "Unknown Day") + @": " + mostCrowdedDayOfWeekPercentage + @"%</td>
+                <td>" + (secondMostCrowdedDayOfWeek?.DayOfWeek.ToString() ?? "Unknown Day") + @": " + secondMostCrowdedDayOfWeekPercentage + @"%</td>
+                <td>" + (thirdMostCrowdedDayOfWeek?.DayOfWeek.ToString() ?? "Unknown Day") + @": " + thirdMostCrowdedDayOfWeekPercentage + @"%</td>
+            </tr>
+        </table>
+    </section>";
+			}
 
-                <section>
-                    <h2>4. Days of the Week Analysis</h2>
-                    <table>
-                        <tr>
-                            <th>Most Crowded Days</th>
-                            <td>Day of the Week: "+ mostCrowdedDayOfWeek.DayOfWeek + @"</td>
-                            <td>Percentage of Reservations</td>
-                            <td>"+ mostCrowdedDayOfWeek.DayOfWeek+ @": "+mostCrowdedDayOfWeekPercentage+ @"%</td>
-                            <td>" + secondMostCrowdedDayOfWeek.DayOfWeek + @": " + secondMostCrowdedDayOfWeekPercentage + @"%</td>
-                            <td>"+ thirdMostCrowdedDayOfWeek.DayOfWeek+ @": "+ thirdMostCrowdedDayOfWeekPercentage + @"%</td>
-                        </tr>
-                    </table>
-                </section>
+			ticketHtml += @"
+    <hr>
+    The date the report was generated: " + DateTime.Now.ToShortDateString() + @"
+</body>
+</html>
+";
 
-                <hr>
-                The date the report was generated: " + DateTime.Now.ToShortDateString()+@"
-            </body>
-            </html>
-            ";
 
-            var renderer = new IronPdf.HtmlToPdf();
+			var renderer = new IronPdf.HtmlToPdf();
             renderer.PrintOptions.PaperSize = PdfPrintOptions.PdfPaperSize.A4;
             renderer.PrintOptions.MarginTop = -13;
             renderer.PrintOptions.MarginBottom = -13;

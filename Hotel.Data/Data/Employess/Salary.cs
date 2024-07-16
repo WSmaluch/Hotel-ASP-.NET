@@ -11,9 +11,7 @@ namespace Hotel.Data.Data.Employess
     {
         [Key]
         public int SalaryID { get; set; }
-        public int EmployeeID { get; set; }
         public decimal SalaryAmount { get; set; }
         public string SalaryDetails { get; set; }
-        public Employee Employee { get; set; }
     }
 }

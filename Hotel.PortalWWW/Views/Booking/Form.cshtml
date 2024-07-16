@@ -131,8 +131,11 @@
     input[type=checkbox], input[radio] {
         margin-right:1%;
     }
-    
 
+    #discountCode {
+        width: 150px;
+        height: 25px;
+    }
 </style>
     <div id="content">
     <form action="/Booking/Submit" method="post">
@@ -181,7 +184,27 @@
                         <tr style="display:none" id="specialRequestsTr2" >
                             <td><textarea id="specialRequests" name="specialRequests" rows="4"></textarea></td>
                         </tr>
-                        
+                        <tr>
+                            <td>
+                                <input type="checkbox" id="discountCheckbox" name="discountCheckbox" onclick="showDiscountCodeField()"> I have a discount code
+                            </td>
+                        </tr>
+                        <tr style="display:none" id="discountCodeTr">
+                            <td>
+                                Discount Code:
+                            </td>
+                            <td height="10px">
+                                <input type="text" id="discountCode" name="discountCode" />
+                                <tr>
+                                    <td colspan="2">
+                                        <span id="discountMessage" style="color: red;"></span>
+                                    </td>
+                                </tr>
+                            </td>
+                            <td>
+                            <button id="discountCodeButton" type="button" onclick="applyDiscount()" style="display:none">Apply</button>
+                            </td>
+                        </tr>
                     </table>
                 </div>
                 
@@ -300,4 +323,58 @@
             status2.style.display = "none";
         }
     }
+
+    function showDiscountCodeField() {
+        var checkBox = document.getElementById("discountCheckbox");
+        var status = document.getElementById("discountCodeTr");
+        var button = document.getElementById("discountCodeButton");
+
+        if (checkBox.checked == true) {
+            status.style.display = "block";
+            button.style.display = "block";
+        } else {
+            status.style.display = "none";
+            button.style.display = "none";
+        }
+    }
+
+    let originalTotal = null;
+
+    function applyDiscount() {
+        var discountCode = document.getElementById("discountCode").value;
+        var totalElement = document.getElementById("total");
+
+        if (originalTotal === null) {
+            originalTotal = parseFloat(totalElement.innerText.replace('$', ''));
+        }
+
+        if (discountCode.trim() === "") {
+            totalElement.innerText = '$' + originalTotal.toFixed(2);
+            document.getElementById('discountMessage').innerText = '';
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Booking/VerifyDiscountCode",
+            data: { discountCode: discountCode },
+            success: function (response) {
+                if (response.success) {
+                    var discountValue = response.discountValue;
+                    var discountAmount = originalTotal * (discountValue / 100);
+                    var newTotal = originalTotal - discountAmount;
+
+                    totalElement.innerText = '$' + newTotal.toFixed(2);
+                    document.getElementById('discountMessage').innerText = 'Discount applied successfully!';
+                } else {
+                    document.getElementById('discountMessage').innerText = response.message;
+                }
+            },
+            error: function () {
+                document.getElementById('discountMessage').innerText = 'An error occurred while applying the discount.';
+            }
+        });
+    }
+
+
 </script>

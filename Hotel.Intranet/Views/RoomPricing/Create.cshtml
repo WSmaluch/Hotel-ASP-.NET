@@ -4,49 +4,91 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>RoomPricing</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="TypeId" class="control-label"></label>
-                <select asp-for="TypeId" class ="form-control" asp-items="ViewBag.TypeId"></select>
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title mt-5">Add Room Pricing</h3>
             </div>
-            <div class="form-group">
-                <label asp-for="ValidFrom" class="control-label"></label>
-                <input asp-for="ValidFrom" class="form-control" type="date" />
-                <span asp-validation-for="ValidFrom" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ValidTo" class="control-label"></label>
-                <input asp-for="ValidTo" class="form-control" type="date" />
-                <span asp-validation-for="ValidTo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label>Base price for room</label>
-                <input asp-for="BasePriceAdult" class="form-control" />
-                <span asp-validation-for="BasePriceAdult" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label>Additional price for room</label>
-                <input asp-for="BasePriceChildren" class="form-control" />
-                <span asp-validation-for="BasePriceChildren" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <form asp-action="Create">
+                @* <div asp-validation-summary="All" class="text-danger"></div> *@
+                @if (ViewBag.ErrorMessages != null && ViewBag.ErrorMessages.Count > 0)
+                {
+                    <div class="text-danger">
+                        @foreach (var error in ViewBag.ErrorMessages)
+                        {
+                            <p>@error</p>
+                        }
+                    </div>
+                }
+                <div class="row formtype">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Room type</label>
+                            <select asp-for="TypeId" class="form-control" asp-items="ViewBag.TypeId" data-val="false"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Valid From</label>
+                            <input asp-for="ValidFrom" class="form-control" type="date" />
+                            <span asp-validation-for="ValidFrom" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Valid To</label>
+                            <input asp-for="ValidTo" class="form-control" type="date" />
+                            <span asp-validation-for="ValidTo" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Base price for a night</label>
+                            <input asp-for="BasePriceAdult" class="form-control" data-val="false" />
+                            <span asp-validation-for="BasePriceAdult" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Additional price for a night</label>
+                            <input asp-for="BasePriceChildren" class="form-control" data-val="false" />
+                            <span asp-validation-for="BasePriceChildren" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary buttonedit ml-2">Save</button>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var basePriceAdultInput = document.querySelector("#BasePriceAdult");
+        var basePriceChildrenInput = document.querySelector("#BasePriceChildren");
+
+        // Replace dots with commas before form submission
+        var form = document.querySelector("form");
+        form.addEventListener("submit", function () {
+            replaceDotsWithCommas(basePriceAdultInput);
+            replaceDotsWithCommas(basePriceChildrenInput);
+        });
+
+        function replaceDotsWithCommas(inputElement) {
+            var value = inputElement.value.trim();
+            var newValue = value.replace(/\./g, ",");
+            inputElement.value = newValue;
+        }
+    });
+</script>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

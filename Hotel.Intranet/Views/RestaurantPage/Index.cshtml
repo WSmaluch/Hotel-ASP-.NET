@@ -1,0 +1,100 @@
+﻿@model IEnumerable<Hotel.Data.Data.Restaurant.RestaurantPage>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <div class="mt-5">
+                    <h4 class="card-title float-left mt-2">Restaurant Pages</h4>
+                    @* <a asp-action="Create" class="btn btn-primary float-right veiwbutton">Create New</a> *@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card card-table">
+                <div class="card-body booking_card">
+                    <div class="table-responsive">
+                        <table class="datatable table table-stripped table table-hover table-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Banner URL</th>
+                                    <th>Banner Title</th>
+                                    <th>Content 1 Title</th>
+                                    <th>Content 1 Description</th>
+                                    <th>Content 1 Picture 1 URL</th>
+                                    <th>Content 1 Picture 2 URL</th>
+                                    <th>Content 2 Title</th>
+                                    <th>Content 2 Description</th>
+                                    <th>Content 3 Title</th>
+                                    <th>Content 3 Description</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td><img src=" @Html.DisplayFor(modelItem => item.BannerUrl)" width="100" height="100" /></td>
+                                        <td>@Html.DisplayFor(modelItem => item.BannerTitle)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Content1Title)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Content1Description)</td>
+                                        <td><img src=" @Html.DisplayFor(modelItem => item.Content1Picture1Url)" width="100" height="100" /></td>
+                                        <td><img src=" @Html.DisplayFor(modelItem => item.Content1Picture2Url)" width="100" height="100" /></td>
+                                        <td>@Html.DisplayFor(modelItem => item.Content2Title)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Content2Description)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Content3Title)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Content3Description)</td>
+                                        <td class="text-right">
+                                            <div class="dropdown dropdown-action">
+                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v ellipse_color"></i></a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.IdAboutPage"><i class="fas fa-pencil-alt m-r-5"></i> Edit</a>
+                                                    <a class="dropdown-item" href="#" onclick="confirmDelete('@item.IdAboutPage')"><i class="fas fa-trash-alt m-r-5"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete_asset" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h3 class="delete_class">Are you sure?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                    <button type="button" class="btn btn-danger" onclick="deleteConfirm()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var idToDelete;
+
+        function confirmDelete(id) {
+            idToDelete = id;
+            $('#delete_asset').modal('show');
+        }
+
+        function deleteConfirm() {
+            window.location.href = '/RestaurantPage/Delete/' + idToDelete;
+        }
+    </script>
+}

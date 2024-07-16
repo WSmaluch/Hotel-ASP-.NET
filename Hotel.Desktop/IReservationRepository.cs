@@ -18,5 +18,6 @@ namespace Hotel.Desktop
         List<RepairTask>? GetReapairTasks();
         List<RepairTask>? GetRepairsTasksWithEmployees();
         List<Employee>? GetEmployees();
+
     }
 }

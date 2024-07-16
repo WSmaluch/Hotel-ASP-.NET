@@ -11,8 +11,6 @@ namespace Hotel.Data.Data.Employess
     {
         [Key]
         public int QualificationID { get; set; }
-        public int EmployeeID { get; set; }
-        public string HeldQualifications { get; set; }
-        public Employee Employee { get; set; }
+        public string QualificationName { get; set; }
     }
 }

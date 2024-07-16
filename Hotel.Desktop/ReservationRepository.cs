@@ -29,8 +29,12 @@ namespace Hotel.Desktop
 
         public List<CleaningTask> GetCleaningTasks()
         {
+            DateTime oneWeekAgo = DateTime.Now.AddDays(-7);
+
+
             var tasks = _hotelContext.CleaningTask
                 .Include(r => r.Room)
+                .Where(t => t.StatusId == 8 || t.ScheduledDate <= oneWeekAgo)
                 .ToList();
 
             var statuses = _hotelContext.Status;
@@ -51,7 +55,11 @@ namespace Hotel.Desktop
 
         public List<RepairTask>? GetReapairTasks()
         {
-            return _hotelContext.RepairTask.ToList();
+            DateTime oneWeekAgo = DateTime.Now.AddDays(-7);
+
+            return _hotelContext.RepairTask
+                .Where(r => r.ScheduledDate <= oneWeekAgo || r.StatusId == 12)
+                .ToList();
         }
 
         public List<RepairTask> GetRepairsTasksWithEmployees()
@@ -87,6 +95,5 @@ namespace Hotel.Desktop
             return _hotelContext.Room.ToList();
         }
 
-        // Inne implementacje interfejsu...
     }
 }

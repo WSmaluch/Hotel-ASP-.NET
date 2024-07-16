@@ -26,6 +26,7 @@ namespace Hotel.PortalWWW.Controllers
         private readonly HotelContext _context;
         private readonly IConfiguration _configuration;
         private decimal totalPrice;
+        private int discountCodeId;
         #endregion
 
         #region Properties
@@ -141,6 +142,21 @@ namespace Hotel.PortalWWW.Controllers
         }
 
         [HttpPost]
+        public JsonResult VerifyDiscountCode(string discountCode)
+        {
+            var discount = _context.DiscountCode
+                .FirstOrDefault(dc => dc.Code == discountCode && dc.IsActive && dc.ValidFrom <= DateTime.Today && dc.ValidTo >= DateTime.Today);
+
+            if (discount != null)
+            {
+                return Json(new { success = true, discountValue = discount.Discount });
+            }
+
+            return Json(new { success = false, message = "Invalid or expired discount code." });
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> Submit(
             int typeId,
             string checkIn,
@@ -155,8 +171,9 @@ namespace Hotel.PortalWWW.Controllers
             string address,
             string postalCode,
             string city,
-            //testowo ustawiam 1, ale docelowo przycisk ze strony form ma tu przekazać optionId
-            int selectedOfferId
+            int selectedOfferId,
+            string discountCode 
+
             )
         {
 
@@ -186,10 +203,47 @@ namespace Hotel.PortalWWW.Controllers
                     PostalCode=postalCode
                 };
 
+                // Sprawdzanie, czy kod rabatowy został wprowadzony i jest prawidłowy
+                if (!string.IsNullOrEmpty(discountCode))
+                {
+                    var discount = _context.DiscountCode.FirstOrDefault(dc => dc.Code == discountCode && dc.IsActive && dc.ValidFrom <= DateTime.Today && dc.ValidTo >= DateTime.Today);
+                    if (discount != null)
+                    {
+                        double discountAmount = reservation.TotalPrice * (double)discount.Discount / 100;
+
+                        // Zastosowanie zniżki do całkowitej ceny rezerwacji
+                        reservation.TotalPrice -= discountAmount;
+
+                        discount.IsActive = false;
+                        _context.DiscountCode.Update(discount);
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Invalid or expired discount code.";
+                        return View();
+                    }
+                }
+
+                // Tworzenie nowego kodu zniżkowego
+                DiscountCode discountCod = new DiscountCode
+                {
+                    Code = GenerateDiscountCode(), 
+                    Discount = 5, 
+                    ValidFrom = DateTime.Today, 
+                    ValidTo = DateTime.Today.AddMonths(6), 
+                    IsActive = true, 
+                    AddedBy = "Admin", 
+                    AddedDate = DateTime.Now, 
+                };
+
+                // Dodanie kodu zniżkowego do bazy danych
+                _context.DiscountCode.Add(discountCod);
+
                 reservation.AddedBy = "PortalWWW";
                 reservation.StatusId = 1;
                 _context.Reservations.Add(reservation);
                 await _context.SaveChangesAsync();
+                discountCodeId = discountCod.IdDiscountCode;
                 int confirmationCode = reservation.IdReservation;
                 await SendConfirmationEmail(reservation, email, confirmationCode);
                 ViewBag.Message = "Reservation submitted successfully!";
@@ -197,6 +251,9 @@ namespace Hotel.PortalWWW.Controllers
                 ViewBag.Reservation = reservation;
                 ViewBag.OfferName = _context.Options.Find(selectedOfferId).Name;
                 ViewBag.Days = days;
+                ViewBag.DiscountCode = _context.DiscountCode.Find(discountCodeId).Code;
+
+
                 return View();
             }
             catch (Exception ex)
@@ -225,7 +282,11 @@ namespace Hotel.PortalWWW.Controllers
             return totalPrice;
         }
 
-
+        private string GenerateDiscountCode()
+        {
+            string discountCode = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+            return discountCode;
+        }
         //private decimal GetTotalPrice(int typeId, DateTime checkIn, DateTime checkOut, int adults, int children)
         //{
         //    // Find the applicable room pricing based on the room type and date range
@@ -400,11 +461,11 @@ namespace Hotel.PortalWWW.Controllers
 
             var typeOfRoom = _context.Types.Find(_context.Room.Find(reservation.RoomId).TypeId);
 
-
+            var discountCode = _context.DiscountCode.Find(discountCodeId).Code;
 
             var message = new MailMessage
             {
-                From = new MailAddress("hoteltest321@outlook.com"),
+                From = new MailAddress(smtpSettings["Username"]),
                 Subject = "Reservation Confirmation",
                 IsBodyHtml = true,
             };
@@ -615,6 +676,7 @@ namespace Hotel.PortalWWW.Controllers
                                         <td width='130px'><img id='icon' src='https://i.imgur.com/WxRri4Y.png' alt='shower'> 1</td>
                                         <td width='130px'><img id='icon' src='https://i.imgur.com/CZdNj90.png' alt='bed'> 1</td>
                                         <td width='130px'><img id='icon' src='https://i.imgur.com/8ETVSV2.png' alt='size'> 1</td>
+
                                     </tr>
                                 </table>
                                 <br>

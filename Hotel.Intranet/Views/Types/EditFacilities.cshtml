@@ -17,7 +17,7 @@
                 <label>Facilities</label><br/>
                 <h7 style="color:red;">The previous facilities will be reset.</h7>
                 <div class="input-group">
-                    <select asp-for="Facilities" class="form-control" multiple asp-items="ViewBag.Facilities"></select>
+                    <select asp-for="Facilities" class="form-control" multiple required asp-items="ViewBag.Facilities"></select>
                     <div class="input-group-append">
                         <a href="#" class="btn btn-primary" id="addFacility">
                             <i style="margin-top:35px" class="fas fa-plus"></i>

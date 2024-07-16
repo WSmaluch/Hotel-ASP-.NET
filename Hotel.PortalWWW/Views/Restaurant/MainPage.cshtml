@@ -1,0 +1,112 @@
+﻿@* @ViewBag.RestaurantPage Hotel.Data.Data.Restaurant.RestaurantPage *@
+@{
+    ViewData["Title"] = "Restauracja Hotelowa";
+}
+
+<!-- bradcam_area_start -->
+<div class="bradcam_area breadcam_bg" style="background-image:url(https://i.imgur.com/ccGTCmJ.png)">
+    <h3>@ViewBag.RestaurantPage.BannerTitle</h3>
+</div>
+<!-- bradcam_area_end -->
+<!-- about_area_start -->
+<div class="about_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-5 col-lg-5">
+                <div class="about_info">
+                    <div class="section_title mb-20px">
+                        <h3>
+                            @ViewBag.RestaurantPage.Content1Title
+                        </h3>
+                    </div>
+                    <p>@ViewBag.RestaurantPage.Content1Description</p>
+                </div>
+            </div>
+            <div class="col-xl-7 col-lg-7">
+                <div class="about_thumb d-flex">
+                    <div class="img_1">
+                        <img src="@ViewBag.RestaurantPage.Content1Picture1Url" alt="">
+                    </div>
+                    <div class="img_2">
+                        <img src="@ViewBag.RestaurantPage.Content1Picture2Url" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- about_area_end -->
+<!-- menu_area_start -->
+<div class="menu_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="section_title mb-70 text-center">
+                    <span>Menu</span>
+                    <h3>Nasze specjały</h3>
+                    <div class="menu_buttons">
+                        @foreach (var seasonalMenu in ViewBag.SeasonalMenus)
+                        {
+                            <button class="menu_button" data-menu-id="@seasonalMenu.Id">@seasonalMenu.Name</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="menuItemsContainer">
+            @foreach (var dish in ViewBag.Dishes)
+            {
+                <div class="col-xl-4 col-lg-4 col-md-6 menu-item" data-menu-id="@dish.Name">
+                    <div class="single_menu text-center">
+                        <div class="menu_info">
+                            <h4>@dish.Name</h4>
+                            <p>@dish.Description</p>
+                            <h5>@dish.Price.Price</h5>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- menu_area_end -->
+<!-- about_info_area_start -->
+<!-- KARUZELA ZDJEC-->
+@* <div class="about_info_area">
+    <div class="about_active owl-carousel" style="width:80%;height:40%">
+        @foreach (var item in ViewBag.Gallery)
+        {
+            <img src="@item.ImageUrl"/>
+        }
+    </div>
+</div> *@
+<!-- about_info_area_end -->
+<!-- about_main_info_start -->
+<div class="about_main_info">
+    <div class="container">
+        <div class="row">
+            <div class="col-xl-6 col-md-6">
+                <div class="single_about_info">
+                    <h3>
+                        @ViewBag.RestaurantPage.Content2Title
+                    </h3>
+                    <p>
+                        @ViewBag.RestaurantPage.Content2Description
+                    </p>
+                </div>
+            </div>
+            <div class="col-xl-6 col-md-6">
+                <div class="single_about_info">
+                    <h3>
+                        @ViewBag.RestaurantPage.Content3Title
+                    </h3>
+                    <p>
+                        @ViewBag.RestaurantPage.Content3Description
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- about_main_info_end -->

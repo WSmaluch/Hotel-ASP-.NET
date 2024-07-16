@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Gallery";
+}
+
+<style>
+    .single_gallery_item .gallery_img {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .single_gallery_item .gallery_img img {
+            width: 100%;
+            height: 300px; /* Ustawiona stała wysokość dla wszystkich obrazów */
+            object-fit: cover; /* Zachowuje proporcje obrazu */
+        }
+
+    .single_gallery_item .hover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Przezroczyste tło dla przycisku powiększenia */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .single_gallery_item:hover .hover {
+        opacity: 1;
+    }
+
+    .single_gallery_item .hover a {
+        color: #fff;
+        font-size: 24px;
+    }
+</style>
+
+<!-- bradcam_area_start -->
+<div class="bradcam_area breadcam_bg" style="background-image:url(https://i.imgur.com/ccGTCmJ.png)">
+    <h3>Gallery</h3>
+</div>
+<!-- bradcam_area_end -->
+<!--================ Gallery Area =================-->
+<section class="gallery_area section-padding">
+    <div class="container">
+        <div class="row">
+            @foreach (var gallery in ViewBag.Gallery)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="single_gallery_item">
+                        <div class="gallery_img">
+                            <img src="@gallery.ImageUrl" alt="Gallery Image">
+                            <div class="hover">
+                                <a class="light" href="@gallery.ImageUrl"><i class="fa fa-expand"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!--================ Gallery Area =================-->

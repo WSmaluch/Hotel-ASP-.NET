@@ -11,8 +11,6 @@ namespace Hotel.Data.Data.Employess
     {
         [Key]
         public int DepartmentID { get; set; }
-        public int EmployeeID { get; set; }
         public string DepartmentName { get; set; }
-        public Employee Employee { get; set; }
     }
 }

@@ -22,9 +22,8 @@ namespace Hotel.Intranet.Controllers
         // GET: Employee
         public async Task<IActionResult> Index()
         {
-              return _context.Employee != null ? 
-                          View(await _context.Employee.ToListAsync()) :
-                          Problem("Entity set 'HotelContext.Employee'  is null.");
+            var hotelContext = _context.Employee.Include(e => e.Contact).Include(e => e.Department).Include(e => e.Qualification).Include(e => e.Salary);
+            return View(await hotelContext.ToListAsync());
         }
 
         // GET: Employee/Details/5
@@ -36,6 +35,10 @@ namespace Hotel.Intranet.Controllers
             }
 
             var employee = await _context.Employee
+                .Include(e => e.Contact)
+                .Include(e => e.Department)
+                .Include(e => e.Qualification)
+                .Include(e => e.Salary)
                 .FirstOrDefaultAsync(m => m.EmployeeID == id);
             if (employee == null)
             {
@@ -48,6 +51,10 @@ namespace Hotel.Intranet.Controllers
         // GET: Employee/Create
         public IActionResult Create()
         {
+            ViewData["ContactId"] = new SelectList(_context.Contact, "ContactID", "Address");
+            ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentID", "DepartmentName");
+            ViewData["QualificationId"] = new SelectList(_context.Qualification, "QualificationID", "QualificationName");
+            ViewData["SalaryId"] = new SelectList(_context.Salary, "SalaryID", "SalaryDetails");
             return View();
         }
 
@@ -56,15 +63,18 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeeID,FirstName,LastName,HiringDate")] Employee employee)
+        public async Task<IActionResult> Create([Bind("EmployeeID,FirstName,LastName,HiringDate,ContactId,DepartmentId,QualificationId,SalaryId")] Employee employee)
         {
-            if (ModelState.IsValid)
-            {
+            ViewData["ContactId"] = new SelectList(_context.Contact, "ContactID", "Address", employee.ContactId);
+            ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentID", "DepartmentName", employee.DepartmentId);
+            ViewData["QualificationId"] = new SelectList(_context.Qualification, "QualificationID", "QualificationName", employee.QualificationId);
+            ViewData["SalaryId"] = new SelectList(_context.Salary, "SalaryID", "SalaryDetails", employee.SalaryId);
+            //if (ModelState.IsValid)
+            //{
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            return View(employee);
+            //}
         }
 
         // GET: Employee/Edit/5
@@ -80,6 +90,10 @@ namespace Hotel.Intranet.Controllers
             {
                 return NotFound();
             }
+            ViewData["ContactId"] = new SelectList(_context.Contact, "ContactID", "Address", employee.ContactId);
+            ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentID", "DepartmentName", employee.DepartmentId);
+            ViewData["QualificationId"] = new SelectList(_context.Qualification, "QualificationID", "QualificationName", employee.QualificationId);
+            ViewData["SalaryId"] = new SelectList(_context.Salary, "SalaryID", "SalaryDetails", employee.SalaryId);
             return View(employee);
         }
 
@@ -88,52 +102,52 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EmployeeID,FirstName,LastName,HiringDate")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("EmployeeID,FirstName,LastName,HiringDate,ContactId,DepartmentId,QualificationId,SalaryId")] Employee employee)
         {
+            ViewData["ContactId"] = new SelectList(_context.Contact, "ContactID", "Address", employee.ContactId);
+            ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentID", "DepartmentName", employee.DepartmentId);
+            ViewData["QualificationId"] = new SelectList(_context.Qualification, "QualificationID", "QualificationName", employee.QualificationId);
+            ViewData["SalaryId"] = new SelectList(_context.Salary, "SalaryID", "SalaryDetails", employee.SalaryId);
+            
             if (id != employee.EmployeeID)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.EmployeeID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(employee);
+                await _context.SaveChangesAsync();
             }
-            return View(employee);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EmployeeExists(employee.EmployeeID))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Employee/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Employee == null)
+            if (_context.Employee == null)
             {
-                return NotFound();
+                return Problem("Entity set 'HotelContext.Employee'  is null.");
+            }
+            var empl = await _context.Employee.FindAsync(id);
+            if (empl != null)
+            {
+                _context.Employee.Remove(empl);
             }
 
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.EmployeeID == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            return View(employee);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: Employee/Delete/5

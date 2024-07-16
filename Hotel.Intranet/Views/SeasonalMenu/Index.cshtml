@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Hotel.Data.Data.Restaurant.SeasonalMenu>
+
+@{
+    ViewData["Title"] = "Seasonal Menus";
+}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title mt-5">Seasonal Menus</h3>
+            </div>
+            <div class="col text-right">
+                <a asp-action="Create" class="btn btn-primary">Create New</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Description</th>
+                                    <th>Dish</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                        <td>
+                                            @foreach (var o in item.Dishes)
+                                            {
+                                                <ul>
+                                                    <li>@o.Name</li>
+                                                </ul>
+                                            }
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" id="actionDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Actions
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="actionDropdown">
+                                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">
+                                                        <i class="fas fa-pencil-alt"></i> Edit
+                                                    </a>
+                                                    <a class="dropdown-item" href="#" onclick="confirmDelete('@item.Id')">
+                                                        <i class="fas fa-trash-alt"></i> Delete
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete_asset" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h3 class="delete-class">Are you sure?</h3>
+                <div class="mt-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                    <button type="button" class="btn btn-danger" onclick="deleteConfirm()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var idToDelete;
+
+        function confirmDelete(id) {
+            idToDelete = id;
+            $('#delete_asset').modal('show');
+        }
+
+        function deleteConfirm() {
+            window.location.href = '/SeasonalMenu/Delete/' + idToDelete;
+        }
+    </script>
+}

@@ -54,54 +54,6 @@ namespace Hotel.Intranet.Controllers
         }
 
 
-        //// GET: Reservations/Create
-        //public IActionResult Create()
-        //{
-        //    ViewBag.Rooms = new SelectList(_context.Room.Include(r => r.Type).Select(r => new {
-        //        IdRoom = r.IdRoom,
-        //        DisplayNameWithNumber = $"{r.Number} - {r.Type.Name}"
-        //    }), "IdRoom", "DisplayNameWithNumber");
-        //    return View();
-        //}
-
-        //// GET: Reservations/Create
-        ////private List<Room> GetAvailableRooms(DateTime checkIn, DateTime checkOut, int numberOfAdults, int numberOfChildren)
-        ////{
-        ////    var reservedRoomIds = _context.Reservations
-        ////        .Where(r => (checkIn < r.CheckOut && checkOut > r.CheckIn) || (checkIn >= r.CheckOut && checkOut <= r.CheckIn))
-        ////        .Select(r => r.RoomId)
-        ////        .ToList();
-
-        ////    var availableRooms = _context.Room
-        ////        .Include(r => r.Type)
-        ////        .Where(r => !reservedRoomIds.Contains(r.IdRoom))
-        ////        .ToList();
-
-        ////    // Filtruj pokoje na podstawie liczby osób
-        ////    availableRooms = availableRooms
-        ////        .Where(r => r.Type.MaxAmountOfPeople >= (numberOfAdults + numberOfChildren))
-        ////        .ToList();
-
-        ////    return availableRooms;
-
-
-        ////    dsadasdasdasdsadasdasdasdasdsa
-
-        ////        var availableRooms = _context.Room
-        ////    .Where(room =>
-        ////        !_context.Reservations
-        ////            .Where(reservation => reservation.IsActive == true &&
-        ////                reservation.CheckIn <= checkOut &&
-        ////                reservation.CheckOut >= checkIn)
-        ////            .Select(reservation => reservation.RoomId)
-        ////            .Contains(room.IdRoom) &&
-        ////        room.Type.MaxAmountOfPeople >= (numberOfAdults + numberOfChildren))
-        ////    .ToList();
-
-        ////    return availableRooms;
-        ////}
-
-
         public IActionResult Create(DateTime? checkIn, DateTime? checkOut, int NumberOfAdults, int NumberOfChildren)
         {
             ViewBag.CheckIn = checkIn;
@@ -218,13 +170,32 @@ namespace Hotel.Intranet.Controllers
         // POST: Reservations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
+
+        private string GenerateDiscountCode()
+        {
+            string discountCode = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+            return discountCode;
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateConfirmed([Bind("IdReservation,RoomId,Name,LastName,Email,PhoneNumber,City,AdressFirstLine,PostalCode,CheckIn,CheckOut,NumberOfAdults,NumberOfChildren,SpecialRequests,TotalPrice,OptionId,StatusId,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Reservation reservation)
         {
-            //if (ModelState.IsValid)
-            //{
+            // Tworzenie nowego kodu zniżkowego
+            DiscountCode discountCode = new DiscountCode
+            {
+                Code = GenerateDiscountCode(), 
+                Discount = 5,
+                ValidFrom = DateTime.Today, 
+                ValidTo = DateTime.Today.AddMonths(6), 
+                IsActive = true, 
+                AddedBy = "Admin", 
+                AddedDate = DateTime.Now, 
+            };
+
+            _context.DiscountCode.Add(discountCode);
+
+            ViewData["RoomId"] = new SelectList(_context.Room, "IdRoom", "PhotosURL", reservation.RoomId);
             reservation.AddedDate = DateTime.Now;
             reservation.AddedBy = "Admin";
             reservation.StatusId = 1;
@@ -232,9 +203,6 @@ namespace Hotel.Intranet.Controllers
             _context.Add(reservation);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-            //}
-            ViewData["RoomId"] = new SelectList(_context.Room, "IdRoom", "PhotosURL", reservation.RoomId);
-            return View(reservation);
         }
 
 
@@ -254,7 +222,7 @@ namespace Hotel.Intranet.Controllers
             {
                 // Przeprowadź obliczenia ceny na podstawie danych pokoju
                 var price = (double)GetTotalPrice(roomType.IdType, reservation.CheckIn, reservation.CheckOut, reservation.NumberOfAdults, reservation.NumberOfChildren);
-                reservation.TotalPrice = AddOccupancyFee(price, roomType.IdType, reservation.CheckIn, reservation.CheckOut, reservation.NumberOfAdults, reservation.NumberOfChildren);
+                reservation.TotalPrice = AddOccupancyFee(price, roomType.IdType, reservation.CheckIn, reservation.CheckOut, reservation.NumberOfAdults, reservation.NumberOfChildren) + CalculateOptionPrice(reservation);
             }
             else
             {
@@ -262,6 +230,10 @@ namespace Hotel.Intranet.Controllers
                 ModelState.AddModelError(string.Empty, "Error retrieving room information.");
                 return View("Create", reservation); // Przekieruj z powrotem do formularza z błędem
             }
+
+            ViewBag.RoomNumber = _context.Room.Find(reservation.RoomId).Number;
+
+            ViewBag.OptionName = _context.Options.Find(reservation.OptionId).Name;
 
             return View("Confirm", reservation);
         }
@@ -280,13 +252,28 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
+            
+
             ViewBag.Rooms = new SelectList(_context.Room.Include(r => r.Type).Select(r => new
             {
                 IdRoom = r.IdRoom,
                 DisplayNameWithNumber = $"{r.Number} - {r.Type.Name}"
             }), "IdRoom", "DisplayNameWithNumber", reservation.RoomId);
 
-            return View(reservation);
+
+			var availableOptions = _context.Options
+					.Where(o => o.StartDate <= reservation.CheckIn&& o.EndDate >= reservation.CheckOut)
+					.ToList();
+
+			var days = (reservation.CheckOut - reservation.CheckIn).TotalDays;
+
+			ViewBag.Options = new SelectList(availableOptions.Select(o => new
+			{
+				IdOption = o.IdOption,
+				DisplayText = $"{o.Name} - {(o.Price * days).ToString("C", CultureInfo.CreateSpecificCulture("en-US"))}"
+			}), "IdOption", "DisplayText");
+
+			return View(reservation);
         }
 
 
@@ -296,17 +283,38 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdReservation,RoomId,Name,CheckIn,CheckOut,NumberOfAdults,NumberOfChildren,SpecialRequests,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Reservation reservation)
+        public async Task<IActionResult> Edit(int id, [Bind("IdReservation,RoomId,Name,LastName,Email,PhoneNumber,City,AdressFirstLine,PostalCode,CheckIn,CheckOut,NumberOfAdults,NumberOfChildren,SpecialRequests,TotalPrice,OptionId,StatusId,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Reservation reservation)
         {
             if (id != reservation.IdReservation)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+
+            var existingReservation = await _context.Reservations.AsNoTracking().FirstOrDefaultAsync(o => o.IdReservation == id);
+
+            //liczenie ponowne ceny
+            if (reservation.TotalPrice == existingReservation.TotalPrice)
             {
+                var roomType = _context.Room
+                .Include(r => r.Type)
+                .Where(r => r.IdRoom == reservation.RoomId)
+                .Select(r => r.Type)
+                .FirstOrDefault();
+
+                var price = (double)GetTotalPrice(roomType.IdType, reservation.CheckIn, reservation.CheckOut, reservation.NumberOfAdults, reservation.NumberOfChildren);
+                reservation.TotalPrice = AddOccupancyFee(price, roomType.IdType, reservation.CheckIn, reservation.CheckOut, reservation.NumberOfAdults, reservation.NumberOfChildren) + CalculateOptionPrice(reservation);
+            }
+            //
+
+
+
+            ViewData["RoomId"] = new SelectList(_context.Room, "IdRoom", "PhotosURL", reservation.RoomId);
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
+                    reservation.StatusId = existingReservation.StatusId;
                     _context.Update(reservation);
                     await _context.SaveChangesAsync();
                 }
@@ -322,8 +330,7 @@ namespace Hotel.Intranet.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["RoomId"] = new SelectList(_context.Room, "IdRoom", "PhotosURL", reservation.RoomId);
+            //}
             return View(reservation);
         }
 
@@ -769,6 +776,23 @@ namespace Hotel.Intranet.Controllers
             }
 
             return price + occupancyFee;
+        }
+
+        private double CalculateOptionPrice(Reservation res)
+        {
+            var availableOptions = _context.Options
+                    .Where(o => o.StartDate <= res.CheckIn && o.EndDate >= res.CheckOut)
+                    .ToList();
+
+            var days = (res.CheckOut - res.CheckIn).TotalDays;
+
+            var option = availableOptions
+                .Where(o => o.IdOption == res.OptionId)
+                .FirstOrDefault();
+
+            var price = option.Price * days;
+
+            return price;
         }
     }
 }

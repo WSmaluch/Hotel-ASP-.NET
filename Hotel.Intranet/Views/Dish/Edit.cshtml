@@ -1,0 +1,138 @@
+﻿@model Hotel.Data.Data.Restaurant.Dish
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Dish</h4>
+<hr />
+<div class="content container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label">Name</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label">Description</label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PriceId" class="control-label">Price</label>
+                    <div class="input-group">
+                        <select asp-for="PriceId" class="form-control" asp-items="ViewBag.PriceId"></select>
+                        <div class="input-group-append">
+                            <a href="#" class="btn btn-primary" id="addPrice">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <span asp-validation-for="PriceId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CategoryId" class="control-label">Category</label>
+                    <div class="input-group">
+                        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                        <div class="input-group-append">
+                            <a href="#" class="btn btn-primary" id="addCategory">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NutritionInfoId" class="control-label">Nutrition Info</label>
+                    <div class="input-group">
+                        <select asp-for="NutritionInfoId" class="form-control" asp-items="ViewBag.NutritionInfoId"></select>
+                        <div class="input-group-append">
+                            <a href="#" class="btn btn-primary" id="addNutritionInfo">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <span asp-validation-for="NutritionInfoId" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Ingredients</label>
+                        <div class="input-group">
+                            <select asp-for="Ingredients" class="form-control" multiple asp-items="ViewBag.Ingredients"></select>
+                            <div class="input-group-append">
+                                <a href="#" class="btn btn-primary" id="editIngredients">
+                                    <i style="margin-top:35px" class="fas fa-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Ingredients" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Menu</label>
+                        <div class="input-group">
+                            <select asp-for="Menu" class="form-control" multiple asp-items="ViewBag.Menu"></select>
+                            <div class="input-group-append">
+                                <a href="#" class="btn btn-primary" id="editMenu">
+                                    <i style="margin-top:35px" class="fas fa-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Ingredients" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group form-check">
+                    <input class="form-check-input" asp-for="IsVegetarian" />
+                    <label class="form-check-label">@Html.DisplayNameFor(model => model.IsVegetarian)</label>
+                </div>
+                <div class="form-group form-check">
+                    <input class="form-check-input" asp-for="IsVegan" />
+                    <label class="form-check-label">@Html.DisplayNameFor(model => model.IsVegan)</label>
+                </div>
+                <div class="form-group form-check">
+                    <input class="form-check-input" asp-for="IsGlutenFree" />
+                    <label class="form-check-label">@Html.DisplayNameFor(model => model.IsGlutenFree)</label>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script>
+    $(document).ready(function () {
+        $('#addIngredients').click(function () {
+            window.location.href = '/Ingredient/Create';
+        });
+    });
+
+    $(document).ready(function () {
+        $('#addMenu').click(function () {
+            window.location.href = '/Menu/Create';
+        });
+    });
+    $('#addPrice').click(function () {
+        window.location.href = '/DishPrice/Create';
+    });
+    $('#addCategory').click(function () {
+        window.location.href = '/RestaurantCategory/Create';
+    });
+    $('#addNutritionInfo').click(function () {
+        window.location.href = '/NutritionInfo/Create';
+    });
+</script>

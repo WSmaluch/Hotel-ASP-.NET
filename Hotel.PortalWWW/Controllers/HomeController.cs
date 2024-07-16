@@ -1,10 +1,12 @@
 ﻿using Hotel.Data;
 using Hotel.Data.Data.CMS.About;
+using Hotel.Data.Data.CMS.Attractions;
 using Hotel.Data.Data.CMS.MainPage;
 using Hotel.PortalWWW.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Diagnostics;
 
 namespace Hotel.PortalWWW.Controllers
@@ -43,16 +45,23 @@ namespace Hotel.PortalWWW.Controllers
                    where about.IsActive == true
                    select about
                 ).ToList().FirstOrDefault();
+
+            ViewBag.Options = _context.Options
+             .Where(option => option.IsActive && option.IdOption != 20)
+             .Include(option => option.ContentItems)
+             .OrderBy(option => Guid.NewGuid())
+             .Take(3)
+             .ToList();
+            ViewBag.Types =
+            (
+                   from type in _context.Types
+                   select type
+                ).ToList();
             ViewBag.Offers =
             (
                    from offer in _context.Offer
                    where offer.IsActive == true
                    select offer
-                ).ToList();
-            ViewBag.Types =
-            (
-                   from type in _context.Types
-                   select type
                 ).ToList();
             return View();
         }
@@ -90,6 +99,13 @@ namespace Hotel.PortalWWW.Controllers
                    from type in _context.Types
                    select type
                 ).ToList();
+            ViewBag.Options = _context.Options
+             .Where(option => option.IsActive && option.IdOption != 20)
+             .Include(option => option.ContentItems)
+             .OrderBy(option => Guid.NewGuid())
+             .Take(3)
+             .ToList();
+
 
             return View();
         }
@@ -112,6 +128,60 @@ namespace Hotel.PortalWWW.Controllers
          .FirstOrDefault();
             return View();
         }
+
+        public IActionResult Attractions()
+        {
+            var attractions = _context.Attraction
+                .Where(att => att.IsActive)
+                .Include(att => att.AttractionType)
+                .Include(att => att.AttractionPrice)
+                .OrderBy(att => Guid.NewGuid())
+                .Take(4)
+                .ToList();
+
+            ViewBag.Attractions = attractions;
+            return View();
+        }
+
+        public IActionResult Vouchers()
+        {
+            ViewBag.Vouchers = _context.Vouchers
+                .Where(v => v.IsActive)
+                .ToList();
+
+            ViewBag.VoucherTypes = _context.VoucherType
+                .Where(vt => vt.IsActive)
+                .ToList();
+
+            ViewBag.VoucherPrices = _context.VoucherPrice
+                .Where(vp => vp.IsActive)
+                .OrderByDescending(vp => vp.Amount)
+                .ToList();
+
+            return View(); 
+        }
+
+        public IActionResult SiteGuide()
+        {
+            ViewBag.SiteGuide = _context.SiteGuide
+                .Where(v => v.IsActive)
+                .OrderBy(att => Guid.NewGuid())
+                .Take(3)
+                .ToList();
+
+            return View(); 
+        }
+
+        public IActionResult Gallery()
+        {
+            ViewBag.Gallery = _context.Gallery
+                .Where(v => v.IsActive)
+                .ToList();
+
+            return View();
+        }
+
+
 
         public IActionResult RoomTypeDetails(int typeId)
         {

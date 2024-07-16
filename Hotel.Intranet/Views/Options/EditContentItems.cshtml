@@ -17,7 +17,7 @@
 				<label>ContentItems</label>
                 <h7 style="color:red;">The previous content items will be reset.</h7>
 				<div class="input-group">
-					<select asp-for="ContentItems" class="form-control" multiple asp-items="ViewBag.ContentItems"></select>
+					<select asp-for="ContentItems" class="form-control" multiple required asp-items="ViewBag.ContentItems"></select>
 					<div class="input-group-append">
 						<a href="#" class="btn btn-primary" id="addContentItem">
 							<i style="margin-top:35px" class="fas fa-plus"></i>

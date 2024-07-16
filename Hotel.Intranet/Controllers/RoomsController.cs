@@ -140,8 +140,6 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            //if (ModelState.IsValid)
-            //{
                 try
                 {
                 _context.Update(room);

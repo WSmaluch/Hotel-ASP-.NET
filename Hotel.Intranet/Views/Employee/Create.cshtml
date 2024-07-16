@@ -4,40 +4,132 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Employee</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title mt-5">Add Employee</h3>
             </div>
-            <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HiringDate" class="control-label"></label>
-                <input asp-for="HiringDate" class="form-control" />
-                <span asp-validation-for="HiringDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <form asp-action="Create">
+                <div class="row formtype">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Hiring Date</label>
+                            <input asp-for="HiringDate" class="form-control" type="date" />
+                            <span asp-validation-for="HiringDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Contact</label>
+                            <div class="input-group">
+                                <select asp-for="ContactId" class="form-control" asp-items="ViewBag.ContactId">
+                                    <option value="">Select Contact</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <a href="#" class="btn btn-primary" id="addContact">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <span asp-validation-for="ContactId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Department</label>
+                            <div class="input-group">
+                                <select asp-for="DepartmentId" class="form-control" asp-items="ViewBag.DepartmentId">
+                                    <option value="">Select Department</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <a href="#" class="btn btn-primary" id="addDepartment">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Qualification</label>
+                            <div class="input-group">
+                                <select asp-for="QualificationId" class="form-control" asp-items="ViewBag.QualificationId">
+                                    <option value="">Select Qualification</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <a href="#" class="btn btn-primary" id="addQualification">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <span asp-validation-for="QualificationId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Salary</label>
+                            <div class="input-group">
+                                <select asp-for="SalaryId" class="form-control" asp-items="ViewBag.SalaryId">
+                                    <option value="">Select Salary</option>
+                                </select>
+                                <div class="input-group-append">
+                                    <a href="#" class="btn btn-primary" id="addSalary">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <span asp-validation-for="SalaryId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary buttonedit ml-2">Save</button>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('#addContact').click(function (e) {
+                e.preventDefault();
+                window.location.href = '/Contact/Create';
+            });
+            $('#addDepartment').click(function (e) {
+                e.preventDefault();
+                window.location.href = '/Department/Create';
+            });
+            $('#addQualification').click(function (e) {
+                e.preventDefault();
+                window.location.href = '/Qualifications/Create';
+            });
+            $('#addSalary').click(function (e) {
+                e.preventDefault();
+                window.location.href = '/Salary/Create';
+            });
+        });
+    </script>
 }

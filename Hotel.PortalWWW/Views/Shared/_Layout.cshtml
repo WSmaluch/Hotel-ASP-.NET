@@ -40,6 +40,11 @@
                                     <li><a href="@Url.Action("About","Home")">About</a></li>
                                     <li><a href="@Url.Action("Blog","Home")">blog</a></li>
                                     <li><a href="@Url.Action("Contact","Home")">contact</a></li>
+                                    <li><a href="@Url.Action("Attractions","Home")">Attractions</a></li>
+                                    <li><a href="@Url.Action("Vouchers","Home")">Vouchers</a></li>
+                                    <li><a href="@Url.Action("SiteGuide","Home")">Site guide</a></li>
+                                    <li><a href="@Url.Action("Gallery","Home")">Gallery</a></li>
+                                    <li><a href="@Url.Action("MainPage","Restaurant")">Restaurant</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -173,10 +178,10 @@
                                 address
                             </h3>
                             <p class="footer_text">
-                                200, Green road, Mongla, <br>
-                                New Yor City USA
+                                Green st. 51 <br>
+                                Nowy Sącz, Poland
                             </p>
-                            <a href="#" class="line-button">Get Direction</a>
+                            <a href="/Home/Contact/" class="line-button">Get Direction</a>
                         </div>
                     </div>
                     <div class="col-xl-3 col-md-6 col-lg-3">
@@ -185,8 +190,8 @@
                                 Reservation
                             </h3>
                             <p class="footer_text">
-                                +10 367 267 2678 <br>
-                                reservation@montana.com
+                                +48 723 110 110 <br>
+                                trapisehotel@gmail.com
                             </p>
                         </div>
                     </div>
@@ -205,11 +210,9 @@
                     </div>
                     <div class="col-xl-4 col-md-6 col-lg-4">
                         <div class="footer_widget">
-                            <h3 class="footer_title">
-                                Newsletter
-                            </h3>
-                            <form action="#" class="newsletter_form">
-                                <input type="text" placeholder="Enter your mail">
+                            <h3 class="footer_title">Newsletter</h3>
+                            <form asp-action="Subscribe" asp-controller="Newsletter" method="post" class="newsletter_form">
+                                <input type="email" name="Email" placeholder="Enter your email" required>
                                 <button type="submit">Sign Up</button>
                             </form>
                             <p class="newsletter_text">Subscribe newsletter to get updates</p>

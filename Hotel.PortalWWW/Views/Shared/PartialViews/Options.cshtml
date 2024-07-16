@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Hotel.Data.Data.Booking.Options>
+<style>
+    #items img {
+        width: 28px;
+        height: 23px;
+        padding-right: 5px;
+    }
+
+    .single_offers {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    .offer-content {
+        flex-grow: 1;
+    }
+
+    .offer-table-container {
+        height: 150px;
+        overflow: hidden;
+    }
+
+    .book_now {
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
+@foreach (var offer in Model)
+{
+    <div class="col-xl-4 col-md-4">
+        <div class="single_offers">
+            <div class="about_thumb">
+                <img src="@offer.PhotoUrl" alt="">
+            </div>
+            <h3>
+                @offer.Name
+            </h3>
+            <div class="offer-content">
+                <div class="offer-table-container">
+                    <table height="20%">
+                        @foreach (var o in offer.ContentItems.Take(5))
+                        {
+                            <tr>
+                                <td id="items"><img src='@o.IconUrl'></td>
+                                <td>@o.Title - @o.Description</td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+            <a href="#test-form" class="book_now popup-with-form">Book now</a>
+        </div>
+    </div>
+}

@@ -2,13 +2,19 @@
 using Hotel.Data.Data.Booking.Extensions;
 using Hotel.Data.Data.CMS;
 using Hotel.Data.Data.CMS.About;
+using Hotel.Data.Data.CMS.Attractions;
 using Hotel.Data.Data.CMS.Blog;
 using Hotel.Data.Data.CMS.Contact;
+using Hotel.Data.Data.CMS.Gallery;
 using Hotel.Data.Data.CMS.Layout;
 using Hotel.Data.Data.CMS.MainPage;
+using Hotel.Data.Data.CMS.Newsletter;
 using Hotel.Data.Data.CMS.Offers;
+using Hotel.Data.Data.CMS.Site_Guid;
+using Hotel.Data.Data.CMS.Voucher;
 using Hotel.Data.Data.Desktop;
 using Hotel.Data.Data.Employess;
+using Hotel.Data.Data.Restaurant;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hotel.Data
@@ -46,5 +52,29 @@ namespace Hotel.Data
 		public DbSet<Qualification>? Qualification { get; set; }
 		public DbSet<Salary>? Salary { get; set; }
 		public DbSet<Status>? Status { get; set; }
+		public DbSet<DiscountCode>? DiscountCode { get; set; }
+		public DbSet<Newsletter>? Newsletter { get; set; }
+		public DbSet<NewsletterConfig>? NewsletterConfig { get; set; }
+		public DbSet<Attraction>? Attraction { get; set; }
+		public DbSet<AttractionType>? AttractionType { get; set; }
+		public DbSet<AttractionPrice>? AttractionPrice { get; set; }
+		public DbSet<Voucher>? Vouchers { get; set; }
+		public DbSet<VoucherPrice>? VoucherPrice { get; set; }
+		public DbSet<VoucherType>? VoucherType { get; set; }
+		public DbSet<SiteGuide>? SiteGuide { get; set; }
+		public DbSet<Gallery>? Gallery { get; set; }
+        //restaurant
+        public DbSet<RestaurantPage>? RestaurantPage { get; set; }
+        public DbSet<CulinaryEvent>? CulinaryEvent { get; set; }
+        public DbSet<Dish>? Dish { get; set; }
+        public DbSet<DishPrice>? DishPrice { get; set; }
+        public DbSet<Ingredient>? Ingredient { get; set; }
+        public DbSet<Menu>? Menu { get; set; }
+        public DbSet<NutritionInfo>? NutritionInfo { get; set; }
+        public DbSet<Promotion>? Promotion { get; set; }
+        public DbSet<RestaurantCategory>? RestaurantCategory { get; set; }
+        public DbSet<RestaurantSchedule>? RestaurantSchedule { get; set; }
+        public DbSet<SeasonalMenu>? SeasonalMenu { get; set; }
+        public DbSet<SpecialDiet>? SpecialDiet { get; set; }
     }
 }

@@ -1,0 +1,71 @@
+﻿@model Hotel.Data.Data.Restaurant.DishPrice
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title mt-5">Edit Dish Price</h3>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="row formtype">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input asp-for="Price" class="form-control" data-val="false" />
+                            <span asp-validation-for="Price" class="text-danger" ></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Effective From</label>
+                            <input asp-for="EffectiveFrom" class="form-control" type="date" />
+                            <span asp-validation-for="EffectiveFrom" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Effective To</label>
+                            <input asp-for="EffectiveTo" class="form-control" type="date" />
+                            <span asp-validation-for="EffectiveTo" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary buttonedit ml-2">Save</button>
+                <a asp-action="Index" class="btn btn-secondary ml-2">Back to List</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var PriceInput = document.querySelector("#Price");
+
+        // Replace dots with commas before form submission
+        var form = document.querySelector("form");
+        form.addEventListener("submit", function () {
+            replaceDotsWithCommas(PriceInput);
+        });
+
+        function replaceDotsWithCommas(inputElement) {
+            var value = inputElement.value.trim();
+            var newValue = value.replace(/\./g, ",");
+            inputElement.value = newValue;
+        }
+    });
+</script>

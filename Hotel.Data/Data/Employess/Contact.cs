@@ -11,16 +11,9 @@ namespace Hotel.Data.Data.Employess
     {
         [Key]
         public int ContactID { get; set; }
-
-        // Foreign key
-        public int EmployeeID { get; set; }
-
-        // Contact properties
         public string EmailAddress { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
 
-        // Navigation property
-        public Employee Employee { get; set; }
     }
 }

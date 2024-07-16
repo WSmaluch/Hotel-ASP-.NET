@@ -158,8 +158,52 @@
 										</td>
 										<td>@res.CheckIn.ToString("dd-MM-yyyy")</td>
 										<td>@res.CheckOut.ToString("dd-MM-yyyy")</td>
-										<td class="text-center"> <span class="badge badge-pill bg-success inv-badge">@res.IsActive</span> </td>
-										<td>@res.TotalPrice</td>
+										@* <td class="text-center"> <span class="badge badge-pill bg-success inv-badge">@res.IsActive</span> </td> *@
+										<td class="text-center">
+											<span class="badge badge-pill bg-success inv-badge">
+												@if (res.StatusId == 1)
+												{
+													<span class="badge badge-pill bg-success inv-badge">Reserved</span>
+												}
+												else if (res.StatusId == 3)
+												{
+													<span class="badge badge-pill bg-success inv-badge">Checked in</span>
+												}
+												else if (res.StatusId == 5)
+												{
+												<span class="badge badge-pill bg-success inv-badge">Cancelled</span>
+												}
+												else if (res.StatusId == 6)
+												{
+												<span class="badge badge-pill bg-success inv-badge">Checked out</span>
+												}
+												else if (res.StatusId == 7)
+												{
+														<span class="badge badge-pill bg-success inv-badge">Cleaned</span>
+												}
+												else if (res.StatusId == 8)
+												{
+														<span class="badge badge-pill bg-success inv-badge">To clean</span>
+												}
+												else if (res.StatusId == 9)
+												{
+														<span class="badge badge-pill bg-success inv-badge">Ready</span>
+												}
+												else if (res.StatusId == 11)
+												{
+														<span class="badge badge-pill bg-success inv-badge">Blocked</span>
+												}
+												else if (res.StatusId == 12)
+												{
+														<span class="badge badge-pill bg-success inv-badge">To repair</span>
+												}
+												else
+												{
+													<span class="badge badge-pill bg-success inv-badge">Undefined</span>
+												}
+											</span>
+										</td>
+										<td style="text-align:center">@res.TotalPrice</td>
 									</tr>
 								}
 							</tbody>

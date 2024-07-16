@@ -159,21 +159,18 @@ namespace Hotel.Intranet.Controllers
         // GET: CleaningTasks/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.CleaningTask == null)
+            if (_context.CleaningTask == null)
             {
-                return NotFound();
+                return Problem("Entity set 'HotelContext.CleaningTask'  is null.");
+            }
+            var cleaningTask = await _context.CleaningTask.FindAsync(id);
+            if (cleaningTask != null)
+            {
+                _context.CleaningTask.Remove(cleaningTask);
             }
 
-            var cleaningTask = await _context.CleaningTask
-                .Include(c => c.ReservationStatus)
-                .Include(c => c.Room)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (cleaningTask == null)
-            {
-                return NotFound();
-            }
-
-            return View(cleaningTask);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: CleaningTasks/Delete/5

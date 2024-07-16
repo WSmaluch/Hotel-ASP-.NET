@@ -133,102 +133,209 @@
 				</form>
 			</div>*@
 		</div>
-		<div class="sidebar" id="sidebar">
-			<div class="sidebar-inner slimscroll">
-				<div id="sidebar-menu" class="sidebar-menu">
-					<ul>
-						<li class="active"> <a asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a> </li>
-						<li class="list-divider"></li>
-						<li class="submenu">
-							<a href="#"><i class="fa fa-suitcase"></i> <span> Reservations </span> <span class="menu-arrow"></span></a>
-							<ul class="submenu_class" style="display: none;">
-								<li><a asp-area="" asp-controller="Reservations" asp-action="Index">Reservations </a></li>
-								<li><a asp-area="" asp-controller="Reservations" asp-action="CreateReservationDate">Create Reservation</a></li>
-								<li><a asp-area="" asp-controller="Reservations" asp-action="Edit">Edit Reservations </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="fas fa-gift"></i> <span> Offers </span> <span class="menu-arrow"></span></a>
-							<ul class="submenu_class" style="display: none;">
-								<li><a asp-area="" asp-controller="Options" asp-action="Index">Options </a></li>
-								<li><a asp-area="" asp-controller="Options" asp-action="Create">Create Options </a></li>
-								<li><a asp-area="" asp-controller="Options" asp-action="Edit">Edit Options </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="fas fa-home"></i> <span> Types </span> <span class="menu-arrow"></span></a>
-							<ul class="submenu_class" style="display: none;">
-								<li><a asp-area="" asp-controller="Types" asp-action="Index">Types</a></li>
-								<li><a asp-area="" asp-controller="Types" asp-action="Create">Add Types </a></li>
-								<li><a asp-area="" asp-controller="Types" asp-action="Edit">Edit Types </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="far fa-money-bill-alt"></i> <span> RoomPricing </span> <span class="menu-arrow"></span></a>
-							<ul class="submenu_class" style="display: none;">
-								<li><a asp-area="" asp-controller="RoomPricing" asp-action="Index">RoomPricing</a></li>
-								<li><a asp-area="" asp-controller="RoomPricing" asp-action="Create">Add RoomPricing </a></li>
-								<li><a asp-area="" asp-controller="RoomPricing" asp-action="Edit">Edit RoomPricing </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="fa fa-paint-brush"></i> <span> CleaningTasks </span> <span class="menu-arrow"></span></a>
-							<ul class="submenu_class" style="display: none;">
-								<li><a asp-area="" asp-controller="CleaningTasks" asp-action="Index">CleaningTasks</a></li>
-								<li><a asp-area="" asp-controller="CleaningTasks" asp-action="Create">Add CleaningTasks </a></li>
-								<li><a asp-area="" asp-controller="CleaningTasks" asp-action="Edit">Edit CleaningTasks </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="fas fa-tools"></i> <span> RepairTasks </span> <span class="menu-arrow"></span></a>
-							<ul class="submenu_class" style="display: none;">
-								<li><a asp-area="" asp-controller="RepairTasks" asp-action="Index"> RepairTasks</a></li>
-								<li><a asp-area="" asp-controller="RepairTasks" asp-action="Create">Add RepairTasks </a></li>
-								<li><a asp-area="" asp-controller="RepairTasks" asp-action="Edit">Edit RepairTasks </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="far fa-star"></i> <span> Facilities </span> <span class="menu-arrow"></span></a>
-							<ul class="submenu_class" style="display: none;">
-								<li><a asp-area="" asp-controller="Facilities" asp-action="Index"> Facilities</a></li>
-								<li><a asp-area="" asp-controller="Facilities" asp-action="Create">Add Facilities </a></li>
-								<li><a asp-area="" asp-controller="Facilities" asp-action="Edit">Edit Facilities </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="far fa-star"></i> <span> Employee </span> <span class="menu-arrow"></span></a>
-							<ul class="submenu_class" style="display: none;">
-								<li><a asp-area="" asp-controller="Employee" asp-action="Index"> Employee</a></li>
-								<li><a asp-area="" asp-controller="Employee" asp-action="Create">Add Employee </a></li>
-								<li><a asp-area="" asp-controller="Employee" asp-action="Edit">Edit Employee </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="fas fa-door-open"></i> <span> Rooms </span> <span class="menu-arrow"></span></a>
-							<ul class="submenu_class" style="display: none;">
-								<li><a href="@Url.Action("Index","Rooms")">All Rooms </a></li>
-								<li><a href="edit-room.html"> Edit Rooms </a></li>
-								<li><a href="@Url.Action("Create","Rooms")" "> Add Rooms </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="far fa-file"></i> <span> Raport </span> <span class="menu-arrow"></span></a>
-							<ul class="submenu_class" style="display: none;">
-								<li><a href="@Url.Action("Raport","Home")">Raport </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="fas fa-user"></i> <span> Pages </span> <span class="menu-arrow"></span></a>
-							<ul class="submenu_class" style="display: none;">
-								<li><a asp-area="" asp-controller="Pages" asp-action="Index">Pages</a></li>
-								<li><a asp-area="" asp-controller="Pages" asp-action="Create">Add Pages </a></li>
-								<li><a asp-area="" asp-controller="Pages" asp-action="Edit">Edit Pages </a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-inner slimscroll">
+                <div id="sidebar-menu" class="sidebar-menu">
+                    <ul>
+                        <!-- Dashboard -->
+                        <li class="active">
+                            <a asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="list-divider"></li>
+
+                        <!-- Management -->
+                        <li class="submenu">
+                            <a href="#"><i class="fas fa-cogs"></i> <span> Management </span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <!-- Reservations -->
+                                <li class="submenu">
+                                    <a href="#"><i class="fa fa-suitcase"></i> <span> Reservations </span> <span class="menu-arrow"></span></a>
+                                    <ul class="submenu_class" style="display: none;">
+                                        <li><a asp-area="" asp-controller="Reservations" asp-action="Index">Reservations</a></li>
+                                        <li><a asp-area="" asp-controller="Reservations" asp-action="CreateReservationDate">Create Reservation</a></li>
+                                    </ul>
+                                </li>
+                                <!-- Offers -->
+                                <li class="submenu">
+                                    <a href="#"><i class="fas fa-gift"></i> <span> Offers </span> <span class="menu-arrow"></span></a>
+                                    <ul class="submenu_class" style="display: none;">
+                                        <li><a asp-area="" asp-controller="Options" asp-action="Index">Options</a></li>
+                                        <li><a asp-area="" asp-controller="Options" asp-action="Create">Create Options</a></li>
+                                    </ul>
+                                </li>
+                                <!-- Rooms -->
+                                <li class="submenu">
+                                    <a href="#"><i class="fas fa-door-open"></i> <span> Rooms </span> <span class="menu-arrow"></span></a>
+                                    <ul class="submenu_class" style="display: none;">
+                                        <li><a href="@Url.Action("Index","Rooms")">All Rooms</a></li>
+                                        <li><a href="@Url.Action("Create","Rooms")">Add Rooms</a></li>
+                                    </ul>
+                                </li>
+                                <!-- Room Pricing -->
+                                <li class="submenu">
+                                    <a href="#"><i class="far fa-money-bill-alt"></i> <span> Room Pricing </span> <span class="menu-arrow"></span></a>
+                                    <ul class="submenu_class" style="display: none;">
+                                        <li><a asp-area="" asp-controller="RoomPricing" asp-action="Index">Room Pricing</a></li>
+                                        <li><a asp-area="" asp-controller="RoomPricing" asp-action="Create">Add Room Pricing</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Tasks -->
+                        <li class="submenu">
+                            <a href="#"><i class="fas fa-tasks"></i> <span> Tasks </span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <li class="submenu">
+                                    <a href="#"><i class="fa fa-paint-brush"></i> <span> Cleaning Tasks </span> <span class="menu-arrow"></span></a>
+                                    <ul class="submenu_class" style="display: none;">
+                                        <li><a asp-area="" asp-controller="CleaningTasks" asp-action="Index">Cleaning Tasks</a></li>
+                                        <li><a asp-area="" asp-controller="CleaningTasks" asp-action="Create">Add Cleaning Tasks</a></li>
+                                    </ul>
+                                </li>
+                                <li class="submenu">
+                                    <a href="#"><i class="fas fa-tools"></i> <span> Repair Tasks </span> <span class="menu-arrow"></span></a>
+                                    <ul class="submenu_class" style="display: none;">
+                                        <li><a asp-area="" asp-controller="RepairTasks" asp-action="Index">Repair Tasks</a></li>
+                                        <li><a asp-area="" asp-controller="RepairTasks" asp-action="Create">Add Repair Tasks</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <!-- Employee Management -->
+                        <li class="submenu">
+                            <a href="#"><i class="fas fa-portrait"></i> <span> Management</span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <li><a asp-area="" asp-controller="Employee" asp-action="Index">Employees</a></li>
+                                <li><a asp-area="" asp-controller="Employee" asp-action="Create">Add Employee</a></li>
+                                <li><a asp-area="" asp-controller="Salary" asp-action="Index">Salary</a></li>
+                                <li><a asp-area="" asp-controller="Salary" asp-action="Create">Add Salary</a></li>
+                                <li><a asp-area="" asp-controller="Qualifications" asp-action="Index">Qualifications</a></li>
+                                <li><a asp-area="" asp-controller="Qualifications" asp-action="Create">Add Qualifications</a></li>
+                                <li><a asp-area="" asp-controller="Department" asp-action="Index">Department</a></li>
+                                <li><a asp-area="" asp-controller="Department" asp-action="Create">Add Department</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Marketing -->
+                        <li class="submenu">
+                            <a href="#"><i class="fas fa-bullhorn"></i> <span> Marketing </span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <li><a href="@Url.Action("Index", "DiscountCode")">Discount Codes</a></li>
+                                <li><a href="@Url.Action("Create", "DiscountCode")">Add Discount Code</a></li>
+                                <li><a href="@Url.Action("Index", "Newsletter")">Newsletter</a></li>
+                                <li><a href="@Url.Action("Create", "Newsletter")">Add Newsletter</a></li>
+                                <li><a href="@Url.Action("Index", "NewsletterConfig")">Newsletter Config</a></li>
+                                <li><a href="@Url.Action("Create", "NewsletterConfig")">Add Newsletter Config</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Facilities -->
+                        <li class="submenu">
+                            <a href="#"><i class="far fa-star"></i> <span> Facilities </span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <li><a asp-area="" asp-controller="Facilities" asp-action="Index">Facilities</a></li>
+                                <li><a asp-area="" asp-controller="Facilities" asp-action="Create">Add Facilities</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Attractions -->
+                        <li class="submenu">
+                            <a href="#"><i class="fas fa-map-marker-alt"></i> <span> Attractions </span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <li><a href="@Url.Action("Index", "Attraction")">Attractions</a></li>
+                                <li><a href="@Url.Action("Create", "Attraction")">Add Attraction</a></li>
+                                <li><a href="@Url.Action("Index", "AttractionType")">Attraction Types</a></li>
+                                <li><a href="@Url.Action("Create", "AttractionType")">Add Attraction Type</a></li>
+                                <li><a href="@Url.Action("Index", "AttractionPrice")">Attraction Prices</a></li>
+                                <li><a href="@Url.Action("Create", "AttractionPrice")">Add Attraction Price</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Vouchers -->
+                        <li class="submenu">
+                            <a href="#"><i class="fas fa-ticket-alt"></i> <span> Vouchers </span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <li><a href="@Url.Action("Index", "Voucher")">Vouchers</a></li>
+                                <li><a href="@Url.Action("Create", "Voucher")">Add Vouchers</a></li>
+                                <li><a href="@Url.Action("Index", "VoucherPrice")">Voucher Prices</a></li>
+                                <li><a href="@Url.Action("Create", "VoucherPrice")">Add Voucher Price</a></li>
+                                <li><a href="@Url.Action("Index", "VoucherType")">Voucher Types</a></li>
+                                <li><a href="@Url.Action("Create", "VoucherType")">Add Voucher Type</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Reports -->
+                        <li class="submenu">
+                            <a href="#"><i class="far fa-file"></i> <span> Reports </span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <li><a href="@Url.Action("Raport","Home")">Raport </a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Pages -->
+                        <li class="submenu">
+                            <a href="#"><i class="fas fa-copy"></i> <span> Pages </span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <li><a asp-area="" asp-controller="Pages" asp-action="Index">Pages</a></li>
+                                <li><a asp-area="" asp-controller="Pages" asp-action="Create">Add Pages</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Contact -->
+                        <li class="submenu">
+                            <a href="#"><i class="fas fa-envelope"></i> <span> Contact </span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <li><a asp-area="" asp-controller="Contact" asp-action="Index">Contact List</a></li>
+                                <li><a asp-area="" asp-controller="Contact" asp-action="Create">Add Contact</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Site Guide -->
+                        <li class="submenu">
+                            <a href="#"><i class="fas fa-info-circle"></i> <span> Site Guide </span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <li><a href="@Url.Action("Index", "SiteGuide")">Site Guide</a></li>
+                                <li><a href="@Url.Action("Create", "SiteGuide")">Add Site Guide</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Gallery -->
+                        <li class="submenu">
+                            <a href="#"><i class="fas fa-images"></i> <span> Gallery </span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <li><a href="@Url.Action("Index", "Gallery")">Gallery</a></li>
+                                <li><a href="@Url.Action("Create", "Gallery")">Add Gallery</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Restaurant -->
+                        <li class="submenu">
+                            <a href="#"><i class="fas fa-images"></i> <span> Restaurant </span> <span class="menu-arrow"></span></a>
+                            <ul class="submenu_class" style="display: none;">
+                                <li><a href="@Url.Action("Index", "CulinaryEvent")">CulinaryEvent</a></li>
+                                <li><a href="@Url.Action("Index", "Dish")">Dish</a></li>
+                                <li><a href="@Url.Action("Index", "DishPrice")">DishPrice</a></li>
+                                <li><a href="@Url.Action("Index", "Ingredient")">Ingredient</a></li>
+                                <li><a href="@Url.Action("Index", "Menu")">Menu</a></li>
+                                <li><a href="@Url.Action("Index", "NutritionInfo")">NutritionInfo</a></li>
+                                <li><a href="@Url.Action("Index", "Promotion")">Promotion</a></li>
+                                <li><a href="@Url.Action("Index", "RestaurantCategory")">RestaurantCategory</a></li>
+                                <li><a href="@Url.Action("Index", "RestaurantPage")">RestaurantPage</a></li>
+                                <li><a href="@Url.Action("Index", "RestaurantSchedule")">RestaurantSchedule</a></li>
+                                <li><a href="@Url.Action("Index", "SeasonalMenu")">SeasonalMenu</a></li>
+                                <li><a href="@Url.Action("Index", "SpecialDiet")">SpecialDiet</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
 		<div class="page-wrapper">
 			@RenderBody()
 		</div>

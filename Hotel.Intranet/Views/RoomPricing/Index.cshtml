@@ -49,6 +49,25 @@
     #monthNavigation button {
         margin: 5px;
     }
+
+    #calendar {
+        margin-left: 20%; 
+    }
+
+    .form-group {
+        margin-left: 20%;
+    }
+
+    .date-cell {
+        padding: 10px;
+        transition: background-color 0.3s ease;
+        margin-top:10px;
+    }
+
+    .highlight {
+        background-color: lightblue; /* Możesz zmienić kolor na dowolny */
+    }
+
 </style>
 <div class="page-header">
 </div>
@@ -93,6 +112,7 @@
                             }
                         }
                     </select>
+                    <br />
                     <button type="submit" class="btn btn-primary">Filter</button>
                     <input type="hidden" name="month" value="@ViewBag.CurrentMonth" />
                     <input type="hidden" name="year" value="@ViewBag.CurrentYear" />
@@ -100,7 +120,7 @@
             </div>
 
 
-            <div id="editForm" style="display:none;">
+            @* <div id="editForm" style="display:none;">
                 <form id="monthEditForm" asp-action="Edit">
                     <label>Select a month:</label>
                     <select id="monthSelector" class="form-control">
@@ -113,48 +133,50 @@
                     </select>
                     <button type="button" onclick="submitForm()" class="btn btn-primary">Edit</button>
                 </form>
-            </div>
+            </div> *@
+            <div id="calendar">
             @if (selectedRoomTypeId != null)
             {
                 var filteredRoomPricings = Model.Where(rp => rp.TypeId == selectedRoomTypeId).ToList();
                 if (filteredRoomPricings.Any())
                 {
-                    <a asp-action="Edit" asp-route-id="@filteredRoomPricings.FirstOrDefault()?.PricingId">Edit</a>
+                    //<a asp-action="Edit" asp-route-id="@filteredRoomPricings.FirstOrDefault()?.PricingId">Edit</a>
                     <table class="table table-bordered">
                         <thead class="table-header">
                             <tr>
                                 <th colspan="7">@firstDayOfMonth.ToString("MMMM yyyy")</th>
                             </tr>
                             <tr>
-                                <th>Sun</th>
                                 <th>Mon</th>
                                 <th>Tue</th>
                                 <th>Wed</th>
                                 <th>Thu</th>
                                 <th>Fri</th>
                                 <th>Sat</th>
+                                <th>Sun</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @for (int row = 0; row < 6; row++) // Changed to 6 to cover all days in the month
+                            @for (int row = 0; row < 6; row++) 
                             {
                                 <tr>
                                     @for (int col = 0; col < 7; col++)
                                     {
                                         var currentDay = firstDayOfMonth.AddDays(row * 7 + col - currentDayOfWeek + 1);
-                                        <td>
+                                        <td style="height:100px">
                                             
                                             @if (currentDay.Month == firstDayOfMonth.Month)
                                             {
-                                                <div style="text-align:center;">@currentDay.Day</div>
-                                                <div class="price-cell">
-                                                    @foreach (var roomPricing in filteredRoomPricings.Where(rp => rp.ValidFrom <= currentDay && rp.ValidTo >= currentDay))
-                                                    {
-                                                        @:<b>@roomPricing.BasePriceAdult</b><br/>
-                                                        @:<b>@roomPricing.BasePriceChildren</b>
-                                                    }
-                                                </div>
-
+                                                <div style="text-align:center;background-color:lightgray;border-bottom-left-radius: 3px; border-bottom-right-radius: 3px;margin:-8px -8px 0px -8px">@currentDay.Day</div>
+                                                    <div class="price-cell" >
+                                                        @foreach (var roomPricing in filteredRoomPricings.Where(rp => rp.ValidFrom <= currentDay && rp.ValidTo >= currentDay))
+                                                        {
+                                                            <div class="date-cell" onclick="redirectToEdit('@roomPricing.PricingId')" data-pricing-id="@roomPricing.PricingId">
+                                                                <b>@roomPricing.BasePriceAdult</b><br />
+                                                                <b>@roomPricing.BasePriceChildren</b>
+                                                            </div>
+                                                        }
+                                                    </div>
                                             }
                                         </td>
                                     }
@@ -173,11 +195,12 @@
                 <p>Please select a room type to display the calendar.</p>
             }
         </div>
+        </div>
     </div>
 </div>
 
 <script>
-    var currentMonth = new Date(@currentYear, @currentMonth - 1, 1); // Remove the quotes around @currentYear and @currentMonth - 1
+    var currentMonth = new Date(@currentYear, @currentMonth - 1, 1);
 
 
     function changeMonth(offset) {
@@ -199,4 +222,27 @@
             window.location.href = '/RoomPricing/Edit/' + selectedId;
         }
     }
+
+</script>
+<script>
+    function redirectToEdit(pricingId) {
+        var url = '/RoomPricing/Edit/' + pricingId;
+        window.location.href = url;
+    }
+
+    document.querySelectorAll('.date-cell').forEach(cell => {
+        cell.addEventListener('mouseenter', function () {
+            var pricingId = this.getAttribute('data-pricing-id');
+            document.querySelectorAll('[data-pricing-id="' + pricingId + '"]').forEach(el => {
+                el.classList.add('highlight');
+            });
+        });
+
+        cell.addEventListener('mouseleave', function () {
+            var pricingId = this.getAttribute('data-pricing-id');
+            document.querySelectorAll('[data-pricing-id="' + pricingId + '"]').forEach(el => {
+                el.classList.remove('highlight');
+            });
+        });
+    });
 </script>

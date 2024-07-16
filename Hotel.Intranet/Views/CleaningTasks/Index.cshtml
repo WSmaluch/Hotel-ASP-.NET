@@ -77,21 +77,21 @@
                 <h3 class="delete_class">Are you sure?</h3>
                 <div class="m-t-20">
                     <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
-                    <button type="button" class="btn btn-danger" onclick="deleteCleaningTask()">Delete</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteConfirm()">Delete</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script>
-    var cleaningTaskIdToDelete;
+    var idToDelete;
 
-    function confirmDelete(cleaningTaskIdToDelete) {
-        cleaningTaskIdToDelete = cleaningTaskId;
+    function confirmDelete(id) {
+        idToDelete = id;
         $('#delete_asset').modal('show');
     }
 
-    function deleteCleaningTask() {
-        window.location.href = '/CleaningTask/Delete/' + cleaningTaskIdToDelete;
+    function deleteConfirm() {
+        window.location.href = '/CleaningTasks/Delete/' + idToDelete;
     }
 </script>

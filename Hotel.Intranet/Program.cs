@@ -1,19 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<HotelContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("HotelContext") ?? throw new InvalidOperationException("Connection string 'HotelContext' not found.")));
 
-IronPdf.License.LicenseKey = "IRONSUITE.CEMEX41860.GOSARLAR.COM.27935-DA55CA586E-CMWALMS-MISGQTS2H47N-F7AM3SMJRFZ3-AJ4JO2FQAECZ-JETWZI7GBNEV-4XW7NY7C4OZN-NBFL3G2HIL5U-XHBH7D-TQW7UTHBQZOLUA-DEPLOYMENT.TRIAL-NBFM2J.TRIAL.EXPIRES.02.MAR.2024";
+IronPdf.License.LicenseKey = "IRONSUITE.YXJ31230.TCCHO.COM.24574-CFC8FD2977-AAQ6YTU-L6DLHSDXSGWW-732LQJW4KW4G-RNHUSUC5HCNJ-KS2J2XZIMFRX-KRJCAURCKAIB-AJ7IJELNNDIW-U3HNB4-TDSAP27Y4H6NEA-DEPLOYMENT.TRIAL-H3WFYP.TRIAL.EXPIRES.06.AUG.2024";
 
 builder.Services.AddScoped<ImgurService>();
 builder.Services.AddHttpClient();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -22,6 +21,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

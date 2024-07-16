@@ -30,20 +30,21 @@
 						<div class="col-md-4">
 							<div class="form-group">
 								<label>StartDate</label>
-								<input asp-for="StartDate" class="form-control" />
+								<input asp-for="StartDate" class="form-control" type="date"/>
+
 							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="form-group">
 							<label>EndDate</label>
-							<input asp-for="EndDate" class="form-control" />
+							<input asp-for="EndDate" class="form-control" type="date" />
 							</div>
 						</div>
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>ContentItems</label>
 							<div class="input-group">
-								<select asp-for="ContentItems" class="form-control" multiple asp-items="ViewBag.ContentItems"></select>
+								<select asp-for="ContentItems" class="form-control" multiple asp-items="ViewBag.ContentItems" data-val="false"></select>
 								<div class="input-group-append">
 									<a href="#" class="btn btn-primary" id="addContentItems" >
 										<i style="margin-top:35px" class="fas fa-plus"></i>
@@ -52,28 +53,12 @@
 							</div>
 						</div>
 					</div>
-					@*<div class="col-md-4">
-						<div class="form-group">
-						<label>PhotoUrl</label>
-						<input asp-for="PhotoUrl" class="form-control" />
-						</div>
-					</div>*@
 					<div class="col-md-4">
 						<div class="form-group">
 							<label>PhotosURL</label>
 							<input type="file" class="form-control-file" id="photoFile" name="photoFile">
-							@*<input asp-for="PhotosURL" class="form-control" />*@
 						</div>
 					</div>
-                    @*<div class="col-md-4">
-                        <div class="form-group">
-                            <label>File Upload</label>
-                            <div class="custom-file mb-3">
-                                <input type="file" class="custom-file-input" id="customFile" name="PhotosURL">
-                                <label class="custom-file-label" for="customFile">Choose file</label>
-                            </div>
-                        </div>
-                    </div>*@
 					</div>
 				<button type="submit" class="btn btn-primary buttonedit ml-2">Save</button>
 				</form>
@@ -87,7 +72,7 @@
 	}
 	<script>
 		$(document).ready(function () {
-			$('#addFacility').click(function () {
+			$('#addContentItems').click(function () {
 				window.location.href = '/ContentItem/Create';
 			});
 		});

@@ -147,22 +147,18 @@ namespace Hotel.Intranet.Controllers
         // GET: RepairTasks/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.RepairTask == null)
+            if (_context.RepairTask == null)
             {
-                return NotFound();
+                return Problem("Entity set 'HotelContext.RepairTask'  is null.");
+            }
+            var repairTask = await _context.RepairTask.FindAsync(id);
+            if (repairTask != null)
+            {
+                _context.RepairTask.Remove(repairTask);
             }
 
-            var repairTask = await _context.RepairTask
-                .Include(r => r.Employee)
-                .Include(r => r.RepairStatus)
-                .Include(r => r.Room)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (repairTask == null)
-            {
-                return NotFound();
-            }
-
-            return View(repairTask);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: RepairTasks/Delete/5

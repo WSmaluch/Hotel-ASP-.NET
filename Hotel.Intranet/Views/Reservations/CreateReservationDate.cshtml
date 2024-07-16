@@ -34,22 +34,36 @@
 
     <script>
         $(document).ready(function () {
-            $(".datepicker").datepicker();
+            $(".datepicker").datepicker({
+                firstDay: 1,
+                minDate: 0,  
+                onSelect: function (dateText, inst) {
+                    var selectedDate = $(this).datepicker("getDate");
+                    var formattedDate = $.datepicker.formatDate("yy-mm-dd", selectedDate);
+                    console.log("Selected date: " + formattedDate);
+                }
+            });
 
             $("#continueButton").on("click", function () {
                 var checkInDate = $("#datepicker").datepicker("getDate");
                 var checkOutDate = $("#datepicker2").datepicker("getDate");
+
+                // Konwersja dat na UTC przed przekazaniem
+                var checkInISO = checkInDate ? new Date(Date.UTC(checkInDate.getFullYear(), checkInDate.getMonth(), checkInDate.getDate())) : null;
+                var checkOutISO = checkOutDate ? new Date(Date.UTC(checkOutDate.getFullYear(), checkOutDate.getMonth(), checkOutDate.getDate())) : null;
+
+                // Przekierowanie z danymi w parametrach
                 var numberOfAdults = $("#numberofadults").val();
                 var numberOfChildrens = $("#numberofchildrens").val();
 
-                // Przekierowanie z danymi w parametrach
-                var url = "/Reservations/Create?checkIn=" + encodeURIComponent(checkInDate.toISOString()) +
-                    "&checkOut=" + encodeURIComponent(checkOutDate.toISOString()) +
+                var url = "/Reservations/Create?checkIn=" + encodeURIComponent(checkInISO.toISOString()) +
+                    "&checkOut=" + encodeURIComponent(checkOutISO.toISOString()) +
                     "&NumberOfAdults=" + numberOfAdults +
                     "&NumberOfChildren=" + numberOfChildrens;
 
                 window.location.href = url;
             });
         });
+
     </script>
 }

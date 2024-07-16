@@ -1,0 +1,75 @@
+﻿@model Hotel.Data.Data.Booking.DiscountCode
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title mt-5">Edit Discount Code</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="IdDiscountCode" />
+
+                <div class="form-group">
+                    <label asp-for="Code" class="control-label">Code</label>
+                    <input asp-for="Code" class="form-control" />
+                    <span asp-validation-for="Code" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Discount" class="control-label">Discount (%)</label>
+                    <input asp-for="Discount" class="form-control" data-val="false"/>
+                    <span asp-validation-for="Discount" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ValidFrom" class="control-label">Valid From</label>
+                    <input asp-for="ValidFrom" class="form-control" type="date" />
+                    <span asp-validation-for="ValidFrom" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ValidTo" class="control-label">Valid To</label>
+                    <input asp-for="ValidTo" class="form-control" type="date" />
+                    <span asp-validation-for="ValidTo" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var discountInput = document.querySelector("#Discount");
+
+        // Replace dots with commas before form submission
+        var form = document.querySelector("form");
+        form.addEventListener("submit", function () {
+            replaceDotsWithCommas(discountInput);
+        });
+
+        function replaceDotsWithCommas(inputElement) {
+            var value = inputElement.value.trim();
+            var newValue = value.replace(/\./g, ",");
+            inputElement.value = newValue;
+        }
+    });
+</script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

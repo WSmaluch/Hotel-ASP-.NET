@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Hotel.Data.Data.CMS.Attractions.Attraction>
+
+@{
+    ViewData["Title"] = "Attractions";
+}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title mt-5">Attractions</h3>
+            </div>
+            <div class="col">
+                <div class="text-right">
+                    <a asp-action="Create" class="btn btn-primary">Add New Attraction</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(model => model.Name)</th>
+                                    <th>@Html.DisplayNameFor(model => model.Description)</th>
+                                    <th>@Html.DisplayNameFor(model => model.ImageUrl)</th>
+                                    <th>@Html.DisplayNameFor(model => model.MoreInfoUrl)</th>
+                                    <th>@Html.DisplayNameFor(model => model.AttractionType.Name)</th>
+                                    <th>@Html.DisplayNameFor(model => model.AttractionPrice.Id)</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                        <td>
+                                            <img src="@item.ImageUrl" alt="@item.Name" class="img-thumbnail" style="max-width: 100px;">
+                                        </td>
+                                        <td>
+                                            <a href="@item.MoreInfoUrl" target="_blank">@item.MoreInfoUrl</a>
+                                        </td>
+                                        <td>@Html.DisplayFor(modelItem => item.AttractionType.Name)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.AttractionPrice.Id)</td>
+                                        <td class="text-right">
+                                            <div class="dropdown dropdown-action">
+                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v ellipse_color"></i></a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-pencil-alt m-r-5"></i> Edit</a>
+                                                    <a class="dropdown-item" asp-action="Details" asp-route-id="@item.Id"><i class="fas fa-eye m-r-5"></i> Details</a>
+                                                    <a class="dropdown-item" href="#" onclick="confirmDelete('@item.Id')"><i class="fas fa-trash-alt m-r-5"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmDelete(id) {
+            if (confirm('Are you sure?')) {
+                window.location.href = '/Attractions/Delete/' + id;
+            }
+        }
+    </script>
+}

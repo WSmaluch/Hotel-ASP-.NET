@@ -61,8 +61,6 @@ namespace Hotel.Intranet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdOption,Name,PhotoUrl,Price,StartDate,EndDate,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Options options, List<int> ContentItems, IFormFile photoFile)
         {
-			//if (ModelState.IsValid)
-			//{
 			if (photoFile != null && photoFile.Length > 0)
 			{
 				// Przetwarzanie przesłanego pliku
@@ -72,6 +70,11 @@ namespace Hotel.Intranet.Controllers
 				// Zapisanie linku do obrazu w obiekcie Types
 				options.PhotoUrl = imageUrl;
 			}
+            else
+            {
+                options.PhotoUrl = "No photo";
+            }
+
 
 			if (ContentItems != null)
             {
@@ -118,53 +121,62 @@ namespace Hotel.Intranet.Controllers
             return View(options);
         }
 
-        // POST: Options/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdOption,Name,PhotoUrl,Price,StartDate,EndDate,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Options options, IFormFile photoFile)
-        {
-            if (id != options.IdOption)
-            {
-                return NotFound();
-            }
+		// POST: Options/Edit/5
+		// To protect from overposting attacks, enable the specific properties you want to bind to.
+		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Edit(int id, [Bind("IdOption,Name,PhotoUrl,Price,StartDate,EndDate,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Options options, IFormFile photoFile)
+		{
+			if (id != options.IdOption)
+			{
+				return NotFound();
+			}
 
-            if (photoFile != null && photoFile.Length > 0)
-            {
-                // Przetwarzanie przesłanego pliku
-                var imageService = new ImgurService(_configuration);
-                var imageUrl = await imageService.UploadImageAsync(photoFile);
+			var existingOption = await _context.Options.AsNoTracking().FirstOrDefaultAsync(o => o.IdOption == id);
 
-                // Zapisanie linku do obrazu w obiekcie Types
-                options.PhotoUrl = imageUrl;
-            }
+			if (existingOption == null)
+			{
+				return NotFound();
+			}
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(options);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OptionsExists(options.IdOption))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(options);
-        }
+			if (photoFile != null && photoFile.Length > 0)
+			{
+				// Przetwarzanie przesłanego pliku
+				var imageService = new ImgurService(_configuration);
+				var imageUrl = await imageService.UploadImageAsync(photoFile);
 
-        // GET: Options/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+				// Zapisanie linku do obrazu w obiekcie Types
+				options.PhotoUrl = imageUrl;
+			}
+			else
+			{
+				// Zachowanie istniejącego PhotoUrl, jeśli nie przesłano nowego pliku - jest ten sam
+				options.PhotoUrl = existingOption.PhotoUrl;
+			}
+
+				try
+				{
+					_context.Entry(options).State = EntityState.Modified;
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!OptionsExists(options.IdOption))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+				return RedirectToAction(nameof(Index));
+		}
+
+
+		// GET: Options/Delete/5
+		public async Task<IActionResult> Delete(int? id)
         {
             //if (id == null || _context.Options == null)
             //{

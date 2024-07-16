@@ -1,0 +1,120 @@
+﻿@model IEnumerable<Hotel.Data.Data.CMS.Newsletter.Newsletter>
+
+@{
+    ViewData["Title"] = "Newsletter Subscribers";
+}
+
+
+<h1>Index</h1>
+
+<div class="page-header">
+    <div class="row align-items-center" style="margin-top:-2%">
+        <div class="col">
+            <div class="mt-5">
+                <h4 class="card-title float-left mt-2">Newsletter</h4>
+                <a asp-action="Create" class="btn btn-primary float-right veiwbutton" style="margin-right:3%">Add Newsletter</a>
+                <button style="margin-right:5px" type="button" class="btn btn-success float-right veiwbutton" onclick="showVersionSelection()">Send Newsletter</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="versionSelection" class="mt-3" style="display: none;">
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Choose Newsletter Version:</label>
+        <div class="col-sm-10">
+            <select id="newsletterVersion" class="form-control">
+                @foreach (var option in ViewBag.NewsletterConfigOptions)
+                {
+                    <option value="@option.Id">@option.Title</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <button type="button" class="btn btn-primary" onclick="sendNewsletter()">Send</button>
+            <button type="button" class="btn btn-secondary" onclick="cancelSend()">Cancel</button>
+            <a href="/NewsletterConfig/Create" class="btn btn-secondary">Add new version</a>
+        </div>
+    </div>
+</div>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Newsletter</th>
+            <th>Subscribed On</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.SubscribedOn)</td>
+                <td>
+                    <div class="dropdown dropdown-action">
+                        <a class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v ellipse_color"></i></a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-pencil-alt m-r-5"></i> Edit</a>
+                            <a class="dropdown-item" href="#" onclick="confirmDelete(@item.Id)"><i class="fas fa-trash-alt m-r-5"></i> Delete</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="delete_asset" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h3 class="delete_class">Are you sure?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                    <button type="button" class="btn btn-danger" onclick="deleteNewsletter()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let idToDelete = null;
+
+    function confirmDelete(id) {
+        idToDelete = id;
+        $('#delete_asset').modal('show');
+    }
+
+    function deleteNewsletter() {
+        window.location.href = '/Newsletter/Delete/' + idToDelete;
+    }
+
+    function showVersionSelection() {
+        $('#versionSelection').show();
+    }
+
+    function cancelSend() {
+        $('#versionSelection').hide();
+    }
+
+    function sendNewsletter() {
+        let version = $('#newsletterVersion').val();
+
+        $.ajax({
+            url: '/Newsletter/SendNewsletterEmail', // Ustaw odpowiednią ścieżkę do Twojej akcji
+            type: 'POST',
+            data: { versionId: version }, // Przesyłanie wersji jako versionId
+            success: function (response) {
+                alert('Newsletter sent successfully!');
+                $('#versionSelection').hide();
+            },
+            error: function (xhr, status, error) {
+                alert('Error sending newsletter: ' + error);
+            }
+        });
+    }
+</script>

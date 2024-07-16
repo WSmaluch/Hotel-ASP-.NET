@@ -59,54 +59,28 @@ namespace Hotel.Intranet.Controllers
             return View();
         }
 
-		// POST: Types/Create
-		// To protect from overposting attacks, enable the specific properties you want to bind to.
-		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-		//[HttpPost]
-		//[ValidateAntiForgeryToken]
-		//public async Task<IActionResult> Create([Bind("IdType,Name,Description,PhotosURL,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types, List<int> facilities)
-		//{
-		//    //if (ModelState.IsValid)
-		//    //{
-		//    if (facilities != null)
-		//    {
-		//        foreach (var facilityId in facilities)
-		//        {
-		//            var facility = await _context.Facilities.FindAsync(facilityId);
-		//            if (facility != null)
-		//            {
-		//                types.Facilities.Add(facility);
-		//            }
-		//        }
-		//        types.AddedDate = DateTime.Now;
-		//        types.AddedBy = "Admin";
-		//        _context.Add(types);
-		//        await _context.SaveChangesAsync();
-		//        return RedirectToAction(nameof(Index));
-		//    }
-		//    ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
-		//    return View(types);
-		//}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create([Bind("IdType,Name,Description,Size,MaxAmountOfPeople,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Types types, List<int> facilities, IFormFile photoFile)
 		{
-			//if (ModelState.IsValid)
-			//{
-				if (photoFile != null && photoFile.Length > 0)
-				{
+			if (photoFile != null && photoFile.Length > 0)
+			{
 					// Przetwarzanie przesłanego pliku
 					var imageService = new ImgurService(_configuration);
 					var imageUrl = await imageService.UploadImageAsync(photoFile);
 
 					// Zapisanie linku do obrazu w obiekcie Types
 					types.PhotosURL = imageUrl;
-				}
+			}
+            else
+            {
+                types.PhotosURL = "No photo";
+            }
 
 
-				// Dodanie obiektu Types do bazy danych
-				types.AddedDate = DateTime.Now;
-				types.AddedBy = "Admin";
+			// Dodanie obiektu Types do bazy danych
+			types.AddedDate = DateTime.Now;
+			types.AddedBy = "Admin";
 
 				// Dodanie związków z obiektami Facilities
 				if (facilities != null)
@@ -163,18 +137,29 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            if (photoFile != null && photoFile.Length > 0)
-            {
-                // Przetwarzanie przesłanego pliku
-                var imageService = new ImgurService(_configuration);
-                var imageUrl = await imageService.UploadImageAsync(photoFile);
+			var existingOption = await _context.Types.AsNoTracking().FirstOrDefaultAsync(o => o.IdType == id);
 
-                // Zapisanie linku do obrazu w obiekcie Types
-                types.PhotosURL = imageUrl;
-            }
-            //if (ModelState.IsValid)
-            //{
-            try
+			if (existingOption == null)
+			{
+				return NotFound();
+			}
+
+			if (photoFile != null && photoFile.Length > 0)
+			{
+				// Przetwarzanie przesłanego pliku
+				var imageService = new ImgurService(_configuration);
+				var imageUrl = await imageService.UploadImageAsync(photoFile);
+
+				// Zapisanie linku do obrazu w obiekcie Types
+				types.PhotosURL = imageUrl;
+			}
+			else
+			{
+				// Zachowanie istniejącego PhotoUrl, jeśli nie przesłano nowego pliku - jest ten sam
+				types.PhotosURL = existingOption.PhotosURL;
+			}
+
+			try
                 {
                     types.ModifiedDate = DateTime.Now;
                     _context.Update(types);
@@ -193,8 +178,6 @@ namespace Hotel.Intranet.Controllers
                 }
                 ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
                 return RedirectToAction(nameof(Index));
-            //}
-            return View(types);
         }
 
         // GET: Types/Delete/5

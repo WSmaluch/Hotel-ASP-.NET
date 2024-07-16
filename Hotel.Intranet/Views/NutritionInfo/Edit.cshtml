@@ -1,0 +1,67 @@
+﻿@model Hotel.Data.Data.Restaurant.NutritionInfo
+
+@{
+    ViewData["Title"] = "Edit Nutrition Info";
+}
+
+<div class="content container-fluid">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <div class="mt-5">
+                    <h4 class="card-title float-left mt-2">Edit Nutrition Info</h4>
+                    <a asp-action="Index" class="btn btn-secondary float-right veiwbutton">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="row formtype">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Calories</label>
+                            <input asp-for="Calories" class="form-control" />
+                            <span asp-validation-for="Calories" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Protein</label>
+                            <input asp-for="Protein" class="form-control" />
+                            <span asp-validation-for="Protein" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Carbohydrates</label>
+                            <input asp-for="Carbohydrates" class="form-control" />
+                            <span asp-validation-for="Carbohydrates" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Fat</label>
+                            <input asp-for="Fat" class="form-control" />
+                            <span asp-validation-for="Fat" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row formtype">
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary buttonedit ml-2">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

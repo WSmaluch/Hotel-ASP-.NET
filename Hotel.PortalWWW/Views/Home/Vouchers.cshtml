@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Hotel.Data.Data.CMS.Voucher.Voucher>
+
+@{
+    ViewData["Title"] = "Vouchers";
+}
+
+<!-- bradcam_area_start -->
+<div class="bradcam_area breadcam_bg" style="background-image:url(https://i.imgur.com/ccGTCmJ.png)">
+    <h3>Vouchers</h3>
+</div>
+<!-- bradcam_area_end -->
+<!--================ Vouchers Area =================-->
+<section class="vouchers_area section-padding">
+    <div class="container">
+        <div class="row">
+            @foreach (var voucher in ViewBag.Vouchers)
+            {
+                <div class="col-lg-12 mb-4">
+                    <div class="row">
+                        <div>
+                            <div class="single_vouchers">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="vouchers_thumb">
+                                            <img src="@voucher.ImageUrl" alt="No photo" style="width:500px; height:500px">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="vouchers_info" style="padding-left:120px">
+                                            <p>@voucher.Description</p>
+                                            You can choose from different types:
+                                            <ul>
+                                            @foreach(var item in ViewBag.VoucherTypes)
+                                            {
+                                                <li>@item.Name</li>
+                                            }
+                                            </ul>
+                                            You can choose from different prices:
+                                            <ul>
+                                                @foreach (var item in ViewBag.VoucherPrices)
+                                                {
+                                                    <li>@item.Amount</li>
+                                                }
+                                            </ul>
+                                            <a href="mailto:hoteltrapise@outlook.com" class="btn btn-primary">Mail us to buy</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!--================ Vouchers Area =================-->
