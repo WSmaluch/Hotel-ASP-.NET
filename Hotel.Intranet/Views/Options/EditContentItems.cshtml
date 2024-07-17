@@ -39,7 +39,6 @@
                 window.location.href = '/ContentItem/Create';
             });
 
-            // Obsługa przycisku "Add ContentItems"
             $('#addContentItemsButton').click(function () {
                 var selectedFacilityIds = $('#ContentItems').val();
                 var optionId = @Model.IdOption;
@@ -48,7 +47,6 @@
                     .done(function (data) {
                         console.log(data);
 
-                        // Przekierowanie do strony edycji dla pokoju po dodaniu udogodnień
                         window.location.href = '/Options/Edit/' + optionId;
                     })
                     .fail(function (error) {

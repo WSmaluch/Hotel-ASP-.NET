@@ -49,40 +49,7 @@
         </div>
     </div>
 </div>
-<!-- about_area_end -->
-<!-- menu_area_start -->
-@* <div class="menu_area">
-    <div class="container">
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="section_title mb-70 text-center">
-                    <span>Menu</span>
-                    <h3>Nasze specjały</h3>
-                    <div class="menu_buttons">
-                        @foreach (var seasonalMenu in ViewBag.SeasonalMenus)
-                        {
-                            <button class="menu_button" data-menu-id="@seasonalMenu.Id">@seasonalMenu.Name</button>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row" id="menuItemsContainer">
-            @foreach (var dish in ViewBag.Dishes)
-            {
-                <div class="col-xl-4 col-lg-4 col-md-6 menu-item" data-menu-id="@dish.Name" style="background-color:lightgray;padding:5px">
-                    <div class="single_menu text-center">
-                        <div class="menu_info">
-                            <h4>@dish.Name</h4>
-                            <p>@dish.Description</p>
-                            <h5>@dish.Price.Price</h5>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-</div> *@
+
 
 <!-- Standardowe menu -->
 @if (ViewBag.Menu != null && ((List<Hotel.Data.Data.Restaurant.Menu>)ViewBag.Menu).Count > 0)

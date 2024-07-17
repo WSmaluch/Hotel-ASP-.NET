@@ -75,6 +75,5 @@ namespace Hotel.Data
         public DbSet<RestaurantCategory>? RestaurantCategory { get; set; }
         public DbSet<RestaurantSchedule>? RestaurantSchedule { get; set; }
         public DbSet<SeasonalMenu>? SeasonalMenu { get; set; }
-        public DbSet<SpecialDiet>? SpecialDiet { get; set; }
     }
 }

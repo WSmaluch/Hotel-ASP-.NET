@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
 using Hotel.Data.Data.Restaurant;
@@ -62,11 +57,11 @@ namespace Hotel.Intranet.Controllers
         {
             if (BannerUrl != null && BannerUrl.Length > 0)
             {
-                // Przetwarzanie przesłanego pliku
+                // Processing the uploaded file
                 var imageService = new ImgurService(_configuration);
                 var imageUrl = await imageService.UploadImageAsync(BannerUrl);
 
-                // Zapisanie linku do obrazu w obiekcie Types
+                // Saving a link to string
                 restaurantPage.BannerUrl = imageUrl;
             }
             else
@@ -76,11 +71,11 @@ namespace Hotel.Intranet.Controllers
 
             if (Content1Picture1Url != null && Content1Picture1Url.Length > 0)
             {
-                // Przetwarzanie przesłanego pliku
+                // Processing the uploaded file
                 var imageService = new ImgurService(_configuration);
                 var imageUrl = await imageService.UploadImageAsync(Content1Picture1Url);
 
-                // Zapisanie linku do obrazu w obiekcie Types
+                // Saving a link to string
                 restaurantPage.Content1Picture1Url = imageUrl;
             }
             else
@@ -90,11 +85,11 @@ namespace Hotel.Intranet.Controllers
 
             if (Content1Picture2Url != null && Content1Picture2Url.Length > 0)
             {
-                // Przetwarzanie przesłanego pliku
+                // Processing the uploaded file
                 var imageService = new ImgurService(_configuration);
                 var imageUrl = await imageService.UploadImageAsync(Content1Picture2Url);
 
-                // Zapisanie linku do obrazu w obiekcie Types
+                // Saving a link to string
                 restaurantPage.Content1Picture2Url = imageUrl;
             }
             else
@@ -148,46 +143,46 @@ namespace Hotel.Intranet.Controllers
 
             if (BannerUrl != null && BannerUrl.Length > 0)
             {
-                // Przetwarzanie przesłanego pliku
+                // Processing the uploaded file
                 var imageService = new ImgurService(_configuration);
                 var imageUrl = await imageService.UploadImageAsync(BannerUrl);
 
-                // Zapisanie linku do obrazu w obiekcie Types
+                // Saving a link to string
                 restaurantPage.BannerUrl = imageUrl;
             }
             else
             {
-                // Zachowanie istniejącego PhotoUrl, jeśli nie przesłano nowego pliku - jest ten sam
+                // Retention of existing PhotoUrl if no new file uploaded - it is the same
                 restaurantPage.BannerUrl = existingOption.BannerUrl;
             }
 
             if (Content1Picture1Url != null && Content1Picture1Url.Length > 0)
             {
-                // Przetwarzanie przesłanego pliku
+                // Processing the uploaded file
                 var imageService = new ImgurService(_configuration);
                 var imageUrl = await imageService.UploadImageAsync(Content1Picture1Url);
 
-                // Zapisanie linku do obrazu w obiekcie Types
+                // Saving a link to string
                 restaurantPage.Content1Picture1Url = imageUrl;
             }
             else
             {
-                // Zachowanie istniejącego PhotoUrl, jeśli nie przesłano nowego pliku - jest ten sam
+                // Retention of existing PhotoUrl if no new file uploaded - it is the same
                 restaurantPage.Content1Picture1Url = existingOption.Content1Picture1Url;
             }
 
             if (Content1Picture2Url != null && Content1Picture2Url.Length > 0)
             {
-                // Przetwarzanie przesłanego pliku
+                // Processing the uploaded file
                 var imageService = new ImgurService(_configuration);
                 var imageUrl = await imageService.UploadImageAsync(Content1Picture2Url);
 
-                // Zapisanie linku do obrazu w obiekcie Types
+                // Saving a link to string
                 restaurantPage.Content1Picture2Url = imageUrl;
             }
             else
             {
-                // Zachowanie istniejącego PhotoUrl, jeśli nie przesłano nowego pliku - jest ten sam
+                // Retention of existing PhotoUrl if no new file uploaded - it is the same
                 restaurantPage.Content1Picture2Url = existingOption.Content1Picture2Url;
             }
 

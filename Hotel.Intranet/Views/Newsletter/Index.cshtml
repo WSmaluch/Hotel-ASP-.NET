@@ -105,9 +105,9 @@
         let version = $('#newsletterVersion').val();
 
         $.ajax({
-            url: '/Newsletter/SendNewsletterEmail', // Ustaw odpowiednią ścieżkę do Twojej akcji
+            url: '/Newsletter/SendNewsletterEmail', 
             type: 'POST',
-            data: { versionId: version }, // Przesyłanie wersji jako versionId
+            data: { versionId: version }, 
             success: function (response) {
                 alert('Newsletter sent successfully!');
                 $('#versionSelection').hide();

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
 using Hotel.Data.Data.Restaurant;
@@ -67,7 +62,6 @@ namespace Hotel.Intranet.Controllers
             if (overlappingSchedule != null)
             {
                 ModelState.AddModelError("", "The schedule overlaps with an existing schedule.");
-                // Return the view with the current model to display validation errors
                 return View(restaurantSchedule);
             }
 
@@ -116,7 +110,6 @@ namespace Hotel.Intranet.Controllers
             if (overlappingSchedule != null)
             {
                 ModelState.AddModelError("", "The schedule overlaps with an existing schedule.");
-                // Return the view with the current model to display validation errors
                 return View(restaurantSchedule);
             }
 

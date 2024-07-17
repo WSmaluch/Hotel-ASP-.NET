@@ -18,7 +18,6 @@
                     <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Id}"/>
                     <GridViewColumn Header="Scheduled Date" DisplayMemberBinding="{Binding ScheduledDate}"/>
                     <GridViewColumn Header="Status" DisplayMemberBinding="{Binding StatusName}"/>
-                    <!-- Add more columns for other properties -->
                 </GridView>
             </ListView.View>
         </ListView>

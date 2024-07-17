@@ -155,7 +155,6 @@
 										</td>
 										<td>@res.CheckIn.ToString("dd-MM-yyyy")</td>
 										<td>@res.CheckOut.ToString("dd-MM-yyyy")</td>
-										@* <td class="text-center"> <span class="badge badge-pill bg-success inv-badge">@res.IsActive</span> </td> *@
 										<td class="text-center">
 											<span class="badge badge-pill bg-success inv-badge">
 												@if (res.StatusId == 1)
@@ -234,7 +233,6 @@
 		});
 	}
 
-	// Wywołaj funkcję po załadowaniu strony
 	document.addEventListener("DOMContentLoaded", function () {
 		donutChart();
 	});

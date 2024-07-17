@@ -16,7 +16,6 @@ namespace Hotel.Desktop.ViewModel
         {
             _reservationRepository = reservationRepository;
 
-            // Domyślnie ustaw widok Home
             CurrentViewModel = new HomeViewModel();
         }
         public void ShowHomeView()

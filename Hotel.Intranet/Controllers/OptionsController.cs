@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
@@ -63,11 +59,11 @@ namespace Hotel.Intranet.Controllers
         {
 			if (photoFile != null && photoFile.Length > 0)
 			{
-				// Przetwarzanie przesłanego pliku
+				// Processing the uploaded file
 				var imageService = new ImgurService(_configuration);
 				var imageUrl = await imageService.UploadImageAsync(photoFile);
 
-				// Zapisanie linku do obrazu w obiekcie Types
+				// Saving a link to string
 				options.PhotoUrl = imageUrl;
 			}
             else
@@ -142,16 +138,16 @@ namespace Hotel.Intranet.Controllers
 
 			if (photoFile != null && photoFile.Length > 0)
 			{
-				// Przetwarzanie przesłanego pliku
+				// Processing the uploaded file
 				var imageService = new ImgurService(_configuration);
 				var imageUrl = await imageService.UploadImageAsync(photoFile);
 
-				// Zapisanie linku do obrazu w obiekcie Types
+				// Saving a link to string
 				options.PhotoUrl = imageUrl;
 			}
 			else
 			{
-				// Zachowanie istniejącego PhotoUrl, jeśli nie przesłano nowego pliku - jest ten sam
+				// Retention of existing PhotoUrl if no new file uploaded - it is the same
 				options.PhotoUrl = existingOption.PhotoUrl;
 			}
 
@@ -178,20 +174,6 @@ namespace Hotel.Intranet.Controllers
 		// GET: Options/Delete/5
 		public async Task<IActionResult> Delete(int? id)
         {
-            //if (id == null || _context.Options == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var options = await _context.Options
-            //    .FirstOrDefaultAsync(m => m.IdOption == id);
-            //if (options == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return View(options);
-
             if (_context.Options == null)
             {
                 return Problem("Entity set 'HotelContext.Options'  is null.");

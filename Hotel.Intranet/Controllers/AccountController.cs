@@ -1,8 +1,6 @@
 ﻿using Hotel.Data;
 using Hotel.Intranet.Helpers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Text;
 
 namespace Hotel.Intranet.Controllers
 {

@@ -5,14 +5,14 @@ namespace Hotel.PortalWWW.Models
 {
     public class BookingModel
     {
-        public int RoomId { get; set; } // Identyfikator wybranego pokoju
-        public string CheckIn { get; set; } // Data zameldowania
-        public string CheckOut { get; set; } // Data wymeldowania
-        public int Adults { get; set; } // Liczba dorosłych gości
-        public int Children { get; set; } // Liczba dzieci gości
-        public IEnumerable<Facilities> facilities { get; set; } // Lista dostępnych udogodnień
-        public IEnumerable<Types> types { get; set; } // Lista dostępnych typów pokoi
-        public IEnumerable<Room> rooms { get; set; } // Lista dostępnych pokoi
+        public int RoomId { get; set; } // Identifier of the selected room
+        public string CheckIn { get; set; } // Check-in date
+        public string CheckOut { get; set; } // Check-out date
+        public int Adults { get; set; } // Number of adult guests
+        public int Children { get; set; } // Number of child guests
+        public IEnumerable<Facilities> facilities { get; set; } // List of available facilities
+        public IEnumerable<Types> types { get; set; } // List of available room types
+        public IEnumerable<Room> rooms { get; set; } // List of available rooms
         public List<Options> Options { get; set; }
         public Dictionary<int, decimal> PricesByRoomType { get; set; }
     }

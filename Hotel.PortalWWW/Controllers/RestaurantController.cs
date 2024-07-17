@@ -41,19 +41,7 @@ namespace Hotel.PortalWWW.Controllers
             .ToList();
 
             ViewBag.Menu = activeMenus;
-            //ViewBag.Menu = activeMenu?.Dishes.ToList();
-            //ViewBag.MenuName = activeMenu?.Name;
-
-            //seasonal menu
-            // Pobierz wszystkie sezony menu do wyboru na stronie
-            //var seasonalMenus = _context.SeasonalMenu
-            //    .Include(sm => sm.Dishes)
-            //    .Where(sm => sm.StartDate <= DateTime.Now.AddYears(1) && sm.EndDate >= DateTime.Now.AddYears(1))
-            //    .ToList();
-
-            //var seasonalMenuDishes = seasonalMenus.Select(sm => sm.Dishes.ToList()).ToList();
-
-            //ViewBag.SeasonalMenus = seasonalMenuDishes;
+            
 
             var seasonalMenus = _context.SeasonalMenu
             .Include(sm => sm.Dishes)
@@ -66,10 +54,7 @@ namespace Hotel.PortalWWW.Controllers
             ViewBag.SeasonalMenus = seasonalMenus;
 
 
-            // Pobierz pierwszy sezonowy menu do wyświetlenia domyślnie
-            //var defaultSeasonalMenu = seasonalMenus.FirstOrDefault();
-
-            // Pobierz dania dla pierwszego sezonowego menu (lub jakiegoś domyślnego)
+           
             var dishes = _context.Dish
                                 .Include(d => d.Category)
                                 .Include(d => d.Price)
@@ -77,31 +62,30 @@ namespace Hotel.PortalWWW.Controllers
                                 .ToList();
 
             ViewBag.Dishes = dishes;
-            //
 
             return View();
         }
         public ActionResult DishDetails(int id)
         {
-            // Pobierz danie z bazy danych na podstawie id
+            // Retrieve a dish from the database based on id
             var dish = _context.Dish.Include(d => d.Category)
                                 .Include(d => d.Price)
                                 .Include(d => d.Ingredients).FirstOrDefault(d => d.Id == id);
 
             if (dish == null)
             {
-                return View("Error404"); // Zwróć 404 Not Found z opcjonalnym komunikatem
+                return View("Error404");
             }
 
             ViewBag.Gallery = dish.ImageUrl;
-            // Przekazanie danych do ViewBag
+            
             ViewBag.DishName = dish.Name;
             ViewBag.DishDescription = dish.Description;
             ViewBag.DishPrice = dish.Price.Price;
 
             ViewBag.DishIngredients = dish.Ingredients;
 
-            return View(); // Zwróć widok DishDetails.cshtml
+            return View(); 
         }
 
     }

@@ -34,7 +34,6 @@ namespace Hotel.PortalWWW.Controllers
             catch (Exception ex)
             {
                 ViewBag.Message = $"An error occurred: {ex.Message}";
-                // Możesz dodać logowanie błędów tutaj
             }
 
             return RedirectToAction("Index", "Home");

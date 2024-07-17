@@ -10,7 +10,6 @@ public class ImgurService
 	public ImgurService(IConfiguration configuration)
 	{
 		_clientId = configuration["ImgurApi:ClientId"];
-		//_clientId = "9e2cf320158a934";
 		_httpClient = new HttpClient();
 	}
 
@@ -20,8 +19,8 @@ public class ImgurService
 		{
 			using (var stream = imageFile.OpenReadStream())
 			{
-				// Wywołaj metodę do przesyłania pliku do Imgur i zwróć link
-				var imgurClient = new ApiClient(_clientId);
+                // Call the method to upload the file to Imgur and return the link
+                var imgurClient = new ApiClient(_clientId);
 				var imageEndpoint = new ImageEndpoint(imgurClient, _httpClient);
 				var imageUpload = await imageEndpoint.UploadImageAsync(stream);
 				return imageUpload.Link;

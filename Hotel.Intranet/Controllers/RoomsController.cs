@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
@@ -68,11 +64,9 @@ namespace Hotel.Intranet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdRoom,TypeId,Number,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Room room, List<int> facilities)
         {
-            //if (ModelState.IsValid)
-            //{
             if (facilities != null)
             {
-                // Dodaj wybrane udogodnienia do pokoju
+                // Add the amenities you want to your room
                 foreach (var facilityId in facilities)
                 {
                     var facility = await _context.Facilities.FindAsync(facilityId);
@@ -81,7 +75,6 @@ namespace Hotel.Intranet.Controllers
                         room.Facilities.Add(facility);
                     }
                 }
-                //}
                 room.StatusId = 9;
                 room.AddedDate = DateTime.Now;
                 room.IsActive = true;
@@ -116,13 +109,13 @@ namespace Hotel.Intranet.Controllers
             ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", room.TypeId);
             ViewBag.Statuses = new SelectList(_context.Status, "StatusId", "StatusName", room.StatusId);
 
-            // Pobierz wszystkie dostępne udogodnienia
+            // Download all available facilities
             var allFacilities = await _context.Facilities.ToListAsync();
 
-            // Ustal, które z udogodnień są przypisane do danego pokoju
+            // Determine which amenities are assigned to a given room
             var selectedFacilities = room.Facilities.ToList();
 
-            // Przypisz wszystkie udogodnienia do ViewBag.Facilities z zaznaczonymi udogodnieniami dla danego pokoju
+            // Assign all facilities to ViewBag.Facilities with room-specific facilities selected
             ViewBag.Facilities = selectedFacilities;
 
             return View(room);
@@ -139,6 +132,7 @@ namespace Hotel.Intranet.Controllers
             {
                 return NotFound();
             }
+            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Description", room.TypeId);
 
                 try
                 {
@@ -157,9 +151,6 @@ namespace Hotel.Intranet.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            //}
-            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Description", room.TypeId);
-            return View(room);
         }
 
         // GET: Rooms/Delete/5
@@ -217,7 +208,6 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            // Pobierz dostępne statusy z bazy danych i przekaż do widoku
             ViewBag.Statuses = await _context.Status.ToListAsync();
 
             return View(room);
@@ -235,7 +225,6 @@ namespace Hotel.Intranet.Controllers
             }
 
             room.StatusId = newStatusId;
-            // Zapisz zmiany
             _context.Update(room);
             await _context.SaveChangesAsync();
 
@@ -266,10 +255,6 @@ namespace Hotel.Intranet.Controllers
 		[HttpPost]
 		public IActionResult AddFacilities(int roomId, List<int> facilityIds)
 		{
-			// Tutaj dodaj logikę dodawania udogodnień do pokoju (roomId)
-			// Użyj facilityIds do określenia, które udogodnienia zostały wybrane
-
-			// Przykładowa logika:
 			var room = _context.Room.Include(r => r.Facilities).FirstOrDefault(r => r.IdRoom == roomId);
 
             room.Facilities.Clear();
@@ -288,7 +273,6 @@ namespace Hotel.Intranet.Controllers
 				_context.SaveChanges();
 			}
 
-			// Przekieruj użytkownika z powrotem do widoku edycji pokoju lub innego, w zależności od potrzeb
 			return RedirectToAction(nameof(Edit), new { id = roomId });
 		}
 	}

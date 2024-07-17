@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
 using Hotel.Data.Data.Booking;
-using System.Globalization;
 
 namespace Hotel.Intranet.Controllers
 {
@@ -87,40 +82,10 @@ namespace Hotel.Intranet.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("PricingId,TypeId,ValidFrom,ValidTo,BasePriceAdult,BasePriceChildren,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] RoomPricing roomPricing)
-        //{
-        //    //if (ModelState.IsValid)
-        //    //{
-        //        // Sprawdź, czy istnieje już cena dla tego typu pokoju na dany dzień
-        //        if (_context.RoomPricing.Any(rp => rp.TypeId == roomPricing.TypeId && rp.ValidFrom.Date == roomPricing.ValidFrom.Date))
-        //        {
-        //            ModelState.AddModelError("ValidFrom", "Cena już istnieje dla tego typu pokoju na podany dzień.");
-        //            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", roomPricing.TypeId);
-        //            return View(roomPricing);
-        //        }
-        //        else
-        //        { 
-        //            roomPricing.AddedBy = "Admin";
-        //            roomPricing.AddedDate = DateTime.Now;
-        //            _context.Add(roomPricing);
-        //            await _context.SaveChangesAsync();
-        //            return RedirectToAction(nameof(Index));
-        //        }
-        //    //}
-
-        //    ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", roomPricing.TypeId);
-        //    return View(roomPricing);
-        //}
-
-        //zmiana dotycząca jeśli cena już istnieje dla tego typu pokoju w podanym zakresie dat
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PricingId,TypeId,ValidFrom,ValidTo,BasePriceAdult,BasePriceChildren,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] RoomPricing roomPricing)
         {
-            //ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", roomPricing.TypeId);
-            // Znajdź kolidujące wpisy
             List<string> errorMessages = new List<string>();
 
             var overlappingPricings = _context.RoomPricing
@@ -131,11 +96,9 @@ namespace Hotel.Intranet.Controllers
 
             if (overlappingPricings.Any())
             {
-                //ModelState.AddModelError("ValidFrom", "Cena już istnieje dla tego typu pokoju w podanym zakresie dat.");
 
                 foreach (var pricing in overlappingPricings)
                 {
-                    //ModelState.AddModelError("ValidFrom", $"Conflicting dates: {pricing.ValidFrom:dd/MM/yyyy} - {pricing.ValidTo:dd/MM/yyyy}");
                     errorMessages.Add($"Conflicting dates: {pricing.ValidFrom:dd/MM/yyyy} - {pricing.ValidTo:dd/MM/yyyy}");
 
                 }
@@ -152,7 +115,6 @@ namespace Hotel.Intranet.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(roomPricing);
         }
 
 
@@ -181,6 +143,7 @@ namespace Hotel.Intranet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PricingId,TypeId,ValidFrom,ValidTo,BasePriceAdult,BasePriceChildren,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] RoomPricing roomPricing)
         {
+            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", roomPricing.TypeId);
             Console.WriteLine($"BasePriceAdult: {roomPricing.BasePriceAdult}");
             Console.WriteLine($"BasePriceChildren: {roomPricing.BasePriceChildren}");
 
@@ -189,8 +152,6 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            //if (ModelState.IsValid)
-            //{
                 try
                 {
                     _context.Update(roomPricing);
@@ -208,9 +169,6 @@ namespace Hotel.Intranet.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            //}
-            ViewData["TypeId"] = new SelectList(_context.Types, "IdType", "Name", roomPricing.TypeId);
-            return View(roomPricing);
         }
 
         // GET: RoomPricing/Delete/5

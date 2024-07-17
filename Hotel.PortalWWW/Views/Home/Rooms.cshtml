@@ -19,7 +19,6 @@
             </div>
         </div>
         <div class="row">
-            @* @await Html.PartialAsync("PartialViews/Offers",(IEnumerable<Hotel.Data.Data.CMS.Offers.Offer>)ViewBag.Offers) *@
             @await Html.PartialAsync("PartialViews/Options", (IEnumerable<Hotel.Data.Data.Booking.Options>)ViewBag.Options)
             
         </div>

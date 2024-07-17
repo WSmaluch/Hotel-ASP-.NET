@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
@@ -66,18 +62,14 @@ namespace Hotel.Intranet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ScheduledDate,Status,RoomId,EmployeeId,Note,StatusId")] RepairTask repairTask)
         {
-            //if (ModelState.IsValid)
-            //{
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "EmployeeID", "FirstName", repairTask.EmployeeId);
+            ViewData["StatusId"] = new SelectList(_context.Status, "StatusId", "StatusName", repairTask.StatusId);
+            ViewData["RoomId"] = new SelectList(_context.Room, "IdRoom", "IdRoom", repairTask.RoomId);
             repairTask.StatusId = 12;
                 _context.Room.Find(repairTask.RoomId).StatusId = 11;
                 _context.Add(repairTask);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            //}
-            ViewData["EmployeeId"] = new SelectList(_context.Employee, "EmployeeID", "FirstName", repairTask.EmployeeId);
-            ViewData["StatusId"] = new SelectList(_context.Status, "StatusId", "StatusName", repairTask.StatusId);
-            ViewData["RoomId"] = new SelectList(_context.Room, "IdRoom", "IdRoom", repairTask.RoomId);
-            return View(repairTask);
         }
 
         // GET: RepairTasks/Edit/5
@@ -199,7 +191,6 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            // Pobierz dostępne statusy z bazy danych i przekaż do widoku
             ViewBag.Statuses = await _context.Status.Where(s => s.StatusId == 12 || s.StatusId == 9).ToListAsync();
 
             return View(repairTask);
@@ -216,7 +207,7 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            // Zmień status rezerwacji na nowy
+            // Change your booking status to a new one
             repairTask.StatusId = newStatusId;
             if (newStatusId == 12)
             {
@@ -227,7 +218,6 @@ namespace Hotel.Intranet.Controllers
                 _context.Room.Find(repairTask.RoomId).StatusId = 9;
             }
 
-            // Zapisz zmiany
             _context.Update(repairTask);
             await _context.SaveChangesAsync();
 

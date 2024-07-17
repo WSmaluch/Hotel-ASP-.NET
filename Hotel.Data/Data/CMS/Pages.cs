@@ -1,15 +1,9 @@
 ﻿using Hotel.Data.Data.CMS.Abstract;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Hotel.Data.Data.CMS
 {
-	public class Pages : AEntity
+    public class Pages : AEntity
 	{
 		[Key]
 		public int IdPage { get; set; }

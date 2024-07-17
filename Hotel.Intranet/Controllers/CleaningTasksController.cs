@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
@@ -65,17 +61,13 @@ namespace Hotel.Intranet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ScheduledDate,RoomId,StatusId")] CleaningTask cleaningTask)
         {
-            //if (ModelState.IsValid)
-            //{
+            ViewData["StatusId"] = new SelectList(_context.Status, "StatusId", "StatusName", cleaningTask.StatusId);
+            ViewData["RoomId"] = new SelectList(_context.Room, "IdRoom", "IdRoom", cleaningTask.RoomId);
                 cleaningTask.StatusId =8;
                 _context.Room.Find(cleaningTask.RoomId).StatusId = 8;
                 _context.Add(cleaningTask);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            //}
-            ViewData["StatusId"] = new SelectList(_context.Status, "StatusId", "StatusName", cleaningTask.StatusId);
-            ViewData["RoomId"] = new SelectList(_context.Room, "IdRoom", "IdRoom", cleaningTask.RoomId);
-            return View(cleaningTask);
         }
 
         // GET: CleaningTasks/Edit/5
@@ -110,14 +102,14 @@ namespace Hotel.Intranet.Controllers
 
             try
             {
-                // Sprawdź, czy cleaning task ma StatusId równy 7
+                // Check if the cleaning task has a StatusId equal to 7
                 if (cleaningTask.StatusId == 7)
                 {
-                    // Znajdź pokój o danym RoomId
+                    // Find the room with the given RoomId
                     var room = _context.Room.Find(cleaningTask.RoomId);
                     if (room != null)
                     {
-                        // Sprawdź, czy istnieje rezerwacja dla tego pokoju
+                        // Check if there is a reservation for this room
                         var reservationExists = _context.Reservations.Any(r =>
                         r.RoomId == room.IdRoom &&
                         r.IsActive &&
@@ -125,12 +117,12 @@ namespace Hotel.Intranet.Controllers
                         DateTime.Today <= r.CheckOut.Date);
                         if (reservationExists)
                         {
-                            // Jeżeli istnieje rezerwacja, zmień StatusId pokoju na 3
+                            // If there is a reservation, change the room's StatusId to 3
                             room.StatusId = 3;
                         }
                         else
                         {
-                            // Jeżeli nie istnieje rezerwacja, zmień StatusId pokoju na 7
+                            // If there is no reservation, change the room's StatusId to 7
                             room.StatusId = 7;
                         }
                     }
@@ -211,7 +203,6 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            // Pobierz dostępne statusy z bazy danych i przekaż do widoku
             ViewBag.Statuses = await _context.Status.Where(s => s.StatusId == 8 || s.StatusId == 7).ToListAsync();
 
             return View(cleaningTask);
@@ -228,7 +219,7 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            // Zmień status rezerwacji na nowy
+            // Change the reservation status to the new one
             cleaningTask.StatusId = newStatusId;
             if (newStatusId == 7)
             {
@@ -239,7 +230,6 @@ namespace Hotel.Intranet.Controllers
                 _context.Room.Find(cleaningTask.RoomId).StatusId = 8;
             }
 
-            // Zapisz zmiany
             _context.Update(cleaningTask);
             await _context.SaveChangesAsync();
 

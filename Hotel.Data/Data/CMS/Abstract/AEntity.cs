@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Hotel.Data.Data.CMS.Abstract
 {
-	abstract public class AEntity
+    abstract public class AEntity
 	{
 		[Display(Name = "Is active?")]
 		public bool IsActive { get; set; } = true;

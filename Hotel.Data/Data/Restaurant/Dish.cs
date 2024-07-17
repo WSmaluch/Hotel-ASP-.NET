@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Hotel.Data.Data.CMS.Abstract;
 
 namespace Hotel.Data.Data.Restaurant
@@ -22,7 +16,7 @@ namespace Hotel.Data.Data.Restaurant
         public DishPrice Price { get; set; }
 
         public int CategoryId { get; set; }
-        public RestaurantCategory Category { get; set; } //Breakfast, Lunch, Dinner  
+        public RestaurantCategory Category { get; set; } 
 
         public bool IsVegetarian { get; set; }
 

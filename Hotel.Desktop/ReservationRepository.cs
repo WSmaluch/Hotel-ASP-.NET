@@ -71,12 +71,10 @@ namespace Hotel.Desktop
 
             var statuses = _hotelContext.Status;
 
-            // Aktualizacja StatusName
             foreach (var task in tasksWithEmployees)
             {
                 task.StatusName = statuses.Find(task.StatusId).StatusName;
 
-                // Aktualizacja Employee
                 task.Employee = _hotelContext.Employee.Find(task.EmployeeId);
             }
 

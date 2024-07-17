@@ -5,31 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d" Title="MainWindow" Height="600" Width="1080" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"  AllowsTransparency="True" WindowStyle="None"  Foreground="White">
-    <!--<Window.Resources>
-        <Storyboard x:Key="MenuOpen">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
-                <EasingDoubleKeyFrame KeyTime="0" Value="60"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="200"/>
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Key="MenuClose">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
-                <EasingDoubleKeyFrame KeyTime="0" Value="200"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="60"/>
-            </DoubleAnimationUsingKeyFrames>
-        </Storyboard>
-    </Window.Resources>
-
-    <Window.Triggers>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpenMenu">
-            <BeginStoryboard Storyboard="{StaticResource MenuOpen}"/>
-        </EventTrigger>
-        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonCloseMenu">
-            <BeginStoryboard Storyboard="{StaticResource MenuClose}"/>
-        </EventTrigger>
-    </Window.Triggers>-->
     <Grid>
-        <!-- Górny pasek z niebieskim tłem -->
         <Grid Height="60" VerticalAlignment="Top" Background="#007ACC" MouseLeftButtonDown="Window_MouseLeftButtonDown" Margin="23,0,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="964*"/>
@@ -37,9 +13,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Text="Hotel Management" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="22" Foreground="White" Margin="500,0,0,0" />
 
-            <!-- Prawa sekcja z nazwą użytkownika i menu rozwijanym -->
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Margin="38,0,0,0">
-                <!-- Menu rozwijane -->
                 <materialDesign:PopupBox  Margin="5 5 40 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
                     <StackPanel Width="150">
                         <Button Content="Account" Foreground="#007ACC"/>
@@ -50,7 +24,6 @@
                     </StackPanel>
                 </materialDesign:PopupBox>
 
-                <!-- Przycisk zamknięcia aplikacji -->
             </StackPanel>
             <Button x:Name="ExitButton" VerticalContentAlignment="Top" FontSize="10" Content="X" Click="ExitButton_Click" Margin="77,-2,-1,41" Foreground="White" Grid.Column="1" MouseEnter="ExitButton_MouseEnter" MouseLeave="ExitButton_MouseLeave"/>
         </Grid>
@@ -61,19 +34,8 @@
             </Grid>
         </Grid>
 
-        <!-- Lewa sekcja z menu bocznym -->
         <Grid x:Name="GridMenu" Width="160" HorizontalAlignment="Left" Background="#2E3A47">
             <StackPanel>
-                <!-- Nagłówek górnego menu z przyciskami do rozwinięcia i zamknięcia -->
-                <!--<Grid Height="60" Background="#2E3A47">
-                    <Button x:Name="ButtonCloseMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Visibility="Collapsed" Click="ButtonCloseMenu_Click">
-                        <materialDesign:PackIcon Foreground="White" Kind="ArrowLeft" Width="25"/>
-                    </Button>
-                    <Button x:Name="ButtonOpenMenu" Width="60" Height="60" Background="{x:Null}" BorderBrush="{x:Null}" VerticalAlignment="Top" HorizontalAlignment="Right" Click="ButtonOpenMenu_Click">
-                        <materialDesign:PackIcon Foreground="White" Kind="Menu" Width="25"/>
-                    </Button>
-                </Grid>-->
-
                 <!-- Lista menu bocznego -->
                 <Image Width="104" Height="103" Margin="0 0 0 0">
                     <Image.Source>

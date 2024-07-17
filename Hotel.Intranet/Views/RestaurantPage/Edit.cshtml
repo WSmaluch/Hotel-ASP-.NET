@@ -16,11 +16,7 @@
                     <form asp-action="Edit" method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="IdAboutPage" />
-                        @*                         <div class="form-group">
-                        <label asp-for="BannerUrl" class="control-label">Banner URL</label>
-                        <input asp-for="BannerUrl" class="form-control" />
-                        <span asp-validation-for="BannerUrl" class="text-danger"></span>
-                        </div> *@
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>BannerUrl</label><br />
@@ -43,11 +39,7 @@
                             <input asp-for="Content1Description" class="form-control" />
                             <span asp-validation-for="Content1Description" class="text-danger"></span>
                         </div>
-                        @*                         <div class="form-group">
-                        <label asp-for="Content1Picture1Url" class="control-label">Content 1 Picture 1 URL</label>
-                        <input asp-for="Content1Picture1Url" class="form-control" />
-                        <span asp-validation-for="Content1Picture1Url" class="text-danger"></span>
-                        </div> *@
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Content1Picture1Url</label><br />
@@ -55,11 +47,7 @@
                                 <input type="file" class="form-control-file" id="Content1Picture1Url" name="Content1Picture1Url">
                             </div>
                         </div>
-                        @*                         <div class="form-group">
-                        <label asp-for="Content1Picture2Url" class="control-label">Content 1 Picture 2 URL</label>
-                        <input asp-for="Content1Picture2Url" class="form-control" />
-                        <span asp-validation-for="Content1Picture2Url" class="text-danger"></span>
-                        </div> *@
+
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Content1Picture2Url</label><br />

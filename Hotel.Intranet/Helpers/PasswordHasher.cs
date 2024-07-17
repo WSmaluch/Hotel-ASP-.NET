@@ -10,40 +10,40 @@ namespace Hotel.Intranet.Helpers
 
         public static string HashPassword(string password)
         {
-            // Generowanie losowego soli
+            // Generating a random salt
             byte[] salt;
             new RNGCryptoServiceProvider().GetBytes(salt = new byte[SaltSize]);
 
-            // Haszowanie hasła z użyciem PBKDF2
+            // Hashing the password using PBKDF2
             var pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations);
             byte[] hash = pbkdf2.GetBytes(HashSize);
 
-            // Łączenie soli i hasza w jedną tablicę bajtów
+            // Combining the salt and hash into one byte array
             byte[] hashBytes = new byte[SaltSize + HashSize];
             Array.Copy(salt, 0, hashBytes, 0, SaltSize);
             Array.Copy(hash, 0, hashBytes, SaltSize, HashSize);
 
-            // Konwersja na base64
+            // Converting to base64
             string base64Hash = Convert.ToBase64String(hashBytes);
 
-            // Zwrócenie zahaszowanego hasła
+            // Returning the hashed password
             return base64Hash;
         }
 
         public static bool VerifyPassword(string password, string hashedPassword)
         {
-            // Konwersja base64 na bajty
+            // Converting base64 to bytes
             byte[] hashBytes = Convert.FromBase64String(hashedPassword);
 
-            // Pobranie soli z hashu
+            // Retrieving the salt from the hash
             byte[] salt = new byte[SaltSize];
             Array.Copy(hashBytes, 0, salt, 0, SaltSize);
 
-            // Obliczenie hasza dla podanego hasła i soli
+            // Computing the hash for the provided password and salt
             var pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations);
             byte[] hash = pbkdf2.GetBytes(HashSize);
 
-            // Porównanie obliczonego hasza z zahashowanym hasłem
+            // Comparing the computed hash with the hashed password
             for (int i = 0; i < HashSize; i++)
             {
                 if (hashBytes[i + SaltSize] != hash[i])
@@ -55,5 +55,4 @@ namespace Hotel.Intranet.Helpers
             return true;
         }
     }
-
 }

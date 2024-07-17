@@ -1,13 +1,8 @@
 ﻿using Hotel.Intranet.Models;
-using Hotel.Intranet.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Configuration;
 using Hotel.Data;
 using Microsoft.EntityFrameworkCore;
-using Hotel.Data.Data.Booking;
-using IronPdf;
-using System.Runtime.Serialization;
 using System.Globalization;
 
 namespace Hotel.Intranet.Controllers
@@ -35,7 +30,6 @@ namespace Hotel.Intranet.Controllers
 
         public IActionResult Index()
         {
-            //1
             //amount of total reservations in this month
             ViewBag.Reservations = _context.Reservations
                 .Where(res => res.CheckIn.Month == DateTime.Now.Month)
@@ -71,8 +65,8 @@ namespace Hotel.Intranet.Controllers
             ViewBag.RoomTypes = _context.Types.ToList();
 
 			var chartData = _context.Reservations
-				.Where(r => r.CheckOut >= DateTime.Now.AddMonths(-3))  // Ograniczenie do ostatnich 3 miesięcy
-				.AsEnumerable()
+				.Where(r => r.CheckOut >= DateTime.Now.AddMonths(-3))  // Limited to the last 3 months
+                .AsEnumerable()
 				.GroupBy(r => new { Year = r.CheckOut.Year, Month = r.CheckOut.Month })
 				.Select(g => new
 				{
@@ -215,7 +209,7 @@ namespace Hotel.Intranet.Controllers
                 .ToList();
 
             var mostCommonOptionId = optionCounts.FirstOrDefault()?.OptionId;
-            var secondMostCommonOptionId = optionCounts.Skip(1).FirstOrDefault()?.OptionId ?? mostCommonOptionId;//ddadsadasdasdasdsadasdasdsa
+            var secondMostCommonOptionId = optionCounts.Skip(1).FirstOrDefault()?.OptionId ?? mostCommonOptionId;
 
 
             var mostCommonOptionCount = optionCounts
@@ -241,7 +235,7 @@ namespace Hotel.Intranet.Controllers
                 .Select(group => new
                 {
                     DayOfWeek = group.Key,
-                    ReservationCount = group.Sum(x => x.ReservationCount) // Zmieniłem na Sum, aby policzyć łączną ilość rezerwacji danego dnia
+                    ReservationCount = group.Sum(x => x.ReservationCount) 
                 })
                 .OrderByDescending(x => x.ReservationCount)
                 .ToList();

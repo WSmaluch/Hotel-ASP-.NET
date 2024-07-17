@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
 using Hotel.Data.Data.CMS.Newsletter;
 using System.Net.Mail;
-using Hotel.Data.Data.Booking;
 using System.Net;
 
 namespace Hotel.Intranet.Controllers
@@ -180,7 +174,7 @@ namespace Hotel.Intranet.Controllers
             }
             catch (Exception ex)
             {
-                // Zaloguj wyjątek lub zwróć odpowiedni status błędu
+                // Log an exception or return the appropriate error status
                 return StatusCode(500, "Error sending newsletter: " + ex.Message);
             }
         }

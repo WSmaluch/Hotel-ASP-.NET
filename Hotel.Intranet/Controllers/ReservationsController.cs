@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
@@ -64,17 +60,14 @@ namespace Hotel.Intranet.Controllers
             var days = (checkOut.Value - checkIn.Value).TotalDays;
 
 
-            // Inicjalizacja ViewBag.Options, nawet jeśli brak dostępnych opcji
             ViewBag.Options = new SelectList(new List<SelectListItem>());
 
             if (checkIn.HasValue && checkOut.HasValue)
             {
-                // Pobierz dostępne opcje
                 var availableOptions = _context.Options
                     .Where(o => o.StartDate <= checkIn && o.EndDate >= checkOut)
                     .ToList();
 
-                // Zaktualizuj ViewBag.Options z rzeczywistymi opcjami
                 ViewBag.Options = new SelectList(availableOptions.Select(o => new
                 {
                     IdOption = o.IdOption,
@@ -86,31 +79,6 @@ namespace Hotel.Intranet.Controllers
 
             if (checkIn.HasValue && checkOut.HasValue)
             {
-                // Pobierz dostępne pokoje
-                //ViewBag.Rooms = new SelectList(_context.Room.Include(r => r.Type)
-                //    .Where(r => r.StatusId == 9 && !_context.Reservations
-                //        .Where(reservation => reservation.IsActive && reservation.StatusId != 9)
-                //        .Select(reservation => reservation.RoomId)
-                //        .Contains(r.IdRoom))
-                //    .Select(r => new
-                //    {
-                //        IdRoom = r.IdRoom,
-                //        DisplayNameWithNumber = $"{r.Number} - {r.Type.Name}"
-                //    }), "IdRoom", "DisplayNameWithNumber");
-
-                //    ViewBag.Rooms = new SelectList(
-                //_context.Room
-                //    .Where(r => !_context.Reservations
-                //        .Where(reservation => reservation.IsActive && (reservation.StatusId == 1 || reservation.StatusId == 2) &&
-                //            reservation.CheckIn <= checkOut && reservation.CheckOut >= checkIn)
-                //        .Select(reservation => reservation.RoomId)
-                //        .Contains(r.IdRoom))
-                //    .Select(r => new
-                //    {
-                //        IdRoom = r.IdRoom,
-                //        DisplayNameWithNumber = $"{r.Number} - {r.Type.Name}"
-                //    })
-                //    .ToList(), "IdRoom", "DisplayNameWithNumber");
                 ViewBag.Rooms = new SelectList(
         _context.Room
             .Where(r => !_context.Reservations
@@ -129,7 +97,7 @@ namespace Hotel.Intranet.Controllers
             }
             else
             {
-                // Pobierz wszystkie pokoje, jeśli daty nie zostały wybrane
+                // Download all rooms if dates are not selected
                 ViewBag.Rooms = new SelectList(_context.Room.Include(r => r.Type)
                     .Where(r => r.StatusId == 9 && !_context.Reservations
                         .Where(reservation => reservation.IsActive && reservation.StatusId != 9)
@@ -146,31 +114,6 @@ namespace Hotel.Intranet.Controllers
         }
 
 
-        //// POST: Reservations/Create
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("IdReservation,RoomId,Name,LastName,Email,PhoneNumber,City,AdressFirstLine,PostalCode,CheckIn,CheckOut,NumberOfAdults,NumberOfChildren,SpecialRequests,TotalPrice,OptionId,StatusId,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Reservation reservation)
-        //{
-        //    //if (ModelState.IsValid)
-        //    //{
-        //        reservation.AddedDate = DateTime.Now;
-        //        reservation.AddedBy = "Admin";
-        //        reservation.StatusId = 1;
-        //        _context.Room.Find(reservation.RoomId).StatusId = 1;
-        //        _context.Add(reservation);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    //}
-        //    ViewData["RoomId"] = new SelectList(_context.Room, "IdRoom", "PhotosURL", reservation.RoomId);
-        //    return View(reservation);
-        //}
-
-        // POST: Reservations/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-
         private string GenerateDiscountCode()
         {
             string discountCode = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
@@ -181,7 +124,7 @@ namespace Hotel.Intranet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateConfirmed([Bind("IdReservation,RoomId,Name,LastName,Email,PhoneNumber,City,AdressFirstLine,PostalCode,CheckIn,CheckOut,NumberOfAdults,NumberOfChildren,SpecialRequests,TotalPrice,OptionId,StatusId,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Reservation reservation)
         {
-            // Tworzenie nowego kodu zniżkowego
+            // Creating a new discount code
             DiscountCode discountCode = new DiscountCode
             {
                 Code = GenerateDiscountCode(), 
@@ -210,8 +153,6 @@ namespace Hotel.Intranet.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Confirm([Bind("IdReservation,RoomId,Name,LastName,Email,PhoneNumber,City,AdressFirstLine,PostalCode,CheckIn,CheckOut,NumberOfAdults,NumberOfChildren,SpecialRequests,TotalPrice,OptionId,StatusId,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Reservation reservation)
         {
-            //reservation.TotalPrice = CalculateFinalPrice(_context.Types.Where(r=> r.Rooms.Find(reservation.RoomId)), typeId, SetcheckIn.ToString(), SetcheckOut.ToString(), adults, children); ;
-
             var roomType = _context.Room
             .Include(r => r.Type)
             .Where(r => r.IdRoom == reservation.RoomId)
@@ -220,15 +161,15 @@ namespace Hotel.Intranet.Controllers
 
             if (roomType != null)
             {
-                // Przeprowadź obliczenia ceny na podstawie danych pokoju
+                // Perform price calculations based on room data
                 var price = (double)GetTotalPrice(roomType.IdType, reservation.CheckIn, reservation.CheckOut, reservation.NumberOfAdults, reservation.NumberOfChildren);
                 reservation.TotalPrice = AddOccupancyFee(price, roomType.IdType, reservation.CheckIn, reservation.CheckOut, reservation.NumberOfAdults, reservation.NumberOfChildren) + CalculateOptionPrice(reservation);
             }
             else
             {
-                // Obsługa błędu, gdy nie udało się pobrać informacji o pokoju
+                // Error handling when room information could not be retrieved
                 ModelState.AddModelError(string.Empty, "Error retrieving room information.");
-                return View("Create", reservation); // Przekieruj z powrotem do formularza z błędem
+                return View("Create", reservation); 
             }
 
             ViewBag.RoomNumber = _context.Room.Find(reservation.RoomId).Number;
@@ -305,13 +246,10 @@ namespace Hotel.Intranet.Controllers
                 var price = (double)GetTotalPrice(roomType.IdType, reservation.CheckIn, reservation.CheckOut, reservation.NumberOfAdults, reservation.NumberOfChildren);
                 reservation.TotalPrice = AddOccupancyFee(price, roomType.IdType, reservation.CheckIn, reservation.CheckOut, reservation.NumberOfAdults, reservation.NumberOfChildren) + CalculateOptionPrice(reservation);
             }
-            //
 
 
 
             ViewData["RoomId"] = new SelectList(_context.Room, "IdRoom", "PhotosURL", reservation.RoomId);
-            //if (ModelState.IsValid)
-            //{
                 try
                 {
                     reservation.StatusId = existingReservation.StatusId;
@@ -330,8 +268,6 @@ namespace Hotel.Intranet.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            //}
-            return View(reservation);
         }
 
         // GET: Reservations/Delete/5
@@ -393,7 +329,6 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            // Pobierz dostępne statusy z bazy danych i przekaż do widoku
             ViewBag.Statuses = await _context.Status.Where(s => s.StatusId >= 1 && s.StatusId <= 6).ToListAsync();
 
             return View(reservation);
@@ -410,7 +345,7 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            // Zmień status rezerwacji na nowy
+            // Change your booking status to a new one
             reservation.StatusId = newStatusId;
             if (newStatusId == 6)
             {
@@ -424,7 +359,6 @@ namespace Hotel.Intranet.Controllers
             else
                 _context.Room.Find(reservation.RoomId).StatusId = newStatusId;
 
-            // Zapisz zmiany
             _context.Update(reservation);
             await _context.SaveChangesAsync();
 
@@ -450,12 +384,12 @@ namespace Hotel.Intranet.Controllers
 
             if (indexOfSemicolon > -1)
             {
-                // Jeśli istnieje średnik, pobierz fragment do pierwszego średnika
+                // If there is a semicolon, get the fragment up to the first semicolon
                 photoFragment = room.PhotosURL.Substring(0, indexOfSemicolon).Trim();
             }
             else
             {
-                // Jeśli nie ma średnika, użyj całego ciągu
+                // If there is no semicolon, use the entire string
                 photoFragment = room.PhotosURL.Trim();
             }
 
@@ -611,107 +545,26 @@ namespace Hotel.Intranet.Controllers
             return File(fileContents, "application/pdf", "Invoice.pdf");
         }
 
-
-        //public decimal CalculateFinalPrice(int typeId, string checkIn, string checkOut, int adults, int children)
-        //{
-        //    var availableRooms = GetAvailableRooms(DateTime.Parse(checkIn), DateTime.Parse(checkOut), adults,children);
-
-        //    var selectedRoom = availableRooms.FirstOrDefault();
-
-        //    int totalRooms = 0;
-
-        //    foreach (var item in _context.Room)
-        //    {
-        //        if (item.TypeId == typeId)
-        //        {
-        //            totalRooms++;
-        //        }
-        //    }
-
-        //    int occupancy = totalRooms - availableRooms.Count;
-        //    double occupancyPercentage = 0;
-
-        //    if (totalRooms > 0)
-        //    {
-        //        occupancyPercentage = ((double)occupancy / totalRooms) * 100;
-        //    }
-
-        //    decimal BasePriceAdult = GetTotalPrice(typeId, DateTime.Parse(checkIn), DateTime.Parse(checkOut), adults, children);
-
-        //    // Doliczenie opłaty za obłożenie w zależności od procentowego obłożenia
-        //    decimal occupancyFee = 0;
-
-        //    if (occupancyPercentage <= 30)
-        //    {
-        //        occupancyFee = (decimal)((double)BasePriceAdult * 0.05); //5% dodatkowej opłaty dla obłożenia poniżej lub równego 30%
-        //    }
-        //    else if (occupancyPercentage <= 50)
-        //    {
-        //        occupancyFee = (decimal)((double)BasePriceAdult * 0.1); // 10% dodatkowej opłaty dla obłożenia poniżej lub równego 50%
-        //    }
-        //    else if (occupancyPercentage <= 70)
-        //    {
-        //        occupancyFee = (decimal)((double)BasePriceAdult * 0.15); // 15% dodatkowej opłaty dla obłożenia poniżej lub równego 70%
-        //    }
-        //    else
-        //    {
-        //        occupancyFee = (decimal)((double)BasePriceAdult * 0.2); // 20% dodatkowej opłaty dla obłożenia powyżej 70%
-        //    }
-
-        //    return TotalPrice = BasePriceAdult + occupancyFee;
-        //}
-
-        //private decimal GetTotalPrice(int typeId, DateTime checkIn, DateTime checkOut, int adults, int children)
-        //{
-        //    // Find the applicable room pricing based on the room type and date range
-        //    var roomPricing = _context.RoomPricing
-        //        .Where(rp => rp.TypeId == typeId && rp.ValidFrom <= checkIn && rp.ValidTo >= checkOut)
-        //        .FirstOrDefault();
-
-        //    if (roomPricing == null)
-        //    {
-        //        // Handle the case when there's no applicable pricing
-        //        return 0; // You can choose to return some default value or handle it differently
-        //    }
-
-        //    // Calculate the number of nights
-        //    int numberOfNights = (int)(checkOut - checkIn).TotalDays;
-
-        //    // Calculate the total price based on room pricing and duration
-        //    if (_context.Types.Find(typeId).MaxAmountOfPeople == (adults + children))
-        //    {
-        //        var over = adults + children - _context.Types.Find(typeId).MaxAmountOfPeople;
-        //        TotalPrice = (decimal)(((roomPricing.BasePriceAdult) + (roomPricing.BasePriceChildren)) * numberOfNights);
-        //    }
-        //    else
-        //    {
-        //        TotalPrice = roomPricing.BasePriceAdult * numberOfNights;
-        //    }
-
-        //    return TotalPrice;
-        //}
-
-
         private decimal GetTotalPrice(int typeId, DateTime checkIn, DateTime checkOut, int adults, int children)
         {
             decimal totalPrice = 0;
 
             for (DateTime currentDay = checkIn; currentDay < checkOut; currentDay = currentDay.AddDays(1))
             {
-                // Sprawdź, który cennik jest aktualny w danym dniu
+                // Check which price list is current on a given day
                 var roomPricing = _context.RoomPricing
                     .Where(rp => rp.TypeId == typeId && rp.ValidFrom <= currentDay && rp.ValidTo >= currentDay)
                     .FirstOrDefault();
 
                 if (roomPricing != null)
                 {
-                    // Oblicz cenę za dany dzień na podstawie cennika
+                    // Calculate the price for a given day based on the price list
                     decimal dailyPrice = CalculateDailyPrice(roomPricing, adults, children);
                     totalPrice += dailyPrice;
                 }
                 else
                 {
-                    // W tym przykładzie zakładam, że brakujące ceny są zerowane.
+                    // In this example, I assume that the missing prices are zeroed.
                     totalPrice += 0;
                 }
             }
@@ -723,12 +576,12 @@ namespace Hotel.Intranet.Controllers
         {
             if (_context.Types.Find(roomPricing.TypeId).MaxAmountOfPeople == (adults + children))
             {
-                // Jeśli liczba osób zgadza się z maksymalną liczbą miejsc, dodaj cenę podstawową i dodatkową
+                // If the number of people matches the maximum capacity, add the basic and additional prices
                 return roomPricing.BasePriceAdult + roomPricing.BasePriceChildren;
             }
             else
             {
-                // Jeśli liczba osób przekracza dostępną liczbę miejsc, dodaj tylko cenę podstawową
+                // If the number of people exceeds the available capacity, only add the base price
                 return roomPricing.BasePriceAdult;
             }
         }
@@ -760,19 +613,19 @@ namespace Hotel.Intranet.Controllers
 
             if (occupancyPercentage <= 30)
             {
-                occupancyFee = price * 0.05; //5% dodatkowej opłaty dla obłożenia poniżej lub równego 30%
+                occupancyFee = price * 0.05; //5% additional fee for occupancy below or equal to 30%
             }
             else if (occupancyPercentage <= 50)
             {
-                occupancyFee = price * 0.1; // 10% dodatkowej opłaty dla obłożenia poniżej lub równego 50%
+                occupancyFee = price * 0.1; // 10% additional fee for occupancy below or equal to 50%
             }
             else if (occupancyPercentage <= 70)
             {
-                occupancyFee = price * 0.15; // 15% dodatkowej opłaty dla obłożenia poniżej lub równego 70%
+                occupancyFee = price * 0.15; // 15% additional fee for occupancy below or equal to 70%
             }
             else
             {
-                occupancyFee = price * 0.2; // 20% dodatkowej opłaty dla obłożenia powyżej 70%
+                occupancyFee = price * 0.2; // 20% additional fee for occupancy above 70%
             }
 
             return price + occupancyFee;

@@ -41,7 +41,6 @@
                 window.location.href = '/Facilities/Create';
             });
 
-            // Obsługa przycisku "Add Facilities"
             $('#addFacilitiesButton').click(function () {
                 var selectedFacilityIds = $('#Facilities').val();
                 var roomId = @Model.IdRoom;
@@ -50,7 +49,6 @@
                     .done(function (data) {
                         console.log(data);
 
-                        // Przekierowanie do strony edycji dla pokoju po dodaniu udogodnień
                         window.location.href = '/Rooms/Edit/' + roomId;
                     })
                     .fail(function (error) {

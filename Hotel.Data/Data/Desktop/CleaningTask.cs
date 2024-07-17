@@ -1,10 +1,5 @@
 ﻿using Hotel.Data.Data.Booking;
 using Hotel.Data.Data.Booking.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hotel.Data.Data.Desktop
 {

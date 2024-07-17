@@ -38,7 +38,7 @@ namespace Hotel.PortalWWW.Controllers
         {
             (DateTime SetcheckIn, DateTime SetcheckOut) = CalculateCheckInCheckOut(checkIn, checkOut);
 
-            //to liczy ile jest pokojów kazdego typu
+            //how many rooms of each type there are 
             var roomCounts = await _context.Room
                 .GroupBy(rc => rc.TypeId)
                 .Select(roomGroup => new
@@ -48,9 +48,8 @@ namespace Hotel.PortalWWW.Controllers
                 })
                 .ToListAsync();
 
-            //to liczy ile pokojow kazdego typu jest zarezerwowanych w danym okresie czasu (CZYLI NIE MOZNA ICH ZAREZERWOWAC)
+            //it counts how many rooms of each type are booked in a given period of time (MEANING THEY CAN'T BE BOOKED)
             var reservedRoomCounts = await _context.Reservations
-                //.Where(reservation => reservation.CheckIn <= SetcheckOut && reservation.CheckOut >= SetcheckIn && reservation.IsActive && (reservation.StatusId == 1 || reservation.StatusId == 3))
                 .Where(reservation => reservation.CheckIn <= SetcheckOut && reservation.CheckOut >= SetcheckIn && reservation.IsActive)
                 .Join(
                     _context.Room,
@@ -66,7 +65,7 @@ namespace Hotel.PortalWWW.Controllers
                 })
                 .ToListAsync();
 
-            //zapytanie łączące dwa powyższe
+            //a query combining the two above
             var availableRoomTypeIds = roomCounts
                 .GroupJoin(
                     reservedRoomCounts,
@@ -82,7 +81,7 @@ namespace Hotel.PortalWWW.Controllers
                 .Select(result => result.TypeId)
                 .ToList();
 
-            //konwersja int na types, łączy z tabelą Facilities aby wybrac nalezace do typu i sprawdza czy podana ilosc ludzi sie zmieści
+            //conversion of int to types, connects to the Facilities table to select those belonging to the type and checks whether the given number of people will fit
             var availableRoomTypes = await _context.Types
            .Where(type => availableRoomTypeIds.Contains(type.IdType) && type.MaxAmountOfPeople >= adults + children)
            .Include(type => type.Facilities) // Include facilities for each type
@@ -100,11 +99,10 @@ namespace Hotel.PortalWWW.Controllers
                 PricesByRoomType = new Dictionary<int, decimal>()
             };
 
-            // Oblicz ceny dla poszczególnych typów pokoi
+            // Calculate prices for individual room types
             foreach (var roomType in availableRoomTypes)
             {
                 int typeId = roomType.IdType;
-                //decimal totalPrice = GetTotalPrice(typeId, SetcheckIn, SetcheckOut, adults, children);
                 decimal totalPrice = CalculateFinalPrice(typeId, SetcheckIn.ToString(), SetcheckOut.ToString(), adults, children);
                 model.PricesByRoomType.Add(typeId, totalPrice);
             }
@@ -183,7 +181,7 @@ namespace Hotel.PortalWWW.Controllers
             {
                 var availableRooms = GetAvailableRooms(typeId, checkIn, checkOut);
 
-                // Tworzenie obiektu rezerwacji na podstawie przekazanych danych
+                // Creating a reservation object based on the submitted data
                 var reservation = new Reservation
                 {
                     RoomId = availableRooms.FirstOrDefault().IdRoom,
@@ -203,7 +201,7 @@ namespace Hotel.PortalWWW.Controllers
                     PostalCode=postalCode
                 };
 
-                // Sprawdzanie, czy kod rabatowy został wprowadzony i jest prawidłowy
+                // Checking whether the discount code has been entered and is correct
                 if (!string.IsNullOrEmpty(discountCode))
                 {
                     var discount = _context.DiscountCode.FirstOrDefault(dc => dc.Code == discountCode && dc.IsActive && dc.ValidFrom <= DateTime.Today && dc.ValidTo >= DateTime.Today);
@@ -211,7 +209,7 @@ namespace Hotel.PortalWWW.Controllers
                     {
                         double discountAmount = reservation.TotalPrice * (double)discount.Discount / 100;
 
-                        // Zastosowanie zniżki do całkowitej ceny rezerwacji
+                        // Applying the discount to the total booking price
                         reservation.TotalPrice -= discountAmount;
 
                         discount.IsActive = false;
@@ -224,7 +222,7 @@ namespace Hotel.PortalWWW.Controllers
                     }
                 }
 
-                // Tworzenie nowego kodu zniżkowego
+                // Creating a new discount code
                 DiscountCode discountCod = new DiscountCode
                 {
                     Code = GenerateDiscountCode(), 
@@ -236,7 +234,7 @@ namespace Hotel.PortalWWW.Controllers
                     AddedDate = DateTime.Now, 
                 };
 
-                // Dodanie kodu zniżkowego do bazy danych
+                // Adding a discount code to the database
                 _context.DiscountCode.Add(discountCod);
 
                 reservation.AddedBy = "PortalWWW";
@@ -287,35 +285,6 @@ namespace Hotel.PortalWWW.Controllers
             string discountCode = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
             return discountCode;
         }
-        //private decimal GetTotalPrice(int typeId, DateTime checkIn, DateTime checkOut, int adults, int children)
-        //{
-        //    // Find the applicable room pricing based on the room type and date range
-        //    var roomPricing = _context.RoomPricing
-        //        .Where(rp => rp.TypeId == typeId && rp.ValidFrom <= checkIn && rp.ValidTo >= checkOut)
-        //        .FirstOrDefault();
-
-        //    if (roomPricing == null)
-        //    {
-        //        // Handle the case when there's no applicable pricing
-        //        return 0; // You can choose to return some default value or handle it differently
-        //    }
-
-        //    // Calculate the number of nights
-        //    int numberOfNights = (int)(checkOut - checkIn).TotalDays;
-
-        //    // Calculate the total price based on room pricing and duration
-        //    if (_context.Types.Find(typeId).MaxAmountOfPeople == (adults + children))
-        //    {
-        //        var over = adults + children - _context.Types.Find(typeId).MaxAmountOfPeople;
-        //        TotalPrice = (decimal)(((roomPricing.BasePriceAdult) + (roomPricing.BasePriceChildren)) * numberOfNights);
-        //    }
-        //    else
-        //    {
-        //        TotalPrice = roomPricing.BasePriceAdult * numberOfNights;
-        //    }
-
-        //    return TotalPrice;
-        //}
 
         private decimal GetTotalPrice(int typeId, DateTime checkIn, DateTime checkOut, int adults, int children)
         {
@@ -323,20 +292,20 @@ namespace Hotel.PortalWWW.Controllers
 
             for (DateTime currentDay = checkIn; currentDay < checkOut; currentDay = currentDay.AddDays(1))
             {
-                // Sprawdź, który cennik jest aktualny w danym dniu
+                // Check which price list is current on a given day
                 var roomPricing = _context.RoomPricing
                     .Where(rp => rp.TypeId == typeId && rp.ValidFrom <= currentDay && rp.ValidTo >= currentDay)
                     .FirstOrDefault();
 
                 if (roomPricing != null)
                 {
-                    // Oblicz cenę za dany dzień na podstawie cennika
+                    // Calculate the price for a given day based on the price list
                     decimal dailyPrice = CalculateDailyPrice(roomPricing, adults, children);
                     totalPrice += dailyPrice;
                 }
                 else
                 {
-                    // W tym przykładzie zakładam, że brakujące ceny są zerowane.
+                    // In this example, I assume that the missing prices are zeroed.
                     totalPrice += 0;
                 }
             }
@@ -348,12 +317,12 @@ namespace Hotel.PortalWWW.Controllers
         {
             if (_context.Types.Find(roomPricing.TypeId).MaxAmountOfPeople == (adults + children))
             {
-                // Jeśli liczba osób zgadza się z maksymalną liczbą miejsc, dodaj cenę podstawową i dodatkową
+                // If the number of people matches the maximum capacity, add the basic and additional prices
                 return roomPricing.BasePriceAdult + roomPricing.BasePriceChildren ;
             }
             else
             {
-                // Jeśli liczba osób przekracza dostępną liczbę miejsc, dodaj tylko cenę podstawową
+                // If the number of people exceeds the available capacity, only add the base price
                 return roomPricing.BasePriceAdult;
             }
         }
@@ -379,21 +348,6 @@ namespace Hotel.PortalWWW.Controllers
 
         public decimal CalculateFinalPrice(int typeId, string checkIn, string checkOut, int adults, int children)
         {
-            //var availableRooms = GetAvailableRooms(typeId, checkIn, checkOut);
-
-            //var selectedRoom = availableRooms.FirstOrDefault();
-
-            //int totalRooms = 0;
-
-            //foreach (var item in _context.Room)
-            //{
-            //    if (item.TypeId == typeId)
-            //    {
-            //        totalRooms++;
-            //    }
-            //}
-
-            //int occupancy = totalRooms - availableRooms.Count;
             var totalRooms = _context.Room.Count();
 
             var availableRooms = _context.Room
@@ -417,24 +371,24 @@ namespace Hotel.PortalWWW.Controllers
 
             decimal BasePriceAdult = GetTotalPrice(typeId, DateTime.Parse(checkIn), DateTime.Parse(checkOut), adults, children);
 
-            // Doliczenie opłaty za obłożenie w zależności od procentowego obłożenia
+            // Occupancy fee added depending on occupancy percentage
             decimal occupancyFee = 0;
 
             if (occupancyPercentage <= 30)
             {
-                occupancyFee = (decimal)((double)BasePriceAdult * 0.05); //5% dodatkowej opłaty dla obłożenia poniżej lub równego 30%
+                occupancyFee = (decimal)((double)BasePriceAdult * 0.05); //5% additional fee for occupancy below or equal to 30%
             }
             else if (occupancyPercentage <= 50)
             {
-                occupancyFee = (decimal)((double)BasePriceAdult * 0.1); // 10% dodatkowej opłaty dla obłożenia poniżej lub równego 50%
+                occupancyFee = (decimal)((double)BasePriceAdult * 0.1); // 10% additional fee for occupancy below or equal to 50%
             }
             else if (occupancyPercentage <= 70)
             {
-                occupancyFee = (decimal)((double)BasePriceAdult * 0.15); // 15% dodatkowej opłaty dla obłożenia poniżej lub równego 70%
+                occupancyFee = (decimal)((double)BasePriceAdult * 0.15); // 15% additional charge for occupancy below or equal to 70%
             }
             else
             {
-                occupancyFee = (decimal)((double)BasePriceAdult * 0.2); // 20% dodatkowej opłaty dla obłożenia powyżej 70%
+                occupancyFee = (decimal)((double)BasePriceAdult * 0.2); // 20% additional fee for occupancy above 70%
             }
 
             return TotalPrice = BasePriceAdult + occupancyFee;

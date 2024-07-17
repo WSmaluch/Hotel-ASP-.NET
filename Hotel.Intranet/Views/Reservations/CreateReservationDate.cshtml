@@ -48,11 +48,11 @@
                 var checkInDate = $("#datepicker").datepicker("getDate");
                 var checkOutDate = $("#datepicker2").datepicker("getDate");
 
-                // Konwersja dat na UTC przed przekazaniem
+                // Convert dates to UTC before forwarding
                 var checkInISO = checkInDate ? new Date(Date.UTC(checkInDate.getFullYear(), checkInDate.getMonth(), checkInDate.getDate())) : null;
                 var checkOutISO = checkOutDate ? new Date(Date.UTC(checkOutDate.getFullYear(), checkOutDate.getMonth(), checkOutDate.getDate())) : null;
 
-                // Przekierowanie z danymi w parametrach
+                // Redirection with data in parameters
                 var numberOfAdults = $("#numberofadults").val();
                 var numberOfChildrens = $("#numberofchildrens").val();
 

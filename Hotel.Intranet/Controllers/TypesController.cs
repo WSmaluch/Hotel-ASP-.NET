@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
@@ -65,11 +61,11 @@ namespace Hotel.Intranet.Controllers
 		{
 			if (photoFile != null && photoFile.Length > 0)
 			{
-					// Przetwarzanie przesłanego pliku
+					// Processing the uploaded file
 					var imageService = new ImgurService(_configuration);
 					var imageUrl = await imageService.UploadImageAsync(photoFile);
 
-					// Zapisanie linku do obrazu w obiekcie Types
+					// Saving a link to string
 					types.PhotosURL = imageUrl;
 			}
             else
@@ -77,12 +73,11 @@ namespace Hotel.Intranet.Controllers
                 types.PhotosURL = "No photo";
             }
 
+			ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
 
-			// Dodanie obiektu Types do bazy danych
 			types.AddedDate = DateTime.Now;
 			types.AddedBy = "Admin";
 
-				// Dodanie związków z obiektami Facilities
 				if (facilities != null)
 				{
 					foreach (var facilityId in facilities)
@@ -98,10 +93,7 @@ namespace Hotel.Intranet.Controllers
 				_context.Add(types);
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
-			//}
 
-			ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
-			return View(types);
 		}
 
 		// GET: Types/Edit/5
@@ -119,7 +111,6 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-            // Pobierz wszystkie dostępne udogodnienia
             ViewData["Facilities"] = new SelectList(_context.Facilities, "IdFacility", "NameFacility");
 
             return View(types);
@@ -146,16 +137,16 @@ namespace Hotel.Intranet.Controllers
 
 			if (photoFile != null && photoFile.Length > 0)
 			{
-				// Przetwarzanie przesłanego pliku
+				// Processing the uploaded file
 				var imageService = new ImgurService(_configuration);
 				var imageUrl = await imageService.UploadImageAsync(photoFile);
 
-				// Zapisanie linku do obrazu w obiekcie Types
+				// Saving a link to string
 				types.PhotosURL = imageUrl;
 			}
 			else
 			{
-				// Zachowanie istniejącego PhotoUrl, jeśli nie przesłano nowego pliku - jest ten sam
+				// Retention of existing PhotoUrl if no new file uploaded - it is the same
 				types.PhotosURL = existingOption.PhotosURL;
 			}
 
@@ -263,7 +254,6 @@ namespace Hotel.Intranet.Controllers
                 _context.SaveChanges();
             }
 
-            // Przekieruj użytkownika z powrotem do widoku edycji pokoju lub innego, w zależności od potrzeb
             return RedirectToAction(nameof(Edit), new { id = typeId });
         }
 

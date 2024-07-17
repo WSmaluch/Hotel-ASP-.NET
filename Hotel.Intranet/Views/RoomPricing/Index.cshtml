@@ -65,7 +65,7 @@
     }
 
     .highlight {
-        background-color: lightblue; /* Możesz zmienić kolor na dowolny */
+        background-color: lightblue; 
     }
 
 </style>
@@ -120,27 +120,13 @@
             </div>
 
 
-            @* <div id="editForm" style="display:none;">
-                <form id="monthEditForm" asp-action="Edit">
-                    <label>Select a month:</label>
-                    <select id="monthSelector" class="form-control">
-                        @foreach (var roomPricing in Model)
-                        {
-                            <option value="@roomPricing.PricingId">
-                                @roomPricing.Type.Name - @roomPricing.ValidFrom.ToString("dd/MM/yyyy") to @roomPricing.ValidTo.ToString("dd/MM/yyyy")
-                            </option>
-                        }
-                    </select>
-                    <button type="button" onclick="submitForm()" class="btn btn-primary">Edit</button>
-                </form>
-            </div> *@
+            
             <div id="calendar">
             @if (selectedRoomTypeId != null)
             {
                 var filteredRoomPricings = Model.Where(rp => rp.TypeId == selectedRoomTypeId).ToList();
                 if (filteredRoomPricings.Any())
                 {
-                    //<a asp-action="Edit" asp-route-id="@filteredRoomPricings.FirstOrDefault()?.PricingId">Edit</a>
                     <table class="table table-bordered">
                         <thead class="table-header">
                             <tr>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
 using Hotel.Data.Data.Booking;
@@ -58,16 +53,12 @@ namespace Hotel.Intranet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdContentItem,Title,Description,IconUrl,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] ContentItem contentItem)
         {
-            //if (ModelState.IsValid)
-            //{
                 contentItem.AddedBy = "Admin";
                 contentItem.AddedDate= DateTime.Now;
                 contentItem.IsActive = true;
                 _context.Add(contentItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            //}
-            return View(contentItem);
         }
 
         // GET: ContentItem/Edit/5
