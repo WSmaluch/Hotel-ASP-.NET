@@ -29,9 +29,11 @@ namespace Hotel.Data.Data.Restaurant
         public bool IsVegan { get; set; }
 
         public bool IsGlutenFree { get; set; }
+        public string ImageUrl { get; set; }
 
         public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
         public List<Menu> Menu { get; set; } = new List<Menu>();
+        public List<SeasonalMenu> SeasonalMenu{ get; set; } = new List<SeasonalMenu>();
         public int NutritionInfoId { get; set; }
         public NutritionInfo NutritionInfo { get; set; }
     }

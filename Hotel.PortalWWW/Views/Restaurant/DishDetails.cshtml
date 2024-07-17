@@ -1,0 +1,81 @@
+﻿<!-- Dołączanie stylów Slick Carousel -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" />
+
+<!-- Dołączanie skryptów jQuery i Slick Carousel -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"></script>
+
+<style>
+    .forQuery {
+        padding-top: 40px;
+        padding-bottom: 60px;
+    }
+
+    .mySlides {
+        display: none;
+    }
+</style>
+
+<!-- bradcam_area_start -->
+<div class="bradcam_area breadcam_bg" style="background-image:url(https://i.imgur.com/ccGTCmJ.png)">
+    <h3>Details</h3>
+</div>
+<!-- bradcam_area_end -->
+<!--================Blog Area =================-->
+<section class="room_details_area section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mb-5 mb-lg-0">
+                <div class="room_details_left" style="position: relative;">
+                    <div id="gallery" class="main_image" style="position: relative;">
+                        @if (ViewBag.Gallery != null)
+                        {
+                                <img class="mySlides" src="@ViewBag.Gallery" style="width:100%;">
+                        }
+                        else
+                        {
+                            <p>No images available</p>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="room_details_sidebar">
+                    <h2>@ViewBag.DishName</h2>
+                    <p>@ViewBag.DishDescription</p>
+                    <h3>Price: @ViewBag.DishPrice</h3>
+                    <h3>Ingredients</h3>
+                    <ul class="list">
+                        @foreach (var item in ViewBag.DishIngredients)
+                        {
+                            <li>@item.Name</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    var slideIndex = 1;
+    showDivs(slideIndex);
+
+    function plusDivs(n) {
+        showDivs(slideIndex += n);
+    }
+
+    function showDivs(n) {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        if (x.length > 0) {
+            if (n > x.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = x.length }
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            x[slideIndex - 1].style.display = "block";
+        }
+    }
+</script>

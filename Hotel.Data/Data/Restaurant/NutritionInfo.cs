@@ -13,13 +13,13 @@ namespace Hotel.Data.Data.Restaurant
         [Key]
         public int Id { get; set; }
 
-        public int Calories { get; set; }
+        public decimal Calories { get; set; }
 
-        public int Protein { get; set; }
+        public decimal Protein { get; set; }
 
-        public int Carbohydrates { get; set; }
+        public decimal Carbohydrates { get; set; }
 
-        public int Fat { get; set; }
+        public decimal Fat { get; set; }
 
     }
 }

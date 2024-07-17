@@ -13,18 +13,18 @@ namespace Hotel.Intranet.Controllers
     public class DishController : Controller
     {
         private readonly HotelContext _context;
+        private readonly IConfiguration _configuration;
 
-        public DishController(HotelContext context)
+        public DishController(HotelContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: Dish
         public async Task<IActionResult> Index()
         {
             var hotelContext = _context.Dish.Include(d => d.Category).Include(d => d.NutritionInfo).Include(d => d.Price).Include(d => d.Ingredients).Include(d => d.Menu);
-
-
             return View(await hotelContext.ToListAsync());
         }
 
@@ -40,7 +40,7 @@ namespace Hotel.Intranet.Controllers
                 .Include(d => d.Category)
                 .Include(d => d.NutritionInfo)
                 .Include(d => d.Price)
-                .Include(d=> d.Menu)
+                .Include(d => d.Menu)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (dish == null)
             {
@@ -55,16 +55,15 @@ namespace Hotel.Intranet.Controllers
         {
             ViewData["CategoryId"] = new SelectList(_context.RestaurantCategory, "Id", "Name");
             ViewData["PriceId"] = new SelectList(_context.DishPrice, "Id", "Price");
+
             ViewBag.Ingredients = new SelectList(_context.Ingredient, "Id", "Name");
             ViewBag.Menu = new SelectList(_context.Menu, "Id", "Name");
-
             var nutritionInfos = _context.NutritionInfo.ToList();
             var nutritionInfoSelectList = nutritionInfos.Select(n => new
             {
                 Id = n.Id,
                 DisplayValue = $"Cal: {n.Calories} P: {n.Protein} CH: {n.Carbohydrates} F: {n.Fat}"
             }).ToList();
-
             ViewBag.NutritionInfoId = new SelectList(nutritionInfoSelectList, "Id", "DisplayValue");
 
             return View();
@@ -75,11 +74,25 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,PriceId,CategoryId,IsVegetarian,IsVegan,IsGlutenFree,NutritionInfoId,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Dish dish, List<int> Ingredients, List<int> Menu)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,PriceId,CategoryId,IsVegetarian,IsVegan,IsGlutenFree,ImageUrl,NutritionInfoId,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Dish dish, List<int> Ingredients, List<int> Menu, IFormFile photoFile)
         {
             ViewData["CategoryId"] = new SelectList(_context.RestaurantCategory, "Id", "Name", dish.CategoryId);
             ViewData["PriceId"] = new SelectList(_context.DishPrice, "Id", "Price", dish.PriceId);
             ViewData["NutritionInfoId"] = new SelectList(_context.NutritionInfo, "Id", "Id", dish.NutritionInfoId);
+
+            if (photoFile != null && photoFile.Length > 0)
+            {
+                // Przetwarzanie przesłanego pliku
+                var imageService = new ImgurService(_configuration);
+                var imageUrl = await imageService.UploadImageAsync(photoFile);
+
+                // Zapisanie linku do obrazu w obiekcie Types
+                dish.ImageUrl = imageUrl;
+            }
+            else
+            {
+                dish.ImageUrl = "No photo";
+            }
 
             if (Ingredients != null)
             {
@@ -125,7 +138,7 @@ namespace Hotel.Intranet.Controllers
             }
 
             //var dish = await _context.Dish.FindAsync(id);
-            var dish = await _context.Dish.Include(d => d.Ingredients).Include(d=>d.Ingredients).FirstOrDefaultAsync(r => r.Id == id);
+            var dish = await _context.Dish.Include(d => d.Ingredients).Include(d => d.Ingredients).FirstOrDefaultAsync(r => r.Id == id);
             if (dish == null)
             {
                 return NotFound();
@@ -149,7 +162,7 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PriceId,CategoryId,IsVegetarian,IsVegan,IsGlutenFree,NutritionInfoId,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Dish dish, List<int> Ingredients, List<int> Menu)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PriceId,CategoryId,IsVegetarian,IsVegan,IsGlutenFree,ImageUrl,NutritionInfoId,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Dish dish, List<int> Ingredients, List<int> Menu, IFormFile photoFile)
         {
             ViewData["CategoryId"] = new SelectList(_context.RestaurantCategory, "Id", "Name", dish.CategoryId);
             ViewData["NutritionInfoId"] = new SelectList(_context.NutritionInfo, "Id", "Id", dish.NutritionInfoId);
@@ -160,68 +173,88 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
+            var existingOption = await _context.Dish.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
+
+            if (existingOption == null)
+            {
+                return NotFound();
+            }
+
+            if (photoFile != null && photoFile.Length > 0)
+            {
+                // Przetwarzanie przesłanego pliku
+                var imageService = new ImgurService(_configuration);
+                var imageUrl = await imageService.UploadImageAsync(photoFile);
+
+                // Zapisanie linku do obrazu w obiekcie Types
+                dish.ImageUrl= imageUrl;
+            }
+            else
+            {
+                // Zachowanie istniejącego PhotoUrl, jeśli nie przesłano nowego pliku - jest ten sam
+                dish.ImageUrl = existingOption.ImageUrl;
+            }
+
             try
-    {
-        var existingDish = await _context.Dish
-            .Include(d => d.Ingredients)
-            .Include(d => d.Menu)
-            .FirstOrDefaultAsync(d => d.Id == id);
-
-        if (existingDish == null)
-        {
-            return NotFound();
-        }
-
-        // Update dish properties
-        _context.Entry(existingDish).CurrentValues.SetValues(dish);
-
-        // Clear current ingredients and menu
-        existingDish.Ingredients.Clear();
-        existingDish.Menu.Clear();
-
-        // Add new ingredients
-        if (Ingredients != null && Ingredients.Count > 0)
-        {
-            foreach (var ingredientId in Ingredients)
             {
-                var ingredient = await _context.Ingredient.FindAsync(ingredientId);
-                if (ingredient != null)
+                var existingDish = await _context.Dish
+                    .Include(d => d.Ingredients)
+                    .Include(d => d.Menu)
+                    .FirstOrDefaultAsync(d => d.Id == id);
+
+                if (existingDish == null)
                 {
-                    existingDish.Ingredients.Add(ingredient);
+                    return NotFound();
+                }
+
+                // Update dish properties
+                _context.Entry(existingDish).CurrentValues.SetValues(dish);
+
+                // Clear current ingredients and menu
+                existingDish.Ingredients.Clear();
+                existingDish.Menu.Clear();
+
+                // Add new ingredients
+                if (Ingredients != null && Ingredients.Count > 0)
+                {
+                    foreach (var ingredientId in Ingredients)
+                    {
+                        var ingredient = await _context.Ingredient.FindAsync(ingredientId);
+                        if (ingredient != null)
+                        {
+                            existingDish.Ingredients.Add(ingredient);
+                        }
+                    }
+                }
+
+                // Add new menu items
+                if (Menu != null && Menu.Count > 0)
+                {
+                    foreach (var menuId in Menu)
+                    {
+                        var menu = await _context.Menu.FindAsync(menuId);
+                        if (menu != null)
+                        {
+                            existingDish.Menu.Add(menu);
+                        }
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!DishExists(dish.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
                 }
             }
+            return RedirectToAction(nameof(Index));
         }
-
-        // Add new menu items
-        if (Menu != null && Menu.Count > 0)
-        {
-            foreach (var menuId in Menu)
-            {
-                var menu = await _context.Menu.FindAsync(menuId);
-                if (menu != null)
-                {
-                    existingDish.Menu.Add(menu);
-                }
-            }
-        }
-
-        await _context.SaveChangesAsync();
-    }
-    catch (DbUpdateConcurrencyException)
-    {
-        if (!DishExists(dish.Id))
-        {
-            return NotFound();
-        }
-        else
-        {
-            throw;
-        }
-    }
-    return RedirectToAction(nameof(Index));
-    }
-
-        
 
         // GET: Dish/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -261,7 +294,7 @@ namespace Hotel.Intranet.Controllers
 
         private bool DishExists(int id)
         {
-            return _context.Dish.Any(e => e.Id == id);
+          return (_context.Dish?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

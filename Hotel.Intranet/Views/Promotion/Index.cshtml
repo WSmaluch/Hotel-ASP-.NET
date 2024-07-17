@@ -37,8 +37,8 @@
                                     <tr>
                                         <td>@Html.DisplayFor(modelItem => item.Name)</td>
                                         <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                                        <td>@item.StartDate.ToShortDateString()</td>
+                                        <td>@item.EndDate.ToShortDateString()</td>
                                         <td>
                                             @if (!string.IsNullOrEmpty(item.ImageUrl))
                                             {

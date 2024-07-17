@@ -31,107 +31,6 @@
 			</a>
 			<a href="javascript:void(0);" id="toggle_btn" onclick="hide()"> <i class="fe fe-text-align-left"></i> </a>
 			<a class="mobile_btn" id="mobile_btn"> <i class="fas fa-bars"></i> </a>
-			@*<ul class="nav user-menu">
-				<li class="nav-item dropdown noti-dropdown">
-					<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"> <i class="fe fe-bell"></i> <span class="badge badge-pill">3</span> </a>
-					<div class="dropdown-menu notifications">
-						<div class="topnav-dropdown-header"> <span class="notification-title">Notifications</span> <a href="javascript:void(0)" class="clear-noti"> Clear All </a> </div>
-						<div class="noti-content">
-							<ul class="notification-list">
-								<li class="notification-message">
-									<a href="#">
-										<div class="media">
-											<span class="avatar avatar-sm">
-												<img class="avatar-img rounded-circle" alt="User Image" src="~/lib/bootstrap/img/profiles/avatar-02.jpg">
-											</span>
-											<div class="media-body">
-												<p class="noti-details"><span class="noti-title">Carlson Tech</span> has approved <span class="noti-title">your estimate</span></p>
-												<p class="noti-time"><span class="notification-time">4 mins ago</span> </p>
-											</div>
-										</div>
-									</a>
-								</li>
-								<li class="notification-message">
-									<a href="#">
-										<div class="media">
-											<span class="avatar avatar-sm">
-												<img class="avatar-img rounded-circle" alt="User Image" src="~/lib/bootstrap/img/profiles/avatar-11.jpg">
-											</span>
-											<div class="media-body">
-												<p class="noti-details">
-													<span class="noti-title">
-														International Software
-														Inc
-													</span> has sent you a invoice in the amount of <span class="noti-title">$218</span>
-												</p>
-												<p class="noti-time"><span class="notification-time">6 mins ago</span> </p>
-											</div>
-										</div>
-									</a>
-								</li>
-								<li class="notification-message">
-									<a href="#">
-										<div class="media">
-											<span class="avatar avatar-sm">
-												<img class="avatar-img rounded-circle" alt="User Image" src="~/lib/bootstrap/img/profiles/avatar-17.jpg">
-											</span>
-											<div class="media-body">
-												<p class="noti-details">
-													<span class="noti-title">John Hendry</span> sent a cancellation request <span class="noti-title">
-														Apple iPhone
-														XR
-													</span>
-												</p>
-												<p class="noti-time"><span class="notification-time">8 mins ago</span> </p>
-											</div>
-										</div>
-									</a>
-								</li>
-								<li class="notification-message">
-									<a href="#">
-										<div class="media">
-											<span class="avatar avatar-sm">
-												<img class="avatar-img rounded-circle" alt="User Image" src="~/lib/bootstrap/img/profiles/avatar-13.jpg">
-											</span>
-											<div class="media-body">
-												<p class="noti-details">
-													<span class="noti-title">
-														Mercury Software
-														Inc
-													</span> added a new product <span class="noti-title">
-														Apple
-														MacBook Pro
-													</span>
-												</p>
-												<p class="noti-time"><span class="notification-time">12 mins ago</span> </p>
-											</div>
-										</div>
-									</a>
-								</li>
-							</ul>
-						</div>
-						<div class="topnav-dropdown-footer"> <a href="#">View all Notifications</a> </div>
-					</div>
-				</li>
-				<li class="nav-item dropdown has-arrow">
-					<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown"> <span class="user-img"><img class="rounded-circle" src="~/lib/bootstrap/img/profiles/avatar-01.jpg" width="31" alt="Soeng Souy"></span> </a>
-					<div class="dropdown-menu">
-						<div class="user-header">
-							<div class="avatar avatar-sm"> <img src="~/lib/bootstrap/img/profiles/avatar-01.jpg" alt="User Image" class="avatar-img rounded-circle"> </div>
-							<div class="user-text">
-								<h6>Soeng Souy</h6>
-								<p class="text-muted mb-0">Administrator</p>
-							</div>
-						</div> <a class="dropdown-item" href="profile.html">My Profile</a> <a class="dropdown-item" href="settings.html">Account Settings</a> <a class="dropdown-item" href="login.html">Logout</a>
-					</div>
-				</li>
-			</ul>*@
-			@*<div class="top-nav-search">
-				<form>
-					<input type="text" class="form-control" placeholder="Search here">
-					<button class="btn" type="submit"><i class="fas fa-search"></i></button>
-				</form>
-			</div>*@
 		</div>
         <div class="sidebar" id="sidebar">
             <div class="sidebar-inner slimscroll">
@@ -315,22 +214,55 @@
 
                         <!-- Restaurant -->
                         <li class="submenu">
-                            <a href="#"><i class="fas fa-images"></i> <span> Restaurant </span> <span class="menu-arrow"></span></a>
+                            <a href="#"><i class="fas fa-bread-slice" aria-hidden="true"></i> <span> Restaurant </span> <span class="menu-arrow"></span></a>
                             <ul class="submenu_class" style="display: none;">
-                                <li><a href="@Url.Action("Index", "CulinaryEvent")">CulinaryEvent</a></li>
-                                <li><a href="@Url.Action("Index", "Dish")">Dish</a></li>
-                                <li><a href="@Url.Action("Index", "DishPrice")">DishPrice</a></li>
-                                <li><a href="@Url.Action("Index", "Ingredient")">Ingredient</a></li>
-                                <li><a href="@Url.Action("Index", "Menu")">Menu</a></li>
-                                <li><a href="@Url.Action("Index", "NutritionInfo")">NutritionInfo</a></li>
-                                <li><a href="@Url.Action("Index", "Promotion")">Promotion</a></li>
-                                <li><a href="@Url.Action("Index", "RestaurantCategory")">RestaurantCategory</a></li>
-                                <li><a href="@Url.Action("Index", "RestaurantPage")">RestaurantPage</a></li>
-                                <li><a href="@Url.Action("Index", "RestaurantSchedule")">RestaurantSchedule</a></li>
-                                <li><a href="@Url.Action("Index", "SeasonalMenu")">SeasonalMenu</a></li>
-                                <li><a href="@Url.Action("Index", "SpecialDiet")">SpecialDiet</a></li>
+                                <!-- Events -->
+                                <li class="submenu">
+                                    <a href="#"><i class="fas fa-calendar-alt"></i> <span> Events </span> <span class="menu-arrow"></span></a>
+                                    <ul class="submenu_class" style="display: none;">
+                                        <li><a href="@Url.Action("Index", "CulinaryEvent")">Culinary Events</a></li>
+                                    </ul>
+                                </li>
+                                <!-- Menus -->
+                                <li class="submenu">
+                                    <a href="#"><i class="fas fa-book-open"></i> <span> Menus </span> <span class="menu-arrow"></span></a>
+                                    <ul class="submenu_class" style="display: none;">
+                                        <li><a href="@Url.Action("Index", "Menu")">Menus</a></li>
+                                        <li><a href="@Url.Action("Index", "SeasonalMenu")">Seasonal Menus</a></li>
+                                    </ul>
+                                </li>
+                                <!-- Promotions -->
+                                <li class="submenu">
+                                    <a href="#"><i class="fas fa-gift"></i> <span> Promotions </span> <span class="menu-arrow"></span></a>
+                                    <ul class="submenu_class" style="display: none;">
+                                        <li><a href="@Url.Action("Index", "Promotion")">Promotions</a></li>
+                                    </ul>
+                                </li>
+                                <!-- Restaurant Information -->
+                                <li class="submenu">
+                                    <a href="#"><i class="fas fa-info-circle"></i> <span> Restaurant Information </span> <span class="menu-arrow"></span></a>
+                                    <ul class="submenu_class" style="display: none;">
+                                        <li><a href="@Url.Action("Index", "RestaurantCategory")">Restaurant Categories</a></li>
+                                        <li><a href="@Url.Action("Index", "RestaurantPage")">Restaurant Pages</a></li>
+                                        <li><a href="@Url.Action("Index", "RestaurantSchedule")">Restaurant Schedule</a></li>
+                                    </ul>
+                                </li>
+                                <!-- Dishes -->
+                                <li class="submenu">
+                                    <a href="#"><i class="fas fa-utensils"></i> <span> Dishes </span> <span class="menu-arrow"></span></a>
+                                    <ul class="submenu_class" style="display: none;">
+                                        <li><a href="@Url.Action("Index", "Dish")">Dishes</a></li>
+                                        <li><a href="@Url.Action("Index", "DishPrice")">Dish Prices</a></li>
+                                        <li><a href="@Url.Action("Index", "Ingredient")">Ingredients</a></li>
+                                        <li><a href="@Url.Action("Index", "NutritionInfo")">Nutrition Information</a></li>
+                                        <li><a href="@Url.Action("Index", "SpecialDiet")">Special Diets</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
+
+
+
                     </ul>
                 </div>
             </div>

@@ -24,28 +24,28 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Calories</label>
-                            <input asp-for="Calories" class="form-control" />
+                            <input asp-for="Calories" class="form-control" data-val="false" />
                             <span asp-validation-for="Calories" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Protein</label>
-                            <input asp-for="Protein" class="form-control" />
+                            <input asp-for="Protein" class="form-control" data-val="false" />
                             <span asp-validation-for="Protein" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Carbohydrates</label>
-                            <input asp-for="Carbohydrates" class="form-control" />
+                            <input asp-for="Carbohydrates" class="form-control" data-val="false" />
                             <span asp-validation-for="Carbohydrates" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label>Fat</label>
-                            <input asp-for="Fat" class="form-control" />
+                            <input asp-for="Fat" class="form-control" data-val="false" />
                             <span asp-validation-for="Fat" class="text-danger"></span>
                         </div>
                     </div>
@@ -65,3 +65,26 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var caloriesInput = document.querySelector("#Calories");
+        var proteinInput = document.querySelector("#Protein");
+        var carbonInput = document.querySelector("#Carbohydrates");
+        var fatInput = document.querySelector("#Fat");
+
+        // Replace dots with commas before form submission
+        var form = document.querySelector("form");
+        form.addEventListener("submit", function () {
+            replaceDotsWithCommas(caloriesInput);
+            replaceDotsWithCommas(proteinInput);
+            replaceDotsWithCommas(carbonInput);
+            replaceDotsWithCommas(fatInput);
+        });
+
+        function replaceDotsWithCommas(inputElement) {
+            var value = inputElement.value.trim();
+            var newValue = value.replace(/\./g, ",");
+            inputElement.value = newValue;
+        }
+    });
+</script>

@@ -27,6 +27,12 @@ namespace Hotel.Intranet.Controllers
             _context = context;
         }
 
+        public IActionResult LogingPage()
+        {
+
+           return View();
+        }
+
         public IActionResult Index()
         {
             //1

@@ -4,6 +4,7 @@ using Hotel.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hotel.Data.Migrations
 {
     [DbContext(typeof(HotelContext))]
-    partial class HotelContextModelSnapshot : ModelSnapshot
+    [Migration("20240716155929_UpdateDishClass2")]
+    partial class UpdateDishClass2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1815,10 +1817,6 @@ namespace Hotel.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -2008,14 +2006,14 @@ namespace Hotel.Data.Migrations
                     b.Property<DateTime>("AddedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Calories")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Calories")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("Carbohydrates")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Carbohydrates")
+                        .HasColumnType("int");
 
-                    b.Property<decimal>("Fat")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Fat")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -2026,8 +2024,8 @@ namespace Hotel.Data.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Protein")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("Protein")
+                        .HasColumnType("int");
 
                     b.Property<string>("RemovedBy")
                         .HasColumnType("nvarchar(max)");

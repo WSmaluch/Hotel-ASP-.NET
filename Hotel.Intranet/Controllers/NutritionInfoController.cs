@@ -22,9 +22,9 @@ namespace Hotel.Intranet.Controllers
         // GET: NutritionInfo
         public async Task<IActionResult> Index()
         {
-              return _context.NutritionInfo != null ? 
-                          View(await _context.NutritionInfo.ToListAsync()) :
-                          Problem("Entity set 'HotelContext.NutritionInfo'  is null.");
+            return _context.NutritionInfo != null ?
+                        View(await _context.NutritionInfo.ToListAsync()) :
+                        Problem("Entity set 'HotelContext.NutritionInfo'  is null.");
         }
 
         // GET: NutritionInfo/Details/5
@@ -149,14 +149,14 @@ namespace Hotel.Intranet.Controllers
             {
                 _context.NutritionInfo.Remove(nutritionInfo);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool NutritionInfoExists(int id)
         {
-          return (_context.NutritionInfo?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.NutritionInfo?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

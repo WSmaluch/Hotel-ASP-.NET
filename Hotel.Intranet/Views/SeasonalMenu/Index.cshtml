@@ -37,8 +37,8 @@
                                 {
                                     <tr>
                                         <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                                        <td>@item.StartDate.ToShortDateString()</td>
+                                        <td>@item.EndDate.ToShortDateString()</td>
                                         <td>@Html.DisplayFor(modelItem => item.Description)</td>
                                         <td>
                                             @foreach (var o in item.Dishes)
@@ -49,17 +49,11 @@
                                             }
                                         </td>
                                         <td class="text-right">
-                                            <div class="dropdown">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button" id="actionDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Actions
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="actionDropdown">
-                                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id">
-                                                        <i class="fas fa-pencil-alt"></i> Edit
-                                                    </a>
-                                                    <a class="dropdown-item" href="#" onclick="confirmDelete('@item.Id')">
-                                                        <i class="fas fa-trash-alt"></i> Delete
-                                                    </a>
+                                            <div class="dropdown dropdown-action">
+                                                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v ellipse_color"></i></a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-pencil-alt m-r-5"></i> Edit</a>
+                                                    <a class="dropdown-item" href="#" onclick="confirmDelete('@item.Id')"><i class="fas fa-trash-alt m-r-5"></i> Delete</a>
                                                 </div>
                                             </div>
                                         </td>

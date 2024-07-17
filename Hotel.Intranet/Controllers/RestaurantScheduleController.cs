@@ -58,6 +58,19 @@ namespace Hotel.Intranet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,DayOfWeek,OpenTime,CloseTime,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] RestaurantSchedule restaurantSchedule)
         {
+            var overlappingSchedule = await _context.RestaurantSchedule
+        .FirstOrDefaultAsync(rs => rs.DayOfWeek == restaurantSchedule.DayOfWeek &&
+                                   ((restaurantSchedule.OpenTime >= rs.OpenTime && restaurantSchedule.OpenTime < rs.CloseTime) ||
+                                    (restaurantSchedule.CloseTime > rs.OpenTime && restaurantSchedule.CloseTime <= rs.CloseTime) ||
+                                    (restaurantSchedule.OpenTime <= rs.OpenTime && restaurantSchedule.CloseTime >= rs.CloseTime)));
+
+            if (overlappingSchedule != null)
+            {
+                ModelState.AddModelError("", "The schedule overlaps with an existing schedule.");
+                // Return the view with the current model to display validation errors
+                return View(restaurantSchedule);
+            }
+
             restaurantSchedule.AddedDate = DateTime.Today;
             restaurantSchedule.AddedBy = "Admin";
             restaurantSchedule.IsActive = true;
@@ -94,7 +107,20 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
-                try
+            var overlappingSchedule = await _context.RestaurantSchedule
+        .FirstOrDefaultAsync(rs => rs.DayOfWeek == restaurantSchedule.DayOfWeek &&
+                                   ((restaurantSchedule.OpenTime >= rs.OpenTime && restaurantSchedule.OpenTime < rs.CloseTime) ||
+                                    (restaurantSchedule.CloseTime > rs.OpenTime && restaurantSchedule.CloseTime <= rs.CloseTime) ||
+                                    (restaurantSchedule.OpenTime <= rs.OpenTime && restaurantSchedule.CloseTime >= rs.CloseTime)));
+
+            if (overlappingSchedule != null)
+            {
+                ModelState.AddModelError("", "The schedule overlaps with an existing schedule.");
+                // Return the view with the current model to display validation errors
+                return View(restaurantSchedule);
+            }
+
+            try
                 {
                     _context.Update(restaurantSchedule);
                     await _context.SaveChangesAsync();
@@ -112,6 +138,7 @@ namespace Hotel.Intranet.Controllers
                 }
                 return RedirectToAction(nameof(Index));
         }
+
 
         // GET: RestaurantSchedule/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -151,7 +178,7 @@ namespace Hotel.Intranet.Controllers
 
         private bool RestaurantScheduleExists(int id)
         {
-          return (_context.RestaurantSchedule?.Any(e => e.Id == id)).GetValueOrDefault();
+            return _context.RestaurantSchedule.Any(e => e.Id == id);
         }
     }
 }
