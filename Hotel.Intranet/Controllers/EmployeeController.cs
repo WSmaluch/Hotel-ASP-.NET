@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
 using Hotel.Data.Data.Employess;
+using System.Text;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Identity;
+using Hotel.Intranet.Helpers;
 
 namespace Hotel.Intranet.Controllers
 {
@@ -63,18 +67,17 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeeID,FirstName,LastName,HiringDate,ContactId,DepartmentId,QualificationId,SalaryId")] Employee employee)
+        public async Task<IActionResult> Create([Bind("EmployeeID,FirstName,LastName,HiringDate,ContactId,Login,PasswordHash,DepartmentId,QualificationId,SalaryId")] Employee employee)
         {
             ViewData["ContactId"] = new SelectList(_context.Contact, "ContactID", "Address", employee.ContactId);
             ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentID", "DepartmentName", employee.DepartmentId);
             ViewData["QualificationId"] = new SelectList(_context.Qualification, "QualificationID", "QualificationName", employee.QualificationId);
             ViewData["SalaryId"] = new SelectList(_context.Salary, "SalaryID", "SalaryDetails", employee.SalaryId);
-            //if (ModelState.IsValid)
-            //{
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            //}
+
+            employee.PasswordHash = PasswordHasher.HashPassword(employee.PasswordHash);
+            _context.Add(employee);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Employee/Edit/5
@@ -102,13 +105,13 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EmployeeID,FirstName,LastName,HiringDate,ContactId,DepartmentId,QualificationId,SalaryId")] Employee employee)
+        public async Task<IActionResult> Edit(int id, [Bind("EmployeeID,FirstName,LastName,HiringDate,ContactId,Login,PasswordHash,DepartmentId,QualificationId,SalaryId")] Employee employee, string newPassword)
         {
             ViewData["ContactId"] = new SelectList(_context.Contact, "ContactID", "Address", employee.ContactId);
             ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentID", "DepartmentName", employee.DepartmentId);
             ViewData["QualificationId"] = new SelectList(_context.Qualification, "QualificationID", "QualificationName", employee.QualificationId);
             ViewData["SalaryId"] = new SelectList(_context.Salary, "SalaryID", "SalaryDetails", employee.SalaryId);
-            
+
             if (id != employee.EmployeeID)
             {
                 return NotFound();
@@ -116,6 +119,11 @@ namespace Hotel.Intranet.Controllers
 
             try
             {
+                if (!string.IsNullOrEmpty(newPassword))
+                {
+                    employee.PasswordHash = PasswordHasher.HashPassword(newPassword);
+                }
+
                 _context.Update(employee);
                 await _context.SaveChangesAsync();
             }
@@ -164,14 +172,15 @@ namespace Hotel.Intranet.Controllers
             {
                 _context.Employee.Remove(employee);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool EmployeeExists(int id)
         {
-          return (_context.Employee?.Any(e => e.EmployeeID == id)).GetValueOrDefault();
+            return (_context.Employee?.Any(e => e.EmployeeID == id)).GetValueOrDefault();
         }
+
     }
 }

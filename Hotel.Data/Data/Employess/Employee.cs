@@ -18,6 +18,10 @@ namespace Hotel.Data.Data.Employess
         public int ContactId { get; set; }
         public Contact Contact { get; set; }
 
+        public string Login { get; set; } 
+
+        public string PasswordHash { get; set; } 
+
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
 

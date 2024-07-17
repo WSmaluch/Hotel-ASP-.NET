@@ -28,6 +28,7 @@
                                 <tr>
                                     <th>First Name</th>
                                     <th>Last Name</th>
+                                    <th>Login</th>
                                     <th>Hiring Date</th>
                                     <th>Contact</th>
                                     <th>Department</th>
@@ -42,6 +43,7 @@
                                     <tr>
                                         <td>@item.FirstName</td>
                                         <td>@item.LastName</td>
+                                        <td>@item.Login</td>
                                         <td>@item.HiringDate.ToString("dd-MM-yyyy")</td>
                                         <td>@(item.Contact != null ? item.Contact.Address : "Empty")</td>
                                         <td>@(item.Department != null ? item.Department.DepartmentName : "Empty")</td>

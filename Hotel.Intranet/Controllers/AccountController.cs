@@ -1,6 +1,8 @@
 ﻿using Hotel.Data;
+using Hotel.Intranet.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace Hotel.Intranet.Controllers
 {
@@ -16,24 +18,25 @@ namespace Hotel.Intranet.Controllers
         [HttpGet]
         public IActionResult LoginPage()
         {
-            return View(); // Zwraca widok formularza logowania
+            return View(); 
         }
 
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-            var user = _context.Employee.FirstOrDefault(e => e.FirstName == username && e.LastName == password);
+            var user = _context.Employee.FirstOrDefault(e => e.Login == username);
+            
+            var unhashedPasswordPassed = PasswordHasher.VerifyPassword(password, user.PasswordHash);
 
-            if (username == user.FirstName && password == user.LastName)
+
+            if (username == user.Login && unhashedPasswordPassed)
             {
-                // Jeśli uwierzytelnienie się powiedzie, możesz przekierować użytkownika do innej strony
-                return RedirectToAction("Index", "Home"); // Przekierowanie na stronę główną
+                return RedirectToAction("Index", "Home"); 
             }
             else
             {
-                // Jeśli uwierzytelnienie się nie powiedzie, możesz przekazać komunikat błędu z powrotem do widoku LoginPage
-                ViewBag.ErrorMessage = "Nieprawidłowy login lub hasło.";
-                return View("LoginPage"); // Zwraca widok formularza logowania z komunikatem błędu
+                ViewBag.ErrorMessage = "Invalid login or password.";
+                return View("LoginPage");
             }
         }
     }
