@@ -68,8 +68,9 @@
 }
 <script>
     $(document).ready(function () {
-        $('#addDishes').click(function () {
+        $('#addDishes').on('click', function (e) {
+            e.preventDefault();
             window.location.href = '/Dish/Create';
         });
-    });
+        });
 </script>

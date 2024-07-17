@@ -11,22 +11,22 @@
     <article class="blog_item">
         <div class="blog_item_img">
             <img class="card-img rounded-0" src="@post.PhotoUrl" alt="">
-            <a href="#" class="blog_item_date">
+            <a class="blog_item_date">
                 <h3>@post.AddedDate.Day</h3>
                 <p>@post.AddedDate.ToString("MMMM")</p>
             </a>
         </div>
 
         <div class="blog_details">
-            <a class="d-inline-block" href="single-blog.html">
+            <a class="d-inline-block">
                 <h2>@post.Title</h2>
             </a>
             <p>
                 @firstSentence(post.Content)
             </p>
             <ul class="blog-info-link">
-                <li><a href="#"><i class="fa fa-user"></i> @post.AddedBy</a></li>
-                <li><a href="#"><i class="fa fa-list"></i>@post.Category</a></li>
+                <li><a><i class="fa fa-user"></i> @post.AddedBy</a></li>
+                <li><a ><i class="fa fa-list"></i>@post.Category</a></li>
             </ul>
         </div>
     </article>

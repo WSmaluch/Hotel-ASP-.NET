@@ -1,59 +1,63 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hotel.Data;
-using Hotel.Data.Data.Booking;
-using Microsoft.Extensions.Options;
+using Hotel.Data.Data.CMS.Blog;
 
 namespace Hotel.Intranet.Controllers
 {
-    public class ContentItemController : Controller
+    public class PostController : Controller
     {
         private readonly HotelContext _context;
         private readonly IConfiguration _configuration;
-        public ContentItemController(HotelContext context, IConfiguration configuration)
+        public PostController(HotelContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
         }
 
-        // GET: ContentItem
+        // GET: Post
         public async Task<IActionResult> Index()
         {
-              return _context.ContentItem != null ? 
-                          View(await _context.ContentItem.ToListAsync()) :
-                          Problem("Entity set 'HotelContext.ContentItem'  is null.");
+              return _context.Post != null ? 
+                          View(await _context.Post.ToListAsync()) :
+                          Problem("Entity set 'HotelContext.Post'  is null.");
         }
 
-        // GET: ContentItem/Details/5
+        // GET: Post/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.ContentItem == null)
+            if (id == null || _context.Post == null)
             {
                 return NotFound();
             }
 
-            var contentItem = await _context.ContentItem
-                .FirstOrDefaultAsync(m => m.IdContentItem == id);
-            if (contentItem == null)
+            var post = await _context.Post
+                .FirstOrDefaultAsync(m => m.IdPost == id);
+            if (post == null)
             {
                 return NotFound();
             }
 
-            return View(contentItem);
+            return View(post);
         }
 
-        // GET: ContentItem/Create
+        // GET: Post/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: ContentItem/Create
+        // POST: Post/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdContentItem,Title,Description,IconUrl,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] ContentItem contentItem, IFormFile photoFile)
+        public async Task<IActionResult> Create([Bind("IdPost,Title,Content,PhotoUrl,Category,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Post post, IFormFile photoFile)
         {
             if (photoFile != null && photoFile.Length > 0)
             {
@@ -62,50 +66,49 @@ namespace Hotel.Intranet.Controllers
                 var imageUrl = await imageService.UploadImageAsync(photoFile);
 
                 // Saving a link to string
-                contentItem.IconUrl = imageUrl;
+                post.PhotoUrl = imageUrl;
             }
             else
             {
-                contentItem.IconUrl = "No photo";
+                post.PhotoUrl = "No photo";
             }
-
-            contentItem.AddedBy = "Admin";
-                contentItem.AddedDate= DateTime.Now;
-                contentItem.IsActive = true;
-                _context.Add(contentItem);
+                post.AddedBy = "Admin";
+            post.AddedDate = DateTime.Now;
+            post.IsActive = true;
+                _context.Add(post);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
         }
 
-        // GET: ContentItem/Edit/5
+        // GET: Post/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.ContentItem == null)
+            if (id == null || _context.Post == null)
             {
                 return NotFound();
             }
 
-            var contentItem = await _context.ContentItem.FindAsync(id);
-            if (contentItem == null)
+            var post = await _context.Post.FindAsync(id);
+            if (post == null)
             {
                 return NotFound();
             }
-            return View(contentItem);
+            return View(post);
         }
 
-        // POST: ContentItem/Edit/5
+        // POST: Post/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdContentItem,Title,Description,IconUrl,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] ContentItem contentItem, IFormFile photoFile)
+        public async Task<IActionResult> Edit(int id, [Bind("IdPost,Title,Content,PhotoUrl,Category,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Post post, IFormFile photoFile)
         {
-            if (id != contentItem.IdContentItem)
+            if (id != post.IdPost)
             {
                 return NotFound();
             }
 
-            var existingOption = await _context.ContentItem.AsNoTracking().FirstOrDefaultAsync(o => o.IdContentItem == id);
+            var existingOption = await _context.Post.AsNoTracking().FirstOrDefaultAsync(o => o.IdPost == id);
 
             if (existingOption == null)
             {
@@ -119,22 +122,22 @@ namespace Hotel.Intranet.Controllers
                 var imageUrl = await imageService.UploadImageAsync(photoFile);
 
                 // Saving a link to string
-                contentItem.IconUrl = imageUrl;
+                post.PhotoUrl = imageUrl;
             }
             else
             {
                 // Retention of existing PhotoUrl if no new file uploaded - it is the same
-                contentItem.IconUrl = existingOption.IconUrl;
+                post.PhotoUrl = existingOption.PhotoUrl;
             }
 
             try
                 {
-                    _context.Update(contentItem);
+                    _context.Update(post);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ContentItemExists(contentItem.IdContentItem))
+                    if (!PostExists(post.IdPost))
                     {
                         return NotFound();
                     }
@@ -146,45 +149,45 @@ namespace Hotel.Intranet.Controllers
                 return RedirectToAction(nameof(Index));
         }
 
-        // GET: ContentItem/Delete/5
+        // GET: Post/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (_context.ContentItem == null)
+            if (_context.Post == null)
             {
-                return Problem("Entity set 'HotelContext.ContentItem'  is null.");
+                return Problem("Entity set 'HotelContext.Post'  is null.");
             }
-            var contentItem = await _context.ContentItem.FindAsync(id);
-            if (contentItem != null)
+            var post = await _context.Post.FindAsync(id);
+            if (post != null)
             {
-                _context.ContentItem.Remove(contentItem);
+                _context.Post.Remove(post);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: ContentItem/Delete/5
+        // POST: Post/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.ContentItem == null)
+            if (_context.Post == null)
             {
-                return Problem("Entity set 'HotelContext.ContentItem'  is null.");
+                return Problem("Entity set 'HotelContext.Post'  is null.");
             }
-            var contentItem = await _context.ContentItem.FindAsync(id);
-            if (contentItem != null)
+            var post = await _context.Post.FindAsync(id);
+            if (post != null)
             {
-                _context.ContentItem.Remove(contentItem);
+                _context.Post.Remove(post);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ContentItemExists(int id)
+        private bool PostExists(int id)
         {
-          return (_context.ContentItem?.Any(e => e.IdContentItem == id)).GetValueOrDefault();
+          return (_context.Post?.Any(e => e.IdPost == id)).GetValueOrDefault();
         }
     }
 }

@@ -122,19 +122,23 @@
 
     <script>
         $(document).ready(function () {
-            $('#addContact').click(function () {
+            $('#addContact').click(function (e) {
+                e.preventDefault();
                 window.location.href = '/Contact/Create';
             });
 
-            $('#addDepartment').click(function () {
+            $('#addDepartment').click(function (e) {
+                e.preventDefault();
                 window.location.href = '/Department/Create';
             });
 
-            $('#addQualification').click(function () {
+            $('#addQualification').click(function (e) {
+                e.preventDefault();
                 window.location.href = '/Qualifications/Create';
             });
 
-            $('#addSalary').click(function () {
+            $('#addSalary').click(function (e) {
+                e.preventDefault();
                 window.location.href = '/Salary/Create';
             });
         });

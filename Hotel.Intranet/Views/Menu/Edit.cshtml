@@ -72,4 +72,12 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(document).ready(function () {
+            $('#addDishes').on('click', function (e) {
+                e.preventDefault();
+                window.location.href = '/Dish/Create';
+            });
+        });
+    </script>
 }

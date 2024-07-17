@@ -101,26 +101,27 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}
-<script>
-    $(document).ready(function () {
-        $('#addIngredients').click(function () {
-            window.location.href = '/Ingredient/Create';
-        });
-    });
+    <script>
+        $(document).ready(function () {
+            $('#addIngredients').click(function () {
+                window.location.href = '/Ingredient/Create';
+            });
 
-    $(document).ready(function () {
-        $('#addMenu').click(function () {
-            window.location.href = '/Menu/Create';
+            $('#addMenu').click(function () {
+                window.location.href = '/Menu/Create';
+            });
+
+            $('#addPrice').click(function () {
+                window.location.href = '/DishPrice/Create';
+            });
+
+            $('#addCategory').click(function () {
+                window.location.href = '/RestaurantCategory/Create';
+            });
+
+            $('#addNutritionInfo').click(function () {
+                window.location.href = '/NutritionInfo/Create';
+            });
         });
-    });
-    $('#addPrice').click(function () {
-        window.location.href = '/DishPrice/Create';
-    });
-    $('#addCategory').click(function () {
-        window.location.href = '/RestaurantCategory/Create';
-    });
-    $('#addNutritionInfo').click(function () {
-        window.location.href = '/NutritionInfo/Create';
-    });
-</script>
+    </script>
+}
