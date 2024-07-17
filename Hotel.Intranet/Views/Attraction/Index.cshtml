@@ -30,7 +30,7 @@
                                     <th>@Html.DisplayNameFor(model => model.ImageUrl)</th>
                                     <th>@Html.DisplayNameFor(model => model.MoreInfoUrl)</th>
                                     <th>@Html.DisplayNameFor(model => model.AttractionType.Name)</th>
-                                    <th>@Html.DisplayNameFor(model => model.AttractionPrice.Id)</th>
+                                    <th>@Html.DisplayNameFor(model => model.AttractionPrice.Price)</th>
                                     <th class="text-right">Actions</th>
                                 </tr>
                             </thead>
@@ -39,15 +39,15 @@
                                 {
                                     <tr>
                                         <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                                        <td class="wide-td">@Html.DisplayFor(modelItem => item.Description)</td>
                                         <td>
-                                            <img src="@item.ImageUrl" alt="@item.Name" class="img-thumbnail" style="max-width: 100px;">
+                                            <img src="@item.ImageUrl" alt="@item.Name" class="img-thumbnail" style="max-width: 200px;">
                                         </td>
                                         <td>
                                             <a href="@item.MoreInfoUrl" target="_blank">@item.MoreInfoUrl</a>
                                         </td>
                                         <td>@Html.DisplayFor(modelItem => item.AttractionType.Name)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.AttractionPrice.Id)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.AttractionPrice.Price)</td>
                                         <td class="text-right">
                                             <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-v ellipse_color"></i></a>

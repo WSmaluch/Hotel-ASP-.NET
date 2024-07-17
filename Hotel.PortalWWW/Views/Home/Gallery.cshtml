@@ -1,6 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Gallery";
 }
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+</head>
 
 <style>
     .single_gallery_item .gallery_img {
@@ -52,15 +56,24 @@
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="single_gallery_item">
                         <div class="gallery_img">
-                            <img src="@gallery.ImageUrl" alt="Gallery Image">
-                            <div class="hover">
-                                <a class="light" href="@gallery.ImageUrl"><i class="fa fa-expand"></i></a>
-                            </div>
+                            <a href="@gallery.ImageUrl" data-lightbox="gallery">
+                                <img src="@gallery.ImageUrl" alt="Gallery Image">
+                                <div class="hover">
+                                    <i class="fa fa-expand"></i>
+                                </div>
+                            </a>
                         </div>
                     </div>
+
                 </div>
             }
         </div>
     </div>
 </section>
 <!--================ Gallery Area =================-->
+<script>
+    lightbox.option({
+        'resizeDuration': 200,
+        'wrapAround': true
+    })
+</script>
