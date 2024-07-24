@@ -9,10 +9,11 @@ namespace Hotel.Intranet.Controllers
     public class AttractionController : Controller
     {
         private readonly HotelContext _context;
-
-        public AttractionController(HotelContext context)
+        private readonly IConfiguration _configuration;
+        public AttractionController(HotelContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: Attraction
@@ -45,7 +46,7 @@ namespace Hotel.Intranet.Controllers
         // GET: Attraction/Create
         public IActionResult Create()
         {
-            ViewData["AttractionPriceId"] = new SelectList(_context.AttractionPrice, "Id", "Id");
+            ViewData["AttractionPriceId"] = new SelectList(_context.AttractionPrice, "Id", "Price");
             ViewData["AttractionTypeId"] = new SelectList(_context.AttractionType, "AttractionTypeId", "Name");
             return View();
         }
@@ -55,10 +56,25 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageUrl,MoreInfoUrl,AttractionTypeId,AttractionPriceId,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Attraction attraction)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageUrl,MoreInfoUrl,AttractionTypeId,AttractionPriceId,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Attraction attraction, IFormFile photoFile)
         {
             ViewData["AttractionPriceId"] = new SelectList(_context.AttractionPrice, "Id", "Id", attraction.AttractionPriceId);
             ViewData["AttractionTypeId"] = new SelectList(_context.AttractionType, "AttractionTypeId", "Name", attraction.AttractionTypeId);
+
+            if (photoFile != null && photoFile.Length > 0)
+            {
+                // Processing the uploaded file
+                var imageService = new ImgurService(_configuration);
+                var imageUrl = await imageService.UploadImageAsync(photoFile);
+
+                // Saving a link to string
+                attraction.ImageUrl = imageUrl;
+            }
+            else
+            {
+                attraction.ImageUrl = "No photo";
+            }
+
             attraction.AddedBy = "Admin";
             attraction.AddedDate = DateTime.Now;
             attraction.IsActive = true;
@@ -81,7 +97,7 @@ namespace Hotel.Intranet.Controllers
             {
                 return NotFound();
             }
-            ViewData["AttractionPriceId"] = new SelectList(_context.AttractionPrice, "Id", "Id", attraction.AttractionPriceId);
+            ViewData["AttractionPriceId"] = new SelectList(_context.AttractionPrice, "Id", "Price", attraction.AttractionPriceId);
             ViewData["AttractionTypeId"] = new SelectList(_context.AttractionType, "AttractionTypeId", "Name", attraction.AttractionTypeId);
             return View(attraction);
         }
@@ -91,15 +107,38 @@ namespace Hotel.Intranet.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ImageUrl,MoreInfoUrl,AttractionTypeId,AttractionPriceId,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Attraction attraction)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ImageUrl,MoreInfoUrl,AttractionTypeId,AttractionPriceId,IsActive,AddedBy,AddedDate,ModifiedBy,ModifiedDate,RemovedBy,RemovedDate")] Attraction attraction, IFormFile photoFile)
         {
+            ViewData["AttractionPriceId"] = new SelectList(_context.AttractionPrice, "Id", "Id", attraction.AttractionPriceId);
+            ViewData["AttractionTypeId"] = new SelectList(_context.AttractionType, "AttractionTypeId", "Name", attraction.AttractionTypeId);
+            
             if (id != attraction.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var existingOption = await _context.Attraction.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
+
+            if (existingOption == null)
             {
+                return NotFound();
+            }
+
+            if (photoFile != null && photoFile.Length > 0)
+            {
+                // Processing the uploaded file
+                var imageService = new ImgurService(_configuration);
+                var imageUrl = await imageService.UploadImageAsync(photoFile);
+
+                // Saving a link to string
+                attraction.ImageUrl = imageUrl;
+            }
+            else
+            {
+                // Retention of existing PhotoUrl if no new file uploaded - it is the same
+                attraction.ImageUrl = existingOption.ImageUrl;
+            }
+
                 try
                 {
                     _context.Update(attraction);
@@ -117,10 +156,6 @@ namespace Hotel.Intranet.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["AttractionPriceId"] = new SelectList(_context.AttractionPrice, "Id", "Id", attraction.AttractionPriceId);
-            ViewData["AttractionTypeId"] = new SelectList(_context.AttractionType, "AttractionTypeId", "Name", attraction.AttractionTypeId);
-            return View(attraction);
         }
 
         // GET: Attraction/Delete/5

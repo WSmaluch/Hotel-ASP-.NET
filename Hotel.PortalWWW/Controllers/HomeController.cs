@@ -40,7 +40,7 @@ namespace Hotel.PortalWWW.Controllers
                 ).ToList().FirstOrDefault();
 
             ViewBag.Options = _context.Options
-             .Where(option => option.IsActive && option.IdOption != 20)
+             .Where(option => option.IsActive && option.IdOption != 1)
              .Include(option => option.ContentItems)
              .OrderBy(option => Guid.NewGuid())
              .Take(3)
@@ -93,7 +93,7 @@ namespace Hotel.PortalWWW.Controllers
                    select type
                 ).ToList();
             ViewBag.Options = _context.Options
-             .Where(option => option.IsActive && option.IdOption != 20)
+             .Where(option => option.IsActive && option.IdOption != 1)
              .Include(option => option.ContentItems)
              .OrderBy(option => Guid.NewGuid())
              .Take(3)

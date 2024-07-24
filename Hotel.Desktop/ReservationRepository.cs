@@ -33,9 +33,10 @@ namespace Hotel.Desktop
 
 
             var tasks = _hotelContext.CleaningTask
-                .Include(r => r.Room)
-                .Where(t => t.StatusId == 8 || t.ScheduledDate <= oneWeekAgo)
-                .ToList();
+              .Include(r => r.Room)
+              .Where(t => (t.ScheduledDate >= oneWeekAgo && t.ScheduledDate <= DateTime.Now) || t.StatusId == 8)
+              .ToList();
+
 
             var statuses = _hotelContext.Status;
 
@@ -85,7 +86,12 @@ namespace Hotel.Desktop
 
         public List<Reservation> GetReservations()
         {
-            return _hotelContext.Reservations.ToList();
+            DateTime today = DateTime.Now.Date;
+            DayOfWeek firstDayOfWeek = DayOfWeek.Monday;
+            DateTime startOfWeek = today.AddDays(-(int)today.DayOfWeek + (int)firstDayOfWeek);
+            DateTime endOfWeek = startOfWeek.AddDays(7).AddTicks(-1);
+
+            return _hotelContext.Reservations.Where(r => r.CheckIn.Date <= endOfWeek && r.CheckOut.Date >= startOfWeek || r.StatusId == 3).ToList();
         }
 
         public List<Room> GetRooms()

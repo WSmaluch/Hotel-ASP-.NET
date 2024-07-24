@@ -69,12 +69,28 @@
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        function confirmDelete(id) {
-            if (confirm('Are you sure?')) {
-                window.location.href = '/Attractions/Delete/' + id;
-            }
-        }
-    </script>
-}
+<div id="delete_asset" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h3 class="delete_class">Are you sure?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                    <button type="button" class="btn btn-danger" onclick="deleteConfirm()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var idToDelete;
+
+    function confirmDelete(id) {
+        idToDelete = id;
+        $('#delete_asset').modal('show');
+    }
+
+    function deleteConfirm() {
+        window.location.href = '/Attraction/Delete/' + idToDelete;
+    }
+</script>

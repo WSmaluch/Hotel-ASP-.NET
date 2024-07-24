@@ -16,11 +16,11 @@ namespace Hotel.Desktop.ViewModel
         public ReservationsViewModel(IReservationRepository reservationRepository)
         {
             _reservationRepository = reservationRepository;
-            DateTime today = DateTime.Today;
 
-            Reservation = _reservationRepository.GetReservations()
-                .Where(r => r.CheckIn.Date <= today && today <= r.CheckOut.Date)
-                .ToList();
+            
+
+            Reservation = _reservationRepository.GetReservations();
+                //.ToList();
         }
 
         public List<Reservation> Reservation { get; set; }

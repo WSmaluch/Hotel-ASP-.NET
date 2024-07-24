@@ -120,7 +120,7 @@ namespace Hotel.PortalWWW.Controllers
         {
             var model = new BookingModel
             {
-                Options = await _context.Options.Include(o => o.ContentItems).Where(o => o.IsActive).ToListAsync(),
+                Options = await _context.Options.Include(o => o.ContentItems).Where(o => o.IsActive).Where(o => o.IdOption != 20).ToListAsync(),
                 facilities = await _context.Facilities.ToListAsync(),
                 types = await _context.Types.ToListAsync(),
                 rooms = await _context.Room.ToListAsync()
@@ -128,6 +128,9 @@ namespace Hotel.PortalWWW.Controllers
 
 
             var days = (checkOut - checkIn).Days;
+
+            ViewBag.CheckInText = checkIn.ToString("dd.MM.yyyy");
+            ViewBag.CheckOutText = checkOut.ToString("dd.MM.yyyy");
 
             ViewBag.TypeId = typeId;
             ViewBag.CheckIn = checkIn;
@@ -417,6 +420,8 @@ namespace Hotel.PortalWWW.Controllers
 
             var discountCode = _context.DiscountCode.Find(discountCodeId).Code;
 
+            var offerName = _context.Options.Find(reservation.OptionId).Name;
+
             var message = new MailMessage
             {
                 From = new MailAddress(smtpSettings["Username"]),
@@ -627,16 +632,17 @@ namespace Hotel.PortalWWW.Controllers
                                         <td><img id='icon' src='https://i.imgur.com/1wdIpUZ.png' alt='human'>" + reservation.NumberOfAdults.ToString() + "adult(s)" + (reservation.NumberOfChildren > 0 ? reservation.NumberOfChildren.ToString() + "children(s)" : "") + @"</td>
                                     </tr>
                                     <tr style='float: left;'>
-                                        <td width='130px'><img id='icon' src='https://i.imgur.com/WxRri4Y.png' alt='shower'> 1</td>
-                                        <td width='130px'><img id='icon' src='https://i.imgur.com/CZdNj90.png' alt='bed'> 1</td>
-                                        <td width='130px'><img id='icon' src='https://i.imgur.com/8ETVSV2.png' alt='size'> 1</td>
-
+                                        <td width='130px'><img id='icon' src='https://i.imgur.com/CZdNj90.png' alt='bed'> "+typeOfRoom.MaxAmountOfPeople+ @"</td>
+                                        <td width='130px'><img id='icon' src='https://i.imgur.com/8ETVSV2.png' alt='size'>"+typeOfRoom.Size+@"</td>
+                                        <td width='130px'>Your discount code: "+discountCode+ @"</td>
                                     </tr>
-                                </table>
+                                    <tr>
+                                        <td style='padding-top:20px'><b>"+offerName+@"</b></td>
+                                    </tr>
+                                    </table>
                                 <br>
                                 <div style='margin-top: 100px;'>
                                     <hr>
-                                    <a href=''><button id='buttonAllInfo' style='display: inline-block; margin-right: 10px;' onclick='showAllInfo()'>All Info</button></a>
                                     <a href='https://drive.google.com/file/d/1JWQweTBgC1wTOHquws4UjKBKmOXglUaa/view?usp=sharing' download><button id='buttonDownload' style='display: inline-block;'>Download Agreement</button></a>
                                 </div>
                             </div>

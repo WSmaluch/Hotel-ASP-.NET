@@ -21,7 +21,7 @@
     #summary {
         background-color: white;
         height: max-content;
-        width: 15%;
+        width: 16%;
         margin-left: 2%;    
         padding: 1.8%;
         margin-top: 2.5%;
@@ -235,38 +235,52 @@
 
                 
 
-                <tr>
-                    @foreach(var offer in Model.Options.Take(3))
+                    @for (int i = 0; i < Model.Options.Count(); i += 3)
                     {
-                    <td>
-                        <div id="offer">
-                            <div>
-                                <img src="@offer.PhotoUrl">
-                            </div>
-                            <div id="description">
-                            <b>@offer.Name</b>
-                                    <table>
-                                    @foreach(var o in offer.ContentItems.Take(5))
-                                    {
-                                            <tr>
-                                                <td id="items"><img src='@o.IconUrl'></td>
-                                                <td>@o.Title - @o.Description</td>
-                                            </tr>
-                                    }
-                                </table>
-                            </div>
-                            <div id="price">
-                                    <b id="OfferPrice">$@(offer.Price * numberOfNights)</b><br><br>
-                                    <button onmousedown="openForm(this)" data-offer-id="@offer.IdOption" onmouseover="calculateTotalPrice(@offer.Price * @numberOfNights)" type="button">Select offer</button>
-                                </div>
-                        </div>
-                    </td>
+                        <tr>
+                            @for (int j = 0; j < 3; j++)
+                            {
+                                int index = i + j;
+                                if (index < Model.Options.Count())
+                                {
+                                    var offer = Model.Options[index];
+                                    <td>
+                                        <div id="offer">
+                                            <div>
+                                                <img src="@offer.PhotoUrl">
+                                            </div>
+                                            <div id="description">
+                                                <b>@offer.Name</b>
+                                                <table>
+                                                    @foreach (var o in offer.ContentItems.Take(5))
+                                                    {
+                                                        <tr>
+                                                            <td id="items"><img src='@o.IconUrl'></td>
+                                                            <td>@o.Title - @o.Description</td>
+                                                        </tr>
+                                                    }
+                                                </table>
+                                            </div>
+                                            <div id="price">
+                                                <b id="OfferPrice">$@(offer.Price * numberOfNights)</b><br><br>
+                                                <button onmousedown="openForm(this)" data-offer-id="@offer.IdOption" onmouseover="calculateTotalPrice(@offer.Price * @numberOfNights)" type="button">Select offer</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            }
+                        </tr>
                     }
+
             </table>
             
         </div>
         <div id="summary">
-            <b>01-12-2023 <span style="padding: 0 6% 0;">&rarr;</span> 31-12-2023<br><br></b>
+            <b>@ViewBag.CheckInText <span style="padding: 0 4% 0;">&rarr;</span> @ViewBag.CheckOutText<br><br></b>
             <span style="font-size: small;">Number of people</span><br>
             2 adults
             <table>

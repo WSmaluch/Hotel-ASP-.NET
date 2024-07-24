@@ -31,12 +31,12 @@
                                         <input asp-for="Description" class="form-control" />
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Image URL</label>
-                                        <input asp-for="ImageUrl" class="form-control" />
-                                    </div>
-                                </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>PhotosURL</label>
+                            <input type="file" class="form-control-file" id="photoFile" name="photoFile">
+                        </div>
+                    </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label>More Info URL</label>
@@ -53,12 +53,6 @@
                                     <div class="form-group">
                                         <label>Attraction Price</label>
                                         <select asp-for="AttractionPriceId" class="form-control" asp-items="ViewBag.AttractionPriceId"></select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Photos URL</label>
-                                        <input type="file" class="form-control-file" id="photoFile" name="photoFile">
                                     </div>
                                 </div>
                             </div>

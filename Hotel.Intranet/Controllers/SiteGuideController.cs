@@ -105,6 +105,14 @@ namespace Hotel.Intranet.Controllers
                 return NotFound();
             }
 
+            var existingOption = await _context.SiteGuide.AsNoTracking().FirstOrDefaultAsync(o => o.Id == id);
+
+
+            if (existingOption == null)
+            {
+                return NotFound();
+            }
+
             if (photoFile != null && photoFile.Length > 0)
             {
                 // Processing the uploaded file
@@ -117,7 +125,7 @@ namespace Hotel.Intranet.Controllers
             else
             {
                 // Retention of existing PhotoUrl if no new file uploaded - it is the same
-                siteGuide.Image = siteGuide.Image;
+                siteGuide.Image = existingOption.Image;
             }
 
                 try

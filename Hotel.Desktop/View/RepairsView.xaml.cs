@@ -26,43 +26,30 @@ namespace Hotel.Desktop.View
         {
             InitializeComponent();
 
-            // Utwórz instancję opcji dla HotelContext
-            var options = new DbContextOptionsBuilder<HotelContext>()
-                .UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=HotelContext2023;Trusted_Connection=True;MultipleActiveResultSets=true")
-                .LogTo(Console.WriteLine) // Dodaj to logowanie do konsoli
-                .Options;
-
-            // Utwórz instancję HotelContext i przekaż opcje jako parametr
-            _context = new HotelContext(options);
+            _context = DbContextFactory.CreateContext();
 
             reservationRepository = new ReservationRepository(_context);
 
             RepairsViewModel viewModel = new RepairsViewModel(reservationRepository);
             DataContext = viewModel;
 
-            // Ładowanie danych
             LoadData();
         }
 
         private void LoadData()
         {
-            // Pobierz zadania naprawcze z informacjami o pracownikach i pokojach
             var repairsTasksWithEmployees = reservationRepository.GetRepairsTasksWithEmployees();
-            //var repairsTasksWithEmployees = _reservationRepository.GetRepairsTasksWithEmployees();
-
-            // Ustaw źródło danych dla widoku
+            
             RepairsListView.ItemsSource = repairsTasksWithEmployees;
         }
 
         private void RepairsListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            // Pobierz zaznaczoną rezerwację
             var listView = (ListView)sender;
             var selectedRepair = (RepairTask)listView.SelectedItem;
             Window popupWindow = null;
             if (selectedRepair != null)
             {
-                // Utwórz nowe okno z informacjami o rezerwacji
                 popupWindow = new Window
                 {
                     Width = 400,
@@ -114,10 +101,8 @@ namespace Hotel.Desktop.View
                     }
                 };
 
-                // Ustaw pozycję okna na środku ekranu
                 popupWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-                // Wyświetl okno
                 popupWindow.ShowDialog();
             }
         }

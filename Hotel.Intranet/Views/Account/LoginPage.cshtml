@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logowanie</title>
+    <title>Trapise Hotel</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -73,7 +73,7 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>Logowanie</h2>
+        <h2>Trapise Resort Management Panel</h2>
 
         @if (ViewBag.ErrorMessage != null)
         {
@@ -82,11 +82,11 @@
 
         <form method="post" asp-action="Login" asp-controller="Account">
             <div>
-                <label for="username">Użytkownik:</label>
+                <label for="username">User login:</label>
                 <input type="text" id="username" name="username" required>
             </div>
             <div>
-                <label for="password">Hasło:</label>
+                <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
             <div>

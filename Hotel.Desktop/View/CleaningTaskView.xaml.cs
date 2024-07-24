@@ -32,16 +32,9 @@ namespace Hotel.Desktop
         {
             InitializeComponent();
 
-            // Utwórz instancję opcji dla HotelContext
-            var options = new DbContextOptionsBuilder<HotelContext>()
-                .UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=HotelContext2023;Trusted_Connection=True;MultipleActiveResultSets=true")
-                .LogTo(Console.WriteLine) // Dodaj to logowanie do konsoli
-                .Options;
+            _context = DbContextFactory.CreateContext();
 
-			// Utwórz instancję HotelContext i przekaż opcje jako parametr
-			_context = new HotelContext(options);
-
-			reservationRepository = new ReservationRepository(_context);
+            reservationRepository = new ReservationRepository(_context);
 
 			CleaningTaskViewModel viewModel = new CleaningTaskViewModel(reservationRepository);
             DataContext = viewModel;
@@ -52,24 +45,18 @@ namespace Hotel.Desktop
 
 		private void LoadData()
 		{
-			// Pobierz zadania naprawcze z informacjami o pracownikach i pokojach
 			var repairsTasksWithEmployees = reservationRepository.GetCleaningTasks();
-			//var repairsTasksWithEmployees = _reservationRepository.GetRepairsTasksWithEmployees();
-
-			// Ustaw źródło danych dla widoku
 
 			CleaningTaskListView.ItemsSource = repairsTasksWithEmployees;
 		}
 
 		private void CleaningTaskListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
 		{
-			// Pobierz zaznaczoną rezerwację
 			var listView = (ListView)sender;
 			var selectedCleaningTask = (CleaningTask)listView.SelectedItem;
 			Window popupWindow = null;
 			if (selectedCleaningTask != null)
 			{
-				// Utwórz nowe okno z informacjami o rezerwacji
 				popupWindow = new Window
 				{
 					Width = 400,
@@ -106,10 +93,8 @@ namespace Hotel.Desktop
 					}
 				};
 
-				// Ustaw pozycję okna na środku ekranu
 				popupWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-				// Wyświetl okno
 				popupWindow.ShowDialog();
 			}
 		}

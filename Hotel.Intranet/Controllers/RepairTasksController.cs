@@ -98,16 +98,16 @@ namespace Hotel.Intranet.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ScheduledDate,Status,RoomId,EmployeeId,Note,StatusId")] RepairTask repairTask)
         {
+            ViewData["EmployeeId"] = new SelectList(_context.Employee, "EmployeeID", "FirstName", repairTask.EmployeeId);
+            ViewData["StatusId"] = new SelectList(_context.Status, "StatusId", "StatusName", repairTask.StatusId);
+            ViewData["RoomId"] = new SelectList(_context.Room, "IdRoom", "IdRoom", repairTask.RoomId);
             if (id != repairTask.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
                 try
                 {
-                    // Znajdź pokój o danym RoomId
                     var room = _context.Room.Find(repairTask.RoomId);
                     if (repairTask.StatusId == 9)
                     {
@@ -129,11 +129,6 @@ namespace Hotel.Intranet.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["EmployeeId"] = new SelectList(_context.Employee, "EmployeeID", "FirstName", repairTask.EmployeeId);
-            ViewData["StatusId"] = new SelectList(_context.Status, "StatusId", "StatusName", repairTask.StatusId);
-            ViewData["RoomId"] = new SelectList(_context.Room, "IdRoom", "IdRoom", repairTask.RoomId);
-            return View(repairTask);
         }
 
         // GET: RepairTasks/Delete/5

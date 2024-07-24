@@ -14,15 +14,7 @@
             <TextBlock Text="Hotel Management" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="22" Foreground="White" Margin="500,0,0,0" />
 
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="1" Margin="38,0,0,0">
-                <materialDesign:PopupBox  Margin="5 5 40 5" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
-                    <StackPanel Width="150">
-                        <Button Content="Account" Foreground="#007ACC"/>
-                        <Button Content="Help" Foreground="#007ACC"/>
-                        <Button Content="Settings" Foreground="#007ACC"/>
-                        <Separator/>
-                        <Button x:Name="ButtonPopUpLogout" Content="Logout" Click="ButtonPopUpLogout_Click" Foreground="#007ACC"/>
-                    </StackPanel>
-                </materialDesign:PopupBox>
+                
 
             </StackPanel>
             <Button x:Name="ExitButton" VerticalContentAlignment="Top" FontSize="10" Content="X" Click="ExitButton_Click" Margin="77,-2,-1,41" Foreground="White" Grid.Column="1" MouseEnter="ExitButton_MouseEnter" MouseLeave="ExitButton_MouseLeave"/>
